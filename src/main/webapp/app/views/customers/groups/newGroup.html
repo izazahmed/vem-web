@@ -1,0 +1,59 @@
+<div class="row">
+    <h1 class="no-margin x-padding text-center size-16 weight-700 text-center modal-title">Add New Group</h1>
+</div>
+<form name="addSiteGroupForm" ng-submit="addSiteGroup(addSiteGroupForm)" novalidate="" autocomplete="off">
+    <div class="form-group required">
+        <label for="email" class="weight-400 control-label size-14">Group Name</label>
+        <input type="text" ng-model="sitesFormData.groupName" placeholder="Enter group name" name="groupName" required maxlength="50" maxlength50="sitesFormData.groupName" class="form-control">
+        <div ng-show="addSiteGroupForm.groupName.$error && addSiteGroupForm.$submitted" ng-messages="addSiteGroupForm.groupName.$error">
+            <div ng-messages-include="error-list1.html"></div>
+        </div>
+        <div class="error size15" ng-show="uniqueGroupNameError">Group name already in use</div>
+    </div>
+    <div>
+        <label for="email" class="weight-400 size-14">Select Sites</label>
+        <div class="row">
+            <div class="col-xs-8 col-lg-8">
+                <select name="siteList" placeholder="Select site" class="form-control" ng-model="sitesFormData.siteList" ng-options="site as site.siteName for site in sites | orderBy: 'siteName'">
+                    <option value="">Select</option>
+                </select>
+                <div ng-show="addSiteGroupForm.siteList.$error && addSiteGroupForm.$submitted" ng-messages="addSiteGroupForm.siteList.$error">
+                    <div ng-messages-include="error-list1.html"></div>
+                </div>
+                <div class="error size15" ng-show="addLocationShow && addSiteGroupForm.$submitted">Add at least one site</div>
+            </div>
+            <div class="col-xs-4 col-lg-4">
+                <button type="button" ng-click="addSiteGroupList($event)" class="btn btn-default addBtn width-full">Add</button>
+            </div>
+            <div class="col-xs-12 col-lg-12">
+			    <div class="size-14 max-height-100 border" ng-if="selectedSiteGroup.length">
+			        <div ng-show="selectedSite.siteName" class="padding-list-5-16 element-hover" ng-repeat="selectedSite in selectedSiteGroup | orderBy: 'siteName'">{{selectedSite.siteName}}
+			        <i class="icon-close size-20 cursor pull-right" aria-hidden="true" ng-click="removeSeletedSite(selectedSite,$event);$event.stopPropagation();"></i>            
+			            <div class="clear"></div>
+			        </div>
+			    </div>
+		    </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <gap></gap>
+    <div class="col-xs-12">
+    <div class="btn-group-gap middle" role="group" aria-label="Basic example">
+        <button type="submit" class="btn btn-primary  margin-left10 col-centered">Save</button>
+        <button type="button" data-dismiss="modal" class="btn btn-default col-centered margin-left10">Cancel</button>
+    </div>
+    </div>
+</form>
+<br/>
+<div class="clear"></div>
+<gap></gap>
+<div class="clear"></div>
+<style>
+        .modal-dialog {
+            max-width: 400px;
+        }
+    </style>
+<script id="error-list1.html" type="text/ng-template">
+    <div class="error size15" ng-message="required">This field is required</div>
+    <div class="error" ng-message="maxlength50">Maximum length of this field is 50 characters</div>
+</script>

@@ -1,0 +1,218 @@
+<div class="blue-bg-bar min-height-52 relative"></div>
+<div class="bar line-height-40 relative x-padding">
+	<span class="size-14 weight-500 line-height-40">Configuration
+		Information</span>
+</div>
+<s-gray-gap></s-gray-gap>
+<div class="clear"></div>
+<form role="form" class="form-horizontal top-97 scroll "
+	name="saveConfigForm" novalidate=""
+	ng-submit="saveConfig(saveConfigForm)" autocomplete="off">
+	<gap></gap>
+	<div class="clear"></div>
+	<div class=" col-sm-10 col-lg-6">
+		<div class="form-group">
+			<label for="email"
+				class="weight-400 size-14 control-label col-sm-3 col-xs-12 text-left-imp">Alert
+				Name</label>
+			<div class="col-xs-12 col-md-9">
+				<input type="text" class="form-control" ng-model="alerts.alert"
+					placeholder="alert" name="alert" required maxlength50="alert"
+					maxlength="50">
+				<div ng-show="saveConfigForm.$error && saveConfigForm.$submitted"
+					ng-messages="saveConfigForm.alert.$error">
+					<div ng-messages-include="error-list1.html"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div class=" col-sm-10 col-lg-6">
+		<div class="form-group">
+			<label for="email"
+				class="weight-400 size-14 control-label col-sm-3 col-xs-12 text-left-imp">Alert
+				Type</label>
+			<div class="col-md-9 col-xs-12">
+				<label for="email"
+					class="weight-400 size-14 control-label text-left-imp">{{alerts.alertType}}</label>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div class=" col-sm-10 col-lg-6">
+		<div class="form-group">
+			<label for="email"
+				class="weight-400 size-14 control-label col-sm-3 col-xs-12 text-left-imp">Priority</label>
+			<div class="col-xs-12 col-md-9">
+				<select class="form-control" name="priority"
+					ng-model="alerts.priority"
+					ng-options="option.value as option.label for option in priorityOptions"></select>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div class=" col-sm-10 col-lg-6">
+		<div class="form-group">
+			<label for="email"
+				class="weight-400 size-14 control-label col-sm-3 col-xs-12 text-left-imp">Parameter</label>
+			<div class="col-md-4 col-xs-12" ng-if="alerts.alertId != 1">
+			
+					<input class="form-control" type="number" name="parameterIdHour" ng-model="alerts.parameterIdHour" ng-show="alerts.alertId == 5"					
+					maxlength="20" min="1" max="24" ng-required="alerts.alertId == 5">
+					 
+					<input class="form-control" type="number" name="parameterIdMin" ng-model="alerts.parameterIdMin" ng-show="alerts.alertId == 2 || alerts.alertId == 3"					
+					maxlength="20" min="10" max="300" ng-required="(alerts.alertId == 2 || alerts.alertId == 3)">
+					
+					<input class="form-control" type="number" name="parameterIdTemp" ng-model="alerts.parameterIdTemp" ng-show="alerts.alertId == 6 || alerts.alertId == 7"					
+					maxlength="20" min="0" max="150" ng-required="(alerts.alertId == 6 || alerts.alertId == 7)">
+					
+					<input class="form-control" type="number" name="parameterId" ng-model="alerts.parameterId" 
+					ng-show="(alerts.alertId == 1 || alerts.alertId == 4 || alerts.alertId == 8 || alerts.alertId == 9)"					
+					maxlength="20" min="0" max="100" ng-required="alerts.alertId == 8" ng-readonly="alerts.alertId == 4 || alerts.alertId == 9">
+					 
+					<div ng-show="saveConfigForm.parameterIdHour.$error.required && saveConfigForm.$submitted && alerts.alertId == 5" ng-messages="saveConfigForm.parameterIdHour.$error">
+		                <div ng-messages-include="error-list1.html"></div>
+		            </div>
+		            <div ng-show="saveConfigForm.parameterIdMin.$error.required && saveConfigForm.$submitted && (alerts.alertId == 2 || alerts.alertId == 3)" ng-messages="saveConfigForm.parameterIdMin.$error">
+		                <div ng-messages-include="error-list1.html"></div>
+		            </div>
+		            <div ng-show="saveConfigForm.parameterIdTemp.$error.required && saveConfigForm.$submitted && (alerts.alertId == 6 || alerts.alertId == 7)" ng-messages="saveConfigForm.parameterIdTemp.$error">
+		                <div ng-messages-include="error-list1.html"></div>
+		            </div>
+		            <div ng-show="saveConfigForm.parameterId.$error.required && saveConfigForm.$submitted && (alerts.alertId == 8)" ng-messages="saveConfigForm.parameterId.$error">
+		                <div ng-messages-include="error-list1.html"></div>
+		            </div>
+		            <div ng-show="saveConfigForm.parameterIdHour.$error.number && saveConfigForm.$submitted && !saveConfigForm.parameterIdHour.$error.required && alerts.alertId == 5">
+		                <div class="error size-15">Please enter valid number</div>
+		            </div>
+		            <div ng-show="saveConfigForm.parameterIdMin.$error.number && saveConfigForm.$submitted && !saveConfigForm.parameterIdMin.$error.required && (alerts.alertId == 2 || alerts.alertId == 3)">
+		                <div class="error size-15">Please enter valid number</div>
+		            </div>
+		            <div ng-show="saveConfigForm.parameterIdTemp.$error.number && saveConfigForm.$submitted && !saveConfigForm.parameterIdTemp.$error.required && (alerts.alertId == 6 || alerts.alertId == 7)">
+		                <div class="error size-15">Please enter valid number</div>
+		            </div>
+		            <div ng-show="saveConfigForm.parameterId.$error.number && saveConfigForm.$submitted && !saveConfigForm.parameterId.$error.required && alerts.alertId == 8">
+		                <div class="error size-15">Please enter valid number</div>
+		            </div>
+		             <p class="error" ng-if="alerts.alertId == 5 && !saveConfigForm.parameterIdHour.$error.required && saveConfigForm.$submitted" 
+		             ng-show="saveConfigForm.parameterIdHour.$error.min || saveConfigForm.parameterIdHour.$error.max && alerts.alertId == 5">Please enter value between 1 to 24</p>
+		             
+		             <p class="error" ng-if="(alerts.alertId == 2 || alerts.alertId == 3) && !saveConfigForm.parameterIdMin.$error.required && saveConfigForm.$submitted"
+		              ng-show="saveConfigForm.parameterIdMin.$error.min || saveConfigForm.parameterIdMin.$error.max && (alerts.alertId == 2 || alerts.alertId == 3)">Please enter value between 10 to 300</p>
+		              	
+		             <p class="error" ng-if="(alerts.alertId == 6 || alerts.alertId == 7) && !saveConfigForm.parameterIdTemp.$error.required && saveConfigForm.$submitted"
+		              ng-show="saveConfigForm.parameterIdTemp.$error.min || saveConfigForm.parameterIdTemp.$error.max && (alerts.alertId == 6 || alerts.alertId == 7)">Please enter value between 0 to 150</p>
+		              
+		              <p class="error" ng-if="alerts.alertId == 8 && !saveConfigForm.parameterId.$error.required && saveConfigForm.$submitted"
+		              ng-show="saveConfigForm.parameterId.$error.min || saveConfigForm.parameterId.$error.max && alerts.alertId == 8">Please enter value between 0 to 100</p>
+			</div>
+			<span ng-if="alerts.alertId == 7 || alerts.alertId == 6" class="line-height-30">
+				<div class="col-sm-4">
+					<select class="form-control" disabled name="alertDegreePreference" ng-model="alerts.alertDegreePreference">
+						<option value="" selected>Fahrenheit</option>
+					</select>
+				</div>
+			</span> 
+			<span ng-if="alerts.alertId != 1" class="line-height-30">{{alerts.parameterUnit}}</span>			
+			<div class="col-sm-6" ng-if="alerts.alertId == 1">
+				<input type="text" ng-model="alerts.parameterId" class="form-control" name="parameterId" required readonly="readonly">
+				<div ng-show="saveConfigForm.$error && saveConfigForm.$submitted" ng-messages="saveConfigForm.parameterId.$error">
+					<div ng-messages-include="error-list1.html"></div>
+				</div>
+			</div>
+			<div class="col-sm-3" ng-if="alerts.alertId == 1">
+				<select class="form-control" name="priority"
+					ng-model="alerts.parameterUnit">
+					<option value="Off">Off</option>
+					<option value="Auto">Auto</option>
+					<option value="Cool">Cool</option>
+					<option value="Heat">Heat</option>
+				</select>
+			</div>
+
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div class=" col-sm-10 col-lg-6">
+		<div class="form-group">
+			<label for="email"
+				class="weight-400 size-14 control-label col-sm-3 col-xs-12 text-left-imp">Customer</label>
+			<div class="col-md-9 col-xs-12">
+				<label for="email"
+					class="weight-400 size-14 control-label text-left-imp">{{alerts.customer}}</label>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div class=" col-sm-10 col-lg-6">
+		<div class="form-group">
+			<label for="email"
+				class="weight-400 size-14 control-label col-sm-3 col-xs-12 text-left-imp">Action
+				List</label>
+			<div class="col-md-8 col-xs-10">
+				<ul id="sortable">
+					<li ng-repeat="temp in actionList track by $index">
+						<div class="row">
+							<div class="col-xs-12 b-margin-10 input-move">
+								<input type="text"
+									class="form-control user-actions clear ui-state-active"
+									ng-value="temp.userAction" ng-model="alerts.userAction[$index]"
+									maxlength = 100 name="actionItems"> <span class="icon-move  size-16"></span>
+								<span class="display-cell"><i
+									class="icon-close-box size-35 cursor text-dark"
+									aria-hidden="true" ng-click="removeRow($index)"></i></span>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="col-xs-12">
+				<button class="btn btn-primary pull-right" type="button"
+					ng-click="addRow()">Add New Row</button>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div class="col-sm-10 col-lg-6">
+		<div class="form-group">
+			<label for="email"
+				class="weight-400 size-14 control-label col-xs-12 col-sm-3 col-xs-12 text-left-imp">Status</label>
+			<div class="col-md-8 col-xs-12">
+				<div class="radio">
+					<label> <input type="radio" name="alerts.status"
+						ng-model="alerts.alertStatus" ng-value="1"> Active
+					</label>
+				</div>
+				<div class="radio">
+					<label> <input type="radio" name="alerts.parameterId"
+						ng-model="alerts.alertStatus" ng-value="0"> InActive
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div class="col-xs-12">
+		<button type="button" onclick="history.back()"
+			class="btn btn-default pull-right margin-left10 mob-bottom-10">Cancel</button>
+		<button type="submit"
+			class="btn btn-primary pull-right margin-left10 mob-bottom-10">Save</button>
+		<button type="button" ng-click="restoreConfiguration($event)"
+			class="btn btn-default pull-right margin-left10 mob-bottom-10">Reset
+			to Default</button>
+		<div class="clear"></div>
+		<gap></gap>
+	</div>
+
+	<script id="error-list1.html" type="text/ng-template">
+    	<div class="error size15" ng-message="required">This field is required</div>
+    	<div class="error" ng-message="maxlength50">Maximum length of this field is 50 characters</div>
+		<div class="error" ng-message="maxlength20">Maximum length of this field is 20 characters</div>
+	</script>
+</form>
+<script>
+    $(function() {
+        $("#sortable").sortable();
+        $("#sortable").disableSelection();
+    });
+</script>

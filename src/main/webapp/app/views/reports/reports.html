@@ -1,0 +1,155 @@
+<div class="clear"></div>
+<div class="pull-right margin-10-15" ng-click="showDetails = !showDetails">
+<i class="icon-down-arrow size-15 thick-border" ng-show="!showDetails"></i>
+<i class="icon-right-arrow size-15 thick-outline margin-left-right-1" ng-show="showDetails"></i>
+</div>
+<div class="min-height-40">
+    <form role="form" name="reportForm" novalidate="" ng-submit="getReportData(reportForm)" autocomplete="off">
+        <div class="md-padding" ng-show="!showDetails">
+            <div class="row">
+                <div class="col-lg-9 col-xs-12">
+                    <div class="row">
+                        <div class="form-group required col-sm-6 col-xs-12">
+                            <label for="" class="weight-500 control-label size-14">Reports</label>
+                            <select class="form-control no-rounded" name="reportType" ng-model="report.reportType" ng-options="option.id as option.name for option in reportOptions" ng-change="changeReportType()" required></select>
+                            <div class="error-container last-error-container" ng-show="reportForm.reportType.$error && reportForm.$submitted" ng-messages="reportForm.reportType.$error">
+                                <div ng-messages-include="error-list.html"></div>
+                            </div>
+                        </div>
+                        <div class="form-group required col-sm-6 col-xs-12">
+                            <label for="" class="weight-500 control-label size-14">Customer</label>
+                            <select class="form-control" name="customer" ng-model="report.customer" ng-options="option.id as option.label for option in customers" ng-change="getGroups()"></select>
+                        </div>
+
+                        <div class="form-group col-sm-6 col-xs-12">
+                            <label for="" class="weight-500 size-14">Group</label>
+                            <select class="form-control" id="group" name="group" ng-model="report.group" ng-options="option.groupId as option.groupName for option in groups" ng-change="getSites()">
+                                <option value="">All</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6 col-xs-12">
+                            <label for="" class="weight-500 size-14">Sites</label>
+                            <select class="form-control" id="site" name="site" ng-model="report.site" ng-change="getDevices()" ng-options="option.siteId as option.siteName for option in sites">
+                                <option value="">All</option>
+                            </select>
+                        </div>
+                        <div class="form-group required col-sm-6 col-xs-12" ng-show="report.reportType == 6">
+                            <label for="" class="weight-500 control-label size-14">Devices</label>
+                            <select class="form-control" id="device" name="device" ng-model="report.device" ng-options="option.deviceId as option.name for option in devices" ng-change="changeDevices()">
+                            	<option value="">Select Device</option>
+                            </select>
+                            <div class="error" ng-if="!report.device && report.reportType == 6 && reportForm.$submitted">This field is required</div>
+                        </div>
+                        <div class="form-group required col-sm-6 col-xs-12" ng-show="report.reportType == 6">
+                            <label for="" class="weight-500 control-label size-14">Parameters</label>
+                            <div ng-dropdown-multiselect="" options="parameterOptions" selected-model="parameterSelected" checkboxes="true" extra-settings="parameterSettings" translation-texts="paramterscustomTexts"></div>
+                            <div class="error" ng-if="parameterSelected.length == 0 && report.reportType == 6 && reportForm.$submitted">This field is required</div>
+                        </div>
+                        <div class="form-group col-sm-6 col-xs-12">
+                            <label for="" class="weight-500 size-14">Time</label>
+                            <select class="form-control" name="time" ng-model="report.time" ng-options="option.id as option.name for option in timeOptions" ng-change="getDates()"></select>
+                        </div>
+                        <div class="form-group required col-sm-6 col-xs-12">
+                            <label for="" class="weight-500 control-label size-14">Date Range</label>
+                            <div class="form-inline">
+                                <div class="form-group relative pull-left mob-margin-right-3">
+                                    <label for="inputfrom" class="weight-400 size-14 line-height-30">From</label>&nbsp;
+                                    <div class="relative  mob-blk-desk-inline">
+                                    <input id="inputfrom" type="text" class="no-bg form-control height-30 fromTo-width"  required name="fromDate" readonly uib-datepicker-popup="MM/dd/yyyy" ng-model="report.fromDate" is-open="popup1.opened" ng-required="true" close-text="Close" max-date="report.toDate" ng-change="select()" ng-click="open1()" />
+                                    <label class="icon-calander size-20 select-date" for="inputfrom"></label>
+                                    </div>
+                                    <div class="error-container last-error-container error-separate" ng-show="reportForm.fromDate.$error && reportForm.$submitted" ng-messages="reportForm.fromDate.$error">
+                                        <div ng-messages-include="error-list.html"></div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="form-group relative pull-left">
+                                    <label for="inputto" class="weight-400 size-14 line-height-30">&nbsp;&nbsp;&nbsp;To</label>&nbsp;
+                                    <div class="relative  mob-blk-desk-inline">
+                                    <input id="inputto" type="text" class="no-bg form-control height-30 fromTo-width" required name="toDate"  readonly uib-datepicker-popup="MM/dd/yyyy" ng-model="report.toDate" is-open="popup2.opened" ng-required="true" close-text="Close" min-date="report.fromDate" ng-change="select()" ng-click="open2()" />
+                                    <label class="icon-calander size-20 select-date" for="inputto"></label>
+                                    </div>
+                                    <div class="error-container last-error-container error-separate" ng-show="reportForm.toDate.$error && reportForm.$submitted" ng-messages="reportForm.toDate.$error">
+                                        <div ng-messages-include="error-list.html"></div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="error" ng-show="errors.devicesLength">
+                    	<p ng-repeat="errorObj in errors.devicesLengthMessage track by $index">{{errorObj}}</p>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <button type="submit" class="btn btn-primary pull-right margin-left10">Analyze</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<hr class="no-margin">
+<div class="x-md-padding">
+    <div class="t-margin-15">
+    	<div class="pull-left">
+           <div ng-if="labelDisplay.device">
+	    		<div class="weight-500" ng-if="labelDisplay.customer">{{labelDisplay.customer}}
+	                <span class="weight-500" ng-if="labelDisplay.group">- {{labelDisplay.group}}</span>
+	                <span class="weight-500" ng-if="labelDisplay.site">- {{labelDisplay.site}}</span>
+	            </div>
+	            <div class="weight-500" ng-if="labelDisplay.device"><a ng-click="deviceRedirect();">{{labelDisplay.device}}</a></div>
+    		</div>
+    		<div ng-if="!labelDisplay.device">
+    			<div ng-if="labelDisplay.site">
+		    		<div class="weight-500" ng-if="labelDisplay.customer">{{labelDisplay.customer}}
+		                <span class="weight-500" ng-if="labelDisplay.group">- {{labelDisplay.group}}</span>
+		            </div>
+		            <div class="weight-500" ng-if="labelDisplay.site">{{labelDisplay.site}}</div>
+		        </div>
+		        <div ng-if="!labelDisplay.site">
+		        	<div ng-if="labelDisplay.group">
+			    		<div class="weight-500" ng-if="labelDisplay.customer">{{labelDisplay.customer}}</div>
+			            <div class="weight-500" ng-if="labelDisplay.group">{{labelDisplay.group}}</div>
+			        </div>
+			        <div ng-if="!labelDisplay.group">
+			    		<div class="weight-500" ng-if="labelDisplay.customer">{{labelDisplay.customer}}</div>
+			        </div>
+		        </div>
+    		</div>
+            <div ng-if="labelDisplay.reportType">{{labelDisplay.reportType}}</div>
+            <div ng-if="labelDisplay.time">{{labelDisplay.time}}</div>
+            <div ng-if="labelDisplay.from && labelDisplay.to">{{labelDisplay.from}} <span ng-if="labelDisplay.to">-</span> {{labelDisplay.to}}</div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="relative">
+    	<span class="icon-right-arrow size-50 vertical-center-right cursor rotate-180" ng-show="report.nameType != 'customer' && reportTypeStatus != 6 && (commonChartData.length > 0 || commonChartData.data.length > 0)" ng-click="backChart(report.nameType)"></span>
+        <hc-pie-chart ng-if="commonChartData.length > 0 && reportTypeStatus == 1" asc="{{report.mainTitle}}" desc="{{report.subTitle}}" callback-fn="ctrlFn(arg1,arg2)" class="col-xs-12 col-md-10 col-md-offset-1" id="container1" name="{{report.nameType}}" data="commonChartData" type="{{reportTypeStatus}}"></hc-pie-chart>
+        <div ng-if="commonChartData.length <= 0 && reportTypeStatus == 1" class="text-center error col-centered">No Data Found</div>
+        <hc-pie-chart ng-if="commonChartData.length > 0 && reportTypeStatus == 2" asc="{{report.mainTitle}}" desc="{{report.subTitle}}" callback-fn="ctrlFn(arg1,arg2)" class="col-xs-12 col-md-10 col-md-offset-1" id="container2" name="{{report.nameType}}" data="commonChartData" type="{{reportTypeStatus}}"></hc-pie-chart>
+        <div ng-if="commonChartData.length <= 0 && reportTypeStatus == 2" class="text-center error col-centered">No Data Found</div>
+        <hc-pie-chart ng-if="commonChartData.length > 0 && reportTypeStatus == 4" asc="{{report.mainTitle}}" desc="{{report.subTitle}}" callback-fn="ctrlFn(arg1,arg2)" class="col-xs-12 col-md-10 col-md-offset-1" id="container3" name="{{report.nameType}}" data="commonChartData" type="{{reportTypeStatus}}"></hc-pie-chart>
+        <div ng-if="commonChartData.length <= 0 && reportTypeStatus==4" class="text-center error col-centered">No Data Found</div>
+        <hc-pie-chart ng-if="commonChartData.length > 0 && reportTypeStatus == 5" asc="{{report.mainTitle}}" desc="{{report.subTitle}}" callback-fn="ctrlFn(arg1,arg2)" class="col-xs-12 col-md-10 col-md-offset-1" id="container4" name="{{report.nameType}}" data="commonChartData" type="{{reportTypeStatus}}"></hc-pie-chart>
+        <div ng-if="commonChartData.length <= 0 && reportTypeStatus == 5" class="text-center error col-centered">No Data Found</div>
+        <hc-dount-pie-chart ng-if="commonChartData.data.length > 0 && reportTypeStatus == 3" asc="{{report.mainTitle}}" desc="{{report.subTitle}}" callback-fn="ctrlFn(arg1,arg2)" class="col-xs-12 col-md-10 col-md-offset-1" id="container5" name="{{report.nameType}}" data="commonChartData"></hc-dount-pie-chart>
+        <div ng-if="commonChartData.data.length <= 0 && reportTypeStatus == 3" class="text-center error col-centered">No Data Found</div>
+    	<div class="clear"></div>
+    </div>
+    <div>
+   		<span class="icon-right-arrow size-50 pull-right cursor rotate-180" ng-show="report.nameType != 'customer' && reportTypeStatus == 6 && (commonChartData.tempurateList.length > 0 || commonChartData.onOffList.length > 0)" ng-click="backChart(report.nameType)">
+                <span class="path1"></span><span class="path2"></span>
+        </span>   
+        <hc-spline-chart ng-if="commonChartData.tempurateList.length > 0 && reportTypeStatus == 6" asc="{{report.mainTitle}}" desc="{{report.subTitle}}" class="col-xs-12 col-md-12 col-lg-12" id="container7" data="commonChartData.tempurateList"></hc-spline-chart>
+        <hc-spline-fan-chart ng-if="commonChartData.onOffList.length > 0 && reportTypeStatus == 6" asc="{{report.mainTitle}}" desc="{{report.subTitle}}" class="col-xs-12 col-md-12 col-lg-12" id="container6" data="commonChartData.onOffList"></hc-spline-fan-chart>
+        <div ng-if="(commonChartData.onOffList.length <= 0 && commonChartData.tempurateList.length <= 0 && reportTypeStatus == 6) || (!commonChartData.onOffList && !commonChartData.tempurateList && reportTypeStatus == 6)" class="text-center error col-centered">No Data Found</div>
+    </div>
+</div>
+<br/>
+<script id="error-list.html" type="text/ng-template">
+    <div class="error size15" ng-message="required">This field is required</div>
+    <div class="error" ng-message="maxlength">Maximum length of this field is 100 characters</div>
+    <div class="error" ng-message="maxlength20">Maximum length of this field is 20 characters</div>
+    <div class="error" ng-message="maxlength32">Maximum length of this field is 32 characters</div>
+</script>

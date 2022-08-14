@@ -1,0 +1,35 @@
+<div class="blue-bg-bar height-50 relative">
+	<div class="text-center white-text position-middle-center line-height-50 size-16"></div>
+</div>
+<div class="x-md-padding">
+	<h1 class="size-16 weight-700 pull-left  line-height-40 no-margin ng-binding">
+		{{user.firstName}} {{user.lastName}}&nbsp;<span class="text-muted size-12"></span>
+	</h1>
+	<a ui-sref="users.settings.profile.edit($state.params)">
+		<p class="pull-right line-height-40 no-margin">
+			<i class="icon-edit size-16 relative" aria-hidden="true"></i> Edit
+		</p>
+	</a>
+<div class="clear"></div>
+</div>
+
+<s-gray-gap></s-gray-gap>
+<gap></gap>
+<div class="clear"></div>
+<!-- <p class="no-margin no-padding no-line-height show-details cursor"
+	ng-click="showUserDetails = !showUserDetails;$event.stopPropagation();">{{
+	!showUserDetails ? "-" : "+" }} Details</p> -->
+<div class="col-xs-12">
+<div class="details-drop" ng-if="user">
+	<p class="no-margin">
+		{{user.roleName}} <span ng-if="!user.roleName.toLowerCase().endsWith('role')">Role</span>&nbsp; <br/>
+		{{customPhonePattern(user.phoneNumber)}}&nbsp;<span class="middle-dot"></span>&nbsp;{{user.emailId}}&nbsp;<br/>
+	</p>
+	<p class="no-margin">
+		Report Preferences: {{getReportPreference(user.reportPreference)}}&nbsp;<span class="middle-dot"></span>&nbsp;Report Level: {{getReportLevel(user.reportLevel)}}&nbsp;<span class="middle-dot"></span>&nbsp;Notification Preferences: {{user.alertPreference != 0 ?(user.alertPreference == 1 ?'Email' : (user.alertPreference == 2 ?'SMS':'Email, SMS')) : 'None'}}&nbsp;<br/>
+		<span ng-if="!user.isCSO">Last Session on {{user.lastLoginInfo || (user.isCSO == 1 ? 'NA':'Never')}}</span>
+		<br/>Status: {{(user.isActive == 1 ? 'Active':(user.isActive == 0 ? 'Inactive':(user.isActive == 2 ? 'Active & Locked' : 'Deleted')))}}
+	</p>
+</div>
+<br />
+</div>

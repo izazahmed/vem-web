@@ -1,0 +1,313 @@
+<div class="row">
+    <h1 class="no-margin padding text-center size-16 weight-700 text-center modal-title">New Site</h1>
+</div>
+<form role="form" name="createLocationForm" novalidate="" ng-submit="createLocation(createLocationForm)" id="createLocationForm" autocomplete="off">
+    <div class="row">
+        <div class="form-group required col-xs-8">
+            <label for="email" class="weight-400 control-label size-14">Site Name</label>
+            <input type="hidden" ng-model="location.customerId" class="form-control">
+            <input type="text" maxlength="50" maxlength50="siteName" class="form-control" ng-model="location.siteName" name="siteName" required>
+            <div class="error-container last-error-container" ng-show="createLocationForm.siteName.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteName.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-4">
+            <label for="email" class="weight-400 size-14">Store #</label>
+            <input type="text" maxlength="20" class="form-control" maxlength20="siteInternalId" ng-pattern="/^[0-9]*$/" ng-model="location.siteInternalId" name="siteInternalId">
+            <div class="error" ng-show="createLocationForm.siteInternalId.$error.pattern && createLocationForm.$submitted">Store # should contain numbers only</div>
+            <div class="error-container last-error-container" ng-show="createLocationForm.siteInternalId.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteInternalId.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+            <div class="error" ng-model="siteInternalIdError" ng-show="errors.internalId">{{siteInternalIdError}}</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="email" class="weight-400 size-14">Type</label>
+        <ui-select allow-free-text="true" ng-model="opt.selected" theme="bootstrap" title="Choose a type">
+            <ui-select-match allow-clear="true" placeholder="Select or search a type in the list...">{{$select.selected.lable}}</ui-select-match>
+            <ui-select-choices repeat="opt in siteTypeOptions | filter: $select.search">
+                <span ng-bind-html="opt.lable | highlight: $select.search"></span>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+    <div class="form-group">
+        <input type="text" ng-model="location.siteTypeNew" maxlength="50" name="siteTypeNew" ng-show="opt.selected.value==0" class="form-control">
+    </div>
+    <div class="form-group required">
+        <label for="email" class="weight-400 control-label size-14">Address</label>
+        <input type="text" maxlength="50" maxlength50="siteAddLine1" class="form-control" ng-model="location.siteAddLine1" name="siteAddLine1" required>
+        <div class="error-container last-error-container" ng-show="createLocationForm.siteAddLine1.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteAddLine1.$error">
+            <div ng-messages-include="error-list.html"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <input type="text" maxlength="50" maxlength50="siteAddLine2" ng-model="location.siteAddLine2" name="siteAddLine2" class="form-control">
+        <div class="error-container last-error-container" ng-show="createLocationForm.siteAddLine2.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteAddLine2.$error">
+            <div ng-messages-include="error-list.html"></div>
+        </div>
+    </div>
+    <div class="row">
+    
+    <!-- ZipCode Search -->
+    
+        <div class="form-group required col-xs-12 col-sm-4">
+            <label for="email" class="weight-400 control-label size-14">City</label>
+            <input type="text"  placeholder="City"   class="form-control site-city-name"   ng-model="location.siteCityName" name="siteCityName" required>
+            <div class="error-container last-error-container" ng-show="(createLocationForm.siteCityName.$error && createLocationForm.$submitted) || siteCityNameRequired" ng-messages="createLocationForm.siteCityName.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+        
+        </div>
+        
+         
+        <div class="form-group required col-xs-12 col-sm-4">
+            <label for="email" class="weight-400 control-label size-14">State</label>
+             <input type="text" placeholder="State"  class="form-control site-state-name" ng-model="location.siteStateName" name="siteStateName" required>
+            <div class="error-container last-error-container" ng-show="(createLocationForm.siteStateName.$error && createLocationForm.$submitted) || siteStateNameRequired" ng-messages="createLocationForm.siteStateName.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+        
+        </div>
+        
+         
+       
+       <div class="form-group required col-xs-12 col-sm-4">
+            <label for="email" class="weight-400 control-label size-14">Zip Code</label>
+            <input type="text" maxlength="5" minlength="5" class="form-control" ng-pattern="/^[0-9]*$/" ng-model="location.siteZipCode" name="siteZipCode" required ng-blur="getStatesAndCities(location.siteZipCode)" placeholder="Enter zip code" ng-click="makeDisable = true;getStateCityValidate()">
+            <div class="error" ng-show="createLocationForm.siteZipCode.$error.pattern && createLocationForm.$submitted">Zip Code should contain numbers only</div>
+            <div class="error-container last-error-container" ng-show="createLocationForm.siteZipCode.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteZipCode.$error">
+                <div class="error size15" ng-message="required">This field is required</div>
+            </div>
+            <div class="error-container last-error-container" ng-show="createLocationForm.siteZipCode.$error && createLocationForm.siteZipCode.$touched && !createLocationForm.siteZipCode.$error.pattern" ng-messages="createLocationForm.siteZipCode.$error">
+                <div class="error" ng-message="minlength">Length of this field should be 5 characters</div>
+            </div>
+            <div class="error" ng-model="siteZipcodeError" ng-show="errors.zipcode">{{siteZipcodeError}}</div>
+        </div>
+        
+        <!-- <div class="form-group required col-xs-12 col-sm-4">
+            <label for="email" class="weight-400 control-label size-14">State</label>
+            <ui-select ng-model="opt.state" ng-required="true" name="state" theme="bootstrap" title="Choose a state" on-select="changeState($item)">
+                <ui-select-match allow-clear="true" placeholder="Select state">{{$select.selected.stateName}}</ui-select-match>
+                <ui-select-choices repeat="opt in siteStateOptions | filter: $select.search">
+                    <span ng-bind-html="opt.stateName | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+            <div class="error-container last-error-container" ng-show="createLocationForm.state.$error && createLocationForm.$submitted" ng-messages="createLocationForm.state.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+            <div ng-dropdown-multiselect="" options="siteStateOptions" selected-model="stateSelected" extra-settings="mainsettings" events="changeStateEvents" translation-texts="statecustomTexts"></div>
+           	<div class="error" ng-show="errors.state">This field is required</div>
+        </div>
+        <div class="form-group required col-xs-12 col-sm-4">
+            <label for="email" class="weight-400 control-label size-14">City</label>
+            <ui-select ng-model="opt.city" ng-required="true" theme="bootstrap" name="city" title="Choose a city" on-select="changeCity($item)">
+                <ui-select-match allow-clear="true" placeholder="Select city">{{$select.selected.cityName}}</ui-select-match>
+                <ui-select-choices repeat="opt in siteCityOptions | filter: $select.search" refresh="refreshCities($select.search)">
+                    <span ng-bind-html="opt.cityName | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+            <div class="error-container last-error-container" ng-show="createLocationForm.city.$error && createLocationForm.$submitted" ng-messages="createLocationForm.city.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+            <div ng-dropdown-multiselect="" options="siteCityOptions" selected-model="citySelected" extra-settings="mainsettings" events="changeCityEvents" translation-texts="citycustomTexts"></div>
+            <div class="error" ng-show="errors.city">This field is required</div>
+        </div>
+        <div class="form-group required col-xs-12 col-sm-4">
+            <label for="email" class="weight-400 control-label size-14">Zip Code</label>
+            <input type="text" maxlength="6" class="form-control" maxlength5="siteZipCode" ng-pattern="/^[0-9]*$/" ng-model="location.siteZipCode" name="siteZipCode" required ng-click="makeDisable = true" ng-blur="checkzipcode()">
+            <div class="error" ng-show="createLocationForm.siteZipCode.$error.pattern">Zip Code should contain numbers only</div>
+            <div class="error-container last-error-container" ng-show="createLocationForm.siteZipCode.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteZipCode.$error">
+                <div class="error size15" ng-message="required">This field is required</div>
+            </div>
+            <div class="error-container last-error-container" ng-show="createLocationForm.siteZipCode.$error && createLocationForm.siteZipCode.$touched" ng-messages="createLocationForm.siteZipCode.$error">
+                <div class="error" ng-message="maxlength5">Maximum length of this field is 5 characters</div>
+                <div class="error" ng-message="minlength">Minimum length of this field is 5 characters</div>
+            </div>
+            <div class="error" ng-model="siteZipcodeError" ng-show="errors.zipcode">{{siteZipcodeError}}</div>
+        </div> -->
+    </div>
+    <div class="form-group required">
+        <label for="email" class="weight-400 control-label size-14">Site Phone</label>
+        <input type="text" maxlength="20" maxlength20="sitePhNo" ui-mask="(999) 999-9999" ui-mask-placeholder ui-mask-placeholder-char="_" ng-model="location.sitePhNo" name="sitePhNo" class="form-control" required>
+        <div class="error-container last-error-container" ng-show="createLocationForm.sitePhNo.$error && createLocationForm.$submitted" ng-messages="createLocationForm.sitePhNo.$error">
+            <div ng-messages-include="error-list.html"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="email" class="weight-400 size-14">District</label>
+        <input type="text" maxlength="50" maxlength50="siteDistrict" ng-model="location.siteDistrict" name="siteDistrict" class="form-control">
+        <div class="error-container last-error-container" ng-show="createLocationForm.siteDistrict.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteDistrict.$error">
+            <div ng-messages-include="error-list.html"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="email" class="weight-400 size-14">Region</label>
+        <input type="text" maxlength="50" maxlength50="siteRegion" ng-model="location.siteRegion" name="siteRegion" class="form-control">
+        <div class="error-container last-error-container" ng-show="createLocationForm.siteRegion.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteRegion.$error">
+            <div ng-messages-include="error-list.html"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="email" class="weight-400 size-14">Area</label>
+        <input type="text" maxlength="50" maxlength50="siteArea" ng-model="location.siteArea" name="siteArea" class="form-control">
+        <div class="error-container last-error-container" ng-show="createLocationForm.siteArea.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteArea.$error">
+            <div ng-messages-include="error-list.html"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="email" class="weight-400 size-14">Time zone</label>
+    </div>
+    <div class="row" ng-init="">
+        <div class="col-lg-6  col-sm-6 col-xs-12">
+            <gap></gap>
+            <input type="text" readonly class="form-control" ng-model="location.siteTimeZone" name="siteTimeZone">
+        </div>
+        <div class="col-lg-3 col-sm-3 col-xs-12">
+            <div class="radio">
+                <label>
+                    <input type="radio" ng-model="location.siteHrsFormate" ng-value="1" name="siteHrsFormate" ng-click="changeTimeFormat(true)"> 12hr Format
+                </label>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-3 col-xs-12">
+            <div class="radio">
+                <label>
+                    <input type="radio" ng-model="location.siteHrsFormate" ng-value="0" name="siteHrsFormate" ng-click="changeTimeFormat(false)"> 24hr Format
+                </label>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="form-group">
+        <label for="email" class="weight-400 size-14">Store Hours</label>
+    </div>
+ 
+    <div class="total-site-hours">
+        <div class="row site-hours" ng-repeat="siteHrs in siteHrs track by $index">
+            <div class="form-group col-xs-2">
+                <label for="email" class="weight-400 size-14"></label>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="location.siteHours[$index].dayOfWeek" name="dayOfWeek" ng-click="location.siteHours[$index].dayOfWeekChecked = !location.siteHours[$index].dayOfWeekChecked;clearStoreDate($index, location.siteHours[$index].dayOfWeek)" ng-true-value="{{siteHrs.value}}" ng-false-value="0" ng-change="clearDate()"> {{siteHrs.lable}}
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-xs-5">
+                <b ng-if="$index == '0' "><label for="email" class="weight-400 size-14">Open</label></b>
+                <div class="input-group" disable-all="!location.siteHours[$index].dayOfWeekChecked">
+                    <div show-spinners="false" ng-change="copyStoreHours();" mousewheel="false" uib-timepicker ng-model="location.siteHours[$index].openHrs" hour-step="hstep" minute-step="mstep" show-meridian="getMeridian" my-enter></div>
+                </div>
+            </div>
+            <div class="form-group col-xs-5">
+                <b ng-if="$index == '0' "><label for="email" class="weight-400 size-14">Close</label></b>
+                <div class="input-group" disable-all="!location.siteHours[$index].dayOfWeekChecked">
+                    <div show-spinners="false" ng-change="copyStoreHours();" mousewheel="false" uib-timepicker ng-model="location.siteHours[$index].closeHrs" min="location.siteHours[$index].openHrs" hour-step="hstep" minute-step="mstep" show-meridian="getMeridian" my-enter></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1 class="size-16 weight-700">Groups</h1>
+    <hr class="no-margin" />
+    <gap></gap>
+    <ui-select multiple allow-free-text="true" ng-model="opt.group" theme="bootstrap" title="Choose a group">
+        <ui-select-match placeholder="Select or search a group in the list...">{{$item.lable}}</ui-select-match>
+        <ui-select-choices repeat="opt in siteGroupOptions | filter: $select.search">
+            <span ng-bind-html="opt.lable | highlight: $select.search"></span>
+        </ui-select-choices>
+    </ui-select>
+    <h1 class="size-16 weight-700">Degree Preferences</h1>
+    <hr class="no-margin" />
+    <gap></gap>
+    <div class="row">
+        <div class="col-xs-6">
+            <select class="form-control" name="degreePreference" ng-model="location.degreePreference" ng-options="option.value as option.label for option in degreePreferenceOptions" ng-init="0" ng-disabled="true"></select>
+        </div>
+    </div>
+    <h1 class="size-16 weight-700">Thermostat Preferences</h1>
+    <hr class="no-margin" />
+    <gap></gap>
+    <div class="row">
+        <div class="col-xs-6 col-sm-4">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="thermostatePreferenceFan" ng-model="location.fanOn" ng-value="1"> Fan On
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="thermostatePreferenceFan" ng-model="location.fanOn" ng-value="0"> Fan Auto
+                </label>
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-6">
+            <div class="radio">
+                <label>
+                    <input type="checkbox" ng-value="true" ng-model="location.isHVACModeToAuto" name="isHVACModeToAuto"> Reset HVAC to Auto
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="checkbox" ng-value="true" ng-model="location.resetHoldMode" name="resetHoldMode"> Reset Hold to Off
+                </label>
+            </div>
+        </div>
+    </div>
+   <div class="row">
+    <div class="col-lg-3 col-xs-12">
+        <div class="radio">
+            <label><input type="radio" name="lockPref" ng-model="location.lock" ng-value="0"> Unlock </label>
+        </div>
+        <div class="radio">
+            <label><input type="radio" name="lockPref" ng-model="location.lock" ng-value="1"> Partial </label>
+        </div>
+        <div class="radio">
+            <label><input type="radio" name="lockPref" ng-model="location.lock" ng-value="2"> Full </label>
+        </div>
+    </div>
+   </div>
+    <div class="row">
+        <div class="form-group required col-xs-6">
+            <label for="email" class="weight-400 control-label size-14">Min SP</label>
+            <input type="number" class="form-control" empty-zero name="minSP" ng-model="location.minSP" min="45" max="90" required/>
+            <div ng-show="createLocationForm.minSP.$error.required && createLocationForm.$submitted" ng-messages="createLocationForm.minSP.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+            <div ng-show="createLocationForm.minSP.$error.number && createLocationForm.$submitted && !createLocationForm.minSP.$error.required">
+                <div class="error size-15">Please enter valid number</div>
+            </div>
+            <p class="error" ng-if="!createLocationForm.minSP.$error.required && createLocationForm.$submitted" ng-show="createLocationForm.minSP.$error.min || createLocationForm.minSP.$error.max">Please enter value between 45 to 90</p>
+        </div>
+        <div class="form-group required col-xs-6">
+            <label for="email" class="weight-400 control-label size-14">Max SP</label>
+            <input type="number" class="form-control" empty-zero name="maxSP" ng-model="location.maxSP" min="{{location.minSP*1+1}}" max="90" required/>
+            <div ng-show="createLocationForm.maxSP.$error.required && createLocationForm.$submitted" ng-messages="createLocationForm.maxSP.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+            <div ng-show="createLocationForm.maxSP.$error.number && createLocationForm.$submitted && !createLocationForm.maxSP.$error.required">
+                <div class="error size-15">Please enter valid number</div>
+            </div>
+            <p class="error" ng-if="!createLocationForm.maxSP.$error.required" ng-show="createLocationForm.maxSP.$error.max">Please enter value between {{location.minSP*1+1}} to 90</p>
+            <p class="error" ng-if="!createLocationForm.maxSP.$error.required" ng-show="createLocationForm.maxSP.$error.min">Max SP has to be greater than Min SP</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-value="true" ng-model="location.nightlyScheduleDownload" name="nightlyScheduleDownload"> Nightly Schedule Download
+            </label>
+        </div>
+    </div>
+    <hr/>
+    <button type="button" data-dismiss="modal" class="btn btn-default pull-right margin-left10">Cancel</button>
+    <button class="btn btn-primary pull-right margin-left10" ng-disabled="makeDisable">Save</button>
+    <div class="clear"></div>
+    <gap></gap>
+</form>
+<script id="error-list.html" type="text/ng-template">
+    <div class="error size15" ng-message="required">This field is required</div>
+    <div class="error" ng-message="maxlength50">Maximum length of this field is 50 characters</div>
+    <div class="error" ng-message="maxlength20">Maximum length of this field is 20 characters</div>
+    <div class="error" ng-message="maxlength10">Maximum length of this field is 10 characters</div>
+    <div class="error" ng-message="maxlength5">Maximum length of this field is 5 characters</div>
+    <div class="error" ng-message="minlength">Minimum length of this field is 5 characters</div>
+</script>

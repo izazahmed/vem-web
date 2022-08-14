@@ -1,0 +1,108 @@
+<ul class="blue-bg-bar">
+	<li class="pull-right">
+		<div>
+			<span class="line-height-40 white-text size-14 weight-500">Filter By &nbsp;</span>
+			
+            <select class="border text-muted xs-padding" ng-model="report.filterBy" ng-change="filterByChange()">
+                <option value="">All</option>
+                <option value="ReportLevel">Report Level</option>
+                <option value="Customer">Customer</option>
+                <option value="Group">Group</option>
+                <option value="Site">Site</option>
+                <!-- <option value="Date">Date</option> -->
+            </select>
+			<select ng-show="report.filterBy=='ReportLevel'" class="border text-muted xs-padding" ng-model="report.reportLevel" 
+				ng-init="report.reportLevel='1'">
+                <option value="1">Customer</option>
+                <option value="2">Group</option>
+                <option value="3">Site</option>
+            </select>
+            <select ng-show="report.filterBy=='Customer'" class="border text-muted xs-padding" name="customer" ng-model="report.customer"
+            ng-options="option.customerName as option.customerName for option in customers">
+            </select>
+                    	 
+           	<select ng-show="report.filterBy=='Group'" class="border text-muted xs-padding" name="group" ng-model="report.group"
+           	ng-options="option.groupName as option.groupName for option in groups"></select>
+           	<select ng-show="report.filterBy=='Site'" class="border text-muted xs-padding" name="site" ng-model="report.site"
+           	ng-options="option.siteName as option.siteName for option in sites"></select>
+            <input type="text" class="border padding-1" ng-focus="showSearch"
+				ng-show="showSearch" ng-model="reportActivity" />&nbsp;<i
+				class="icon-search size-20 cursor show-search y-padding v-middle white-text" aria-hidden="true"
+				ng-click="showSearch = !showSearch"></i>
+		</div>
+	</li>
+	<div class="clear"></div>
+</ul>
+</div>
+<div class="clear"></div>
+<s-gray-gap></s-gray-gap>
+<div class="border-bottom">
+<div class="x-md-padding">
+     <div class="mob-blk-desk-inline"><span class="line-height-45 weight-500">
+     <span ng-click="checkAll()" class="thick-border" style="padding-top:1px;"><span ng-show="!showMain" class="icon-plus size-16 verticalTxt-btm"><span class="path1"></span><span class="path2"></span></span><span class="size-16 minus" ng-show="showMain">-</span></span>&nbsp; {{filteredReports.length}} / {{reportList.length}} Reports &nbsp;</span>
+	 &nbsp;{{screenWidth}}</div>
+	<div class="mob-blk-desk-inline">
+	<form class="form-inline mob-blk-desk-inline mob-left">
+	  <div class="form-group relative">
+	    <label class="weight-400" for="inputfrom">From</label>&nbsp;<span class="relative"><span class="relative mob-blk-desk-inline"><input id="inputfrom" type="text" class="no-bg form-control height-30" style="width:110px" readonly uib-datepicker-popup="MM/dd/yyyy" ng-model="startDate" is-open="popup1.opened" ng-required="true" close-text="Close" max-date="endDate" ng-click="open1()"/>
+	    <label class="icon-calander size-20 select-date" for="inputfrom"></label></span></span>
+	  </div>
+	  <div class="form-group relative">
+	    <label class="weight-400" for="inputto">To</label>&nbsp;<span class="relative"><span class="relative mob-blk-desk-inline"><input id="inputto" type="text" class="no-bg form-control height-30" style="width:110px" readonly uib-datepicker-popup="MM/dd/yyyy" ng-model="endDate" is-open="popup2.opened" ng-required="true" close-text="Close" min-date="startDate" ng-click="open2()"/>	
+	    <label class="icon-calander size-20 select-date" for="inputto"></label></span></span>   
+	  </div>
+	  <button type="button" ng-click="filterDate()" class="btn btn-primary height-30 mob-bottom-10">Submit</button>
+	</form>
+	</div>
+	<div class="clear"></div>
+</div>
+</div>
+ <ul class="scroll top-144 alternate-list-bg">
+ 
+       	<div ng-show="!isDataAvailable" style="opacity:0" id="nodata">
+           <br/><br/><div class="text-center error col-centered">No Data Found</div>
+        </div>
+        <li class="border-bottom y-padding" ng-repeat="report in filteredReports = (reportList | filter: reportFilter | filter: searchReport)">
+	        <div class="col-xs-12 col-sm-9 size-14">
+	             <h1 class="size-14 weight-400 no-margin show-details">
+					<span ng-click="showDiv = !showDiv;$event.stopPropagation();">{{showPlus ? !showDiv ? "-" : "+" : showDiv ? "-" : "+" }} </span>
+					<a class="u-line link" ng-click="downloadPDF(report);" title="Download">{{report.reportName}}</a>
+				</h1>
+				<div class="no-margin no-line-height details-drop animate-show top3-padding" ng-show="showPlus ? !showDiv : showDiv" style="padding: 8px;">
+					<p class="no-margin">Emailed to {{report.fullName}}</p>
+	              	   	<p class="no-margin">{{report.reportLevelText == 'Customer' ? report.reportLevelText : report.reportLevelText + 's'}}: {{report.specificNames}}</p>
+				</div>
+            </div> 
+            <div class="col-xs-12 col-sm-1 size-14">
+            	<span ng-show="report.reportStatus == 1" class="icon-mail-open size-20" title="Read"></span>
+            	<span ng-show="report.reportStatus != 1" class="icon-mail-close size-20" title="Not Read" ></span>
+            </div>
+            <div class="col-xs-12 col-sm-1 size-14">
+            	<a ng-click="hideDiv($index);$event.stopPropagation();">
+            		<span class="icon-mail-resend size-20" title="Resend"></span>
+                </a>
+            </div>
+            <div class="col-xs-12 col-sm-1 size-14">
+            	<a href="" data-toggle="modal" data-target="#modelDialog" ng-click="deletePDF(report);">
+            		<span class="icon-delete-bulk size-20" title="Delete"></span>
+                </a>
+            </div>
+            <form role="form" name="createReportForm" novalidate="" ng-submit="resendPDF(createReportForm, $index, report)" id="createReportForm" autocomplete="off">
+	            <div class="pull-right" id="div{{$index}}" style="display: none;">
+	           	 <ng-form name="reportForm">
+	            	<input type="email" id="email{{$index}}" name="emailmodel" class="border padding-1" ng-model="reportObject.emails[$index].email" required/>&nbsp;
+					<button class="btn btn-primary pull-right margin-left10">Send</button>
+					<div class="error-container last-error-container" ng-show="reportForm.emailmodel.$error && createReportForm.$submitted" ng-messages="reportForm.emailmodel.$error">
+	                	<div ng-messages-include="error-list.html"></div>
+	                </div>
+	             </ng-form>
+	            </div>
+            </form>
+            <div class="clear "></div>
+        </li>
+    </ul>
+<div class="clear"></div>
+<script id="error-list.html" type="text/ng-template">
+    <div class="error" ng-message="email">Please enter valid email address</div>
+    <div class="error size15" ng-message="required">This field is required</div>
+</script>

@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc.xsd
+http://www.springframework.org/schema/cache 
+http://www.springframework.org/schema/cache/spring-cache.xsd">
+<context:component-scan base-package="com.enerallies" />
+<mvc:annotation-driven/>
+
+<cache:annotation-driven />
+<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" 
+                p:cache-manager-ref="ehcache"/>
+<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
+                p:config-location="classpath:ehcache.xml" p:shared="true"/> 
+
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<property name="prefix">
+		<value>/WEB-INF/views/</value>
+	</property>
+	<property name="suffix">
+		<value>.jsp</value>
+	</property>
+</bean>
+
+<mvc:resources mapping="/assets/**" location="/assets/"/>
+<mvc:resources mapping="/app/**" location="/app/"/>
+
+<!-- Initialization for data source -->
+ <bean id="dataSource" 
+      class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+      <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+      <property name="url" value="jdbc:mysql://veminstance.cluster-cbubwz58graf.us-east-1.rds.amazonaws.com:3306/enerallies_vemqa"/>
+      <property name="username" value="enerallies"/>
+      <property name="password" value="vem!1234"/>
+</bean> 
+
+<bean id="dataSourceRead" 
+      class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+      <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+      <property name="url" value="jdbc:mysql://veminstance.cluster-ro-cbubwz58graf.us-east-1.rds.amazonaws.com:3306/enerallies_vemqa"/>
+      <property name="username" value="enerallies"/>
+      <property name="password" value="vem!1234"/>
+</bean>
+
+
+<!-- This data source is for local, QA & prod start-->
+<!-- <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+  <property name="jndiName" value="java:comp/env/jdbc/vemDataSource"/>
+	<property name="lookupOnStartup" value="true"/>
+  <property name="proxyInterface" value="javax.sql.DataSource"/> 
+</bean>
+<bean id="dataSourceRead" class="org.springframework.jndi.JndiObjectFactoryBean">
+  <property name="jndiName" value="java:comp/env/jdbc/vemDataSourceRead"/>
+	<property name="lookupOnStartup" value="true"/>
+  <property name="proxyInterface" value="javax.sql.DataSource"/> 
+</bean> -->
+<!-- local, QA & prod end-->
+
+<!-- This data source is for dev instance start -->
+ <!-- <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+  <property name="jndiName" value="java:comp/env/jdbc/vemDataSourceqa"/>
+	<property name="lookupOnStartup" value="true"/>
+  <property name="proxyInterface" value="javax.sql.DataSource"/> 
+</bean> 
+
+<bean id="dataSourceRead" class="org.springframework.jndi.JndiObjectFactoryBean">
+  <property name="jndiName" value="java:comp/env/jdbc/vemDataSourceqaRead"/>
+	<property name="lookupOnStartup" value="true"/>
+  <property name="proxyInterface" value="javax.sql.DataSource"/> 
+</bean>  -->
+
+<!-- dev instance end -->
+
+
+<mvc:interceptors>
+     <mvc:interceptor>
+         <mvc:mapping path="/**/*"/>
+         <bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+             <property name="cacheSeconds" value="0"/>
+             <property name="useExpiresHeader" value="true"/>
+             <property name="useCacheControlHeader" value="true"/>
+             <property name="useCacheControlNoStore" value="true"/>
+         </bean>
+     </mvc:interceptor>
+     <bean class="com.enerallies.vem.interceptors.admin.LoginInterceptor" />
+ </mvc:interceptors>
+
+<!-- Initialization for data source -->
+<!-- <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+  <property name="jndiName" value="java:comp/env/jdbc/vemDataSource"/> 
+</bean> -->
+
+ <!-- Definition for AdminDaoImpl bean -->
+ <bean id="adminDaoImpl" class="com.enerallies.vem.daoimpl.admin.AdminDaoImpl">
+      <property name="dataSource"  ref="dataSource" />    
+ </bean> 
+ 
+ <!-- Definition for RoleDaoImpl bean -->
+ <bean id="roleDaoImpl" class="com.enerallies.vem.daoimpl.role.RoleDaoImpl">
+      <property name="dataSource"  ref="dataSource" />    
+ </bean>
+ 
+ <!-- Definition for SiteDaoImpl bean -->
+ <bean id="siteDaoImpl" class="com.enerallies.vem.daoimpl.site.SiteDaoImpl">
+      <property name="dataSource"  ref="dataSource" />    
+ </bean> 
+ 
+  <!-- Definition for CustomerDaoImpl bean -->
+ <bean id="customersDaoImpl" class="com.enerallies.vem.daoimpl.customers.CustomersDaoImpl">
+      <property name="dataSource"  ref="dataSource" />    
+ </bean> 
+ 
+ <!-- Definition for IoTDaoImpl bean -->
+ <bean id="ioTDaoImpl" class="com.enerallies.vem.daoimpl.iot.IoTDaoImpl">
+      <property name="dataSource"  ref="dataSource" />
+      <property name="dataSourceRead"  ref="dataSourceRead" />    
+ </bean>
+ 
+ <!-- Definition for LookUpDaoImpl bean -->
+ <bean id="lookUpDaoImpl" class="com.enerallies.vem.daoimpl.LookUpDaoImpl">
+      <property name="dataSource"  ref="dataSource" />    
+ </bean> 
+ 
+ <!-- Definition for GroupDaoImpl bean -->
+ <bean id="groupDaoImpl" class="com.enerallies.vem.daoimpl.group.GroupDaoImpl">
+      <property name="dataSource"  ref="dataSource" />    
+ </bean> 
+ 
+  <!-- Definition for AlertDaoImpl bean -->
+ <bean id="alertDaoImpl" class="com.enerallies.vem.daoimpl.alert.AlertDaoImpl">
+      <property name="dataSource"  ref="dataSource" />    
+ </bean> 
+ 
+  <!-- Definition for BulkUploadDaoImpl bean -->
+ <bean id="bulkUploadDaoImpl" class="com.enerallies.vem.daoimpl.bulkupload.BulkUploadDaoImpl">
+      <property name="dataSource"  ref="dataSource" />    
+ </bean> 
+ 
+ <!-- Definition for multipart request bean -->
+
+ <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+  <property name="maxUploadSize" value="9244532880" /> 
+  </bean>
+  <bean id="scheduleDaoImpl" class="com.enerallies.vem.daoimpl.schedule.ScheduleDaoImpl">
+      <property name="dataSource"  ref="dataSource" /> 
+      <property name="dataSourceRead"  ref="dataSourceRead" />    
+      
+ </bean>
+ 
+ <bean id="activityLogDaoImpl" class="com.enerallies.vem.daoimpl.activity.ActivityLogDaoImpl">
+      <property name="dataSource"  ref="dataSource" />    
+ </bean>  
+ 
+ <!-- free marker config -->
+ <!-- <bean id="freeMarkerConfigurer" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer"/>
+  -->
+ <!-- Definition for free marker template bean -->
+ <bean id="freemarkerTemplateUtil" class="com.enerallies.vem.util.template.FreemarkerTemplateUtil" />
+ 
+ <!-- Definition for GroupDaoImpl bean -->
+ <bean id="auditDaoImpl" class="com.enerallies.vem.daoimpl.audit.AuditDaoImpl">
+      <property name="dataSource"  ref="dataSource" />    
+ </bean>
+ 
+  <!-- Definition for CommonDaoImpl bean -->
+ <bean id="coomonDaoImpl" class="com.enerallies.vem.daoimpl.common.CommonDaoImpl">
+      <property name="dataSource"  ref="dataSource" />    
+ </bean>
+ 
+  <!-- Definition for DashboardDaoImpl bean -->
+ <bean id="reportDaoImpl" class="com.enerallies.vem.daoimpl.report.ReportDaoImpl">
+      <property name="dataSource"  ref="dataSource" />     
+ </bean> 
+
+ <!-- Definition for WeatherDaoImpl bean -->
+ <bean id="weatherDaoImpl" class="com.enerallies.vem.daoimpl.weather.WeatherDaoImpl">
+      <property name="dataSource"  ref="dataSource" />
+      <property name="dataSourceRead"  ref="dataSourceRead" />    
+ </bean>
+ 
+ <!-- Definition for PdfReportDaoImpl bean -->
+ <bean id="pdfReportDaoImpl" class="com.enerallies.vem.daoimpl.pdfreport.PdfReportDaoImpl">
+      <property name="dataSource"  ref="dataSource" />    
+ </bean>
+ 
+ <!-- Definition for AlertEmailDaoImpl bean -->
+ <bean id="alertEmailDaoImpl" class="com.enerallies.vem.daoimpl.alert.AlertEmailDaoImpl">
+      <property name="dataSource"  ref="dataSource" />    
+ </bean>
+ 
+<bean id="applicationContextProvider" class="com.enerallies.vem.listeners.iot.awsiot.ApplicationContextProvider"></bean>
+ <!-- 
+  For times when you just need to invoke a method on a specific object
+  <bean id="releaseLockJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+      <property name="targetObject" ref="adminService" />
+      <property name="targetMethod" value="releaseLock" />
+  </bean>
+
+  Run the job every 5 seconds with initial delay of 1 second
+  <bean id="simpleTrigger"  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+      <property name="jobDetail" ref="releaseLockJob" />
+      <property name="startDelay" value="1000" />
+      <property name="repeatInterval" value="30000" />
+  </bean>
+
+  Scheduler factory bean to glue together jobDetails and triggers to Configure Quartz Scheduler
+  <bean  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+      <property name="jobDetails">
+          <list>
+              <ref bean="releaseLockJob" />
+          </list>
+      </property>
+
+      <property name="triggers">
+          <list>
+              <ref bean="simpleTrigger" />
+          </list>
+      </property>
+  </bean> -->
+ 
+ 
+  	<!-- Scheduler factory bean to glue together jobDetails and triggers to Configure Quartz Scheduler -->
+	 <bean  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	        <property name="triggers">
+	            <list>
+	            	<ref bean="loginApiTrigger"/>
+	            	<ref bean="liveDataTrigger" />
+					<ref bean="tStatDataProcessorTrigger"/>
+	            	<ref bean="weatherDataTrigger"/>
+	            	<ref bean="hourlyForecastTrigger"/>
+	            	<ref bean="weeklyPdfReportTrigger"/>
+	            	<ref bean="awsIoTDevAlertsInputTrigger"/>
+	            	<ref bean="alertMailTrigger"/>
+	            </list>
+	        </property>
+	    </bean>
+
+    <!-- Run the device live data job every 10 minutes everyday -->
+    <!-- <bean id="liveDataTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> -->
+    <bean id="liveDataTrigger"  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="liveDataJobDetail" />
+        <!-- <property name="cronExpression" value="0 0/10 * * * ?" /> -->
+        <property name="startDelay" value="10000"></property>
+        <property name="repeatInterval" value="600000"></property>
+    </bean>
+     <!-- live data object For times when you just need to invoke a method on a specific object -->
+    <bean id="liveDataJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="liveDataJob" />
+        <property name="targetMethod" value="executeInternal" />
+    </bean>
+
+  	<!-- Run the login api data job every 1 hour everyday -->
+    <bean id="loginApiTrigger"  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="loginApiJobDetail" />
+        <!-- <property name="cronExpression" value="0 0/59 * * * ?" /> -->
+        <property name="startDelay" value="5000"></property>
+        <property name="repeatInterval" value="3540000"></property>
+    </bean>
+     <!-- login api object For times when you just need to invoke a method on a specific object -->
+    <bean id="loginApiJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="loginApiJob" />
+        <property name="targetMethod" value="printMessage" />
+    </bean>
+
+   	<!-- Run the forecast data job every day at 11 45 PM -->
+    <bean id="weatherDataTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="weatherDataJobDetail" />
+        <!-- <property name="cronExpression" value="0 0 5 * * ?" />  --> <!-- vem -->
+        <property name="cronExpression" value="0 0 6 * * ?" />  <!-- vemqa & prod-->
+    </bean> 
+  
+<!--     <bean id="weatherDataTrigger"  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="weatherDataJobDetail" />
+        <property name="startDelay" value="5000"></property>
+        <property name="repeatInterval" value="600000"></property>
+    </bean>  -->
+     <!-- forecast object For times when you just need to invoke a method on a specific object -->
+    <bean id="weatherDataJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="weatherJob" />
+        <property name="targetMethod" value="forecastJob" />
+    </bean>
+
+   	<!-- Run the hourlyForecast data job every day at 11 45 PM -->
+     <bean id="hourlyForecastTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="hourlyForecastJobDetail" />
+        <!-- <property name="cronExpression" value="0 45 5 * * ?" />	 --> 	<!-- vem -->
+        <property name="cronExpression" value="0 45 6 * * ?" />   <!-- vemqa & prod-->
+    </bean>
+    
+<!--      <bean id="hourlyForecastTrigger"  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="hourlyForecastJobDetail" />
+        <property name="startDelay" value="120000"></property>
+        <property name="repeatInterval" value="600000"></property>
+    </bean>  -->
+     <!-- hourlyForecast object For times when you just need to invoke a method on a specific object -->
+    <bean id="hourlyForecastJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="hourlyForecastJob" />
+        <property name="targetMethod" value="hourlyForecastJobMethod" />
+    </bean>
+    
+    <!-- Cron job for weekly pdf report --> 
+    <bean id="weeklyPdfReportTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="weeklyPdfReportJobDetail" />
+        <property name="cronExpression" value="0 29 18 ? * SUN *" />	 	<!-- vem -->
+    </bean>
+    <bean id="weeklyPdfReportJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="pdfReportJob" />
+        <property name="targetMethod" value="weeklyPdfReportMethod" />
+    </bean>
+    
+    <!-- Cron job for alert mail --> 
+    <bean id="alertMailTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="alertMailJobDetail" />
+        <property name="cronExpression" value="0 0/10 * 1/1 * ? *" />	 	<!-- vem -->
+    </bean>
+    <bean id="alertMailJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="alertMailJob" />
+        <property name="targetMethod" value="alertMailMethod" />
+    </bean>
+  
+  	<!-- Run the tstat cache builder and mqtt client restarter everyday -->
+    <bean id="tStatDataProcessorTrigger"  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="tStatDataProcessorJobDetail" />
+        <!-- <property name="cronExpression" value="0 0/59 * * * ?" /> -->
+        <property name="startDelay" value="10000"></property>
+        <property name="repeatInterval" value="86410000"></property>
+    </bean>
+     <!-- login api object For times when you just need to invoke a method on a specific object -->
+    <bean id="tStatDataProcessorJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="tStatDataProcessorJob" />
+        <property name="targetMethod" value="initializeDataProcessing" />
+    </bean>
+
+    <!-- Run the aws iot device input to alerts module -->
+    <bean id="awsIoTDevAlertsInputTrigger"  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="awsIoTDevAlertsInputJobDetails" />
+        <!-- <property name="cronExpression" value="0 0/10 * * * ?" /> -->
+        <property name="startDelay" value="10000"></property>
+        <property name="repeatInterval" value="600000"></property>
+    </bean>
+    <!--  live data object For times when you just need to invoke a method on a specific object -->
+    <bean id="awsIoTDevAlertsInputJobDetails" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="awsIoTDevAlertsInputJob" />
+        <property name="targetMethod" value="iterateCacheNPublish" />
+    </bean>
+
+</beans>

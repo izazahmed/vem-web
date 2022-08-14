@@ -1,0 +1,85 @@
+<ul class="blue-bg-bar min-height-52">
+	<img ng-if="userDetails.companyLogo" class="customer-thumg" ng-src="fileUpload/loadImage?imageName={{userDetails.companyLogo}}" alt="Company Logo" />
+	<div class="clear"></div>
+</ul>
+<div class="form-group no-margin white-bg x-md-padding height-40">
+    <h1 class="size-14 weight-500 line-height-40 no-margin pull-left"><a href="javascript:void(0)" ng-click="gotoParent()"><i class="icon-back size-20 vertical-middle line-height-40"></i></a>&nbsp; {{user.firstName}} {{user.lastName}}</h1>
+    <a ui-sref="users.usersList.userProfile.edit($scope.params)">
+        <div class="pull-right line-height-40" ng-if="userDetails.isSuper || userDetails.rolePermissions['User Management']==2">
+            <i class="icon-edit size-14" aria-hidden="true"></i> Edit
+        </div>
+    </a>
+    <div class="clear"></div>
+</div>
+<div class="clear"></div>
+<s-gray-gap></s-gray-gap>
+
+<div class="scroll top-98">
+	<!-- <gap></gap>
+    <p class="no-margin x-md-padding no-line-height show-details cursor inline-block weight-500 y-padding" ng-click="showUserDetails = !showUserDetails;$event.stopPropagation();">{{ showUserDetails ? "+" : "-" }} Details</p>
+ -->
+    <div class="details-drop x-md-padding" ng-show="!showUserDetails" ng-if="user">
+        <gap></gap>
+        <p class="no-margin">
+            {{user.title}}<span ng-if="user.title">&nbsp;</span><span class="middle-dot" ng-if="user.title"></span><span ng-if="user.title">&nbsp;</span>{{user.roleName}} <span ng-if="!user.roleName.toLowerCase().endsWith('role')">Role</span>&nbsp; <br/>
+            {{customPhonePattern(user.phoneNumber)}}&nbsp;<span class="middle-dot"></span>&nbsp; {{user.emailId}}&nbsp;<br/>
+        </p>
+        <p class="no-margin" ng-if="user.lastLoginInfo!=null">
+            Report Preferences: {{getReportPreference(user.reportPreference)}}&nbsp;<span class="middle-dot"></span>&nbsp;Report Level: {{getReportLevel(user.reportLevel)}}&nbsp;<span class="middle-dot"></span>&nbsp;Notification Preferences: {{user.alertPreference != 0 ?(user.alertPreference == 1 ?'Email' : (user.alertPreference == 2 ?'SMS':'Email, SMS')) : 'None'}}&nbsp; <br/> Last Session on {{  (makeFormat(user.lastLoginInfo,'MM/DD/YYYY hh:mm a') | uppercase)  || (user.isCSO == 1 ?'NA':'Never')}}
+            <br/>Status: {{(user.isActive == 1 ? 'Active':(user.isActive == 0 ? 'Inactive':(user.isActive == 2 ? 'Active & Locked' : 'Deleted')))}}
+        </p>
+        <p class="no-margin" ng-if="user.lastLoginInfo==null">
+            Report Preferences: {{getReportPreference(user.reportPreference)}}&nbsp;<span class="middle-dot"></span>&nbsp;Report Level: {{getReportLevel(user.reportLevel)}}&nbsp;<span class="middle-dot"></span>&nbsp;Notification Preferences: {{user.alertPreference != 0 ?(user.alertPreference == 1 ?'Email' : (user.alertPreference == 2 ?'SMS':'Email, SMS')) : 'None'}}&nbsp; <br/> Last Session on {{ user.lastLoginInfo  || (user.isCSO == 1 ?'NA':'Never')}}
+            <br/>Status: {{(user.isActive == 1 ? 'Active':(user.isActive == 0 ? 'Inactive':(user.isActive == 2 ? 'Active & Locked' : 'Deleted')))}}
+        </p>
+       
+        <div class="table-responsive" style="border:none;">
+            <table class="table table-bordered size-14 permission-table" ng-if="userDetails.rolePermissions.hasOwnProperty('Customer Management')">
+
+                <tr ng-repeat="item in groupSitesByCustomer">
+                    <td>{{item.customerName}}</td>
+                    <td class="no-padding table-responsive">
+                        <table class="table size-14">
+                            <tr ng-repeat="group in item.groupsList" ng-if="user.groupId">
+                                <td>{{group.groupName}}</td>
+                                <td class="no-padding table-responsive">
+                                    <table class="table border-left no-margin size-14">
+                                        <tr ng-repeat="site in group.sitesList | filter: profileSiteFilter">
+                                            <td class="border-left border-bottom">{{site.siteName}}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="group in item.groupsList" ng-if="!user.groupId">
+                                <td ng-if="group.sitesList.length" ng-repeat="site in group.sitesList | filter: profileSiteFilter" class="border-left border-bottom">
+                                    {{site.siteName}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <br />
+    <!-- Nav tabs -->
+    <div class="navigation-list">
+       <ul class="nav nav-tabs x-md-padding" role="tablist">
+        <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'customers'}" ng-if="userDetails.rolePermissions.hasOwnProperty('Customer Management') ? true : false">
+        	<a ng-click="gotoCustomers()" data-target="#users" aria-controls="home" role="tab" data-toggle="tab">Customers ({{user.customersList.length}})</a>
+        </li>
+        <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'groups'}" ng-show="userDetails.rolePermissions.hasOwnProperty('Group Management')">
+          	<a ng-click="gotoGroups()" data-target="#Groups" aria-controls="settings" role="tab" data-toggle="tab">Groups ({{user.groupCount}})</a>
+        </li>
+        <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'sites'}" ng-show="userDetails.rolePermissions.hasOwnProperty('Site Management')">
+          <a ng-click="gotoSites()" data-target="#Sites" aria-controls="settings" role="tab" data-toggle="tab">Sites ({{user.siteCount}})</a>
+        </li>
+        <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'activityLog'}">
+          <a ng-click="gotoActivityLog()" data-target="#Activity" aria-controls="settings" role="tab" data-toggle="tab">Activity Log ({{user.activityLogCount}})</a>
+        </li>
+    </ul>
+	</div>
+<div class="tab-content">
+    <div class="customer-info-sub-views" ui-view="userProfile-info"></div>
+</div>
+</div>

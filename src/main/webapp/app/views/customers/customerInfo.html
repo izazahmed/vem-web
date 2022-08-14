@@ -1,0 +1,74 @@
+<div class="blue-bg-bar min-height-52 relative">
+ <img ng-if="customer.companyLogo && !userDetails.companyLogo" class="customer-thumg" ng-src="fileUpload/loadImage?imageName={{customer.companyLogo}}" alt="Company Logo" />
+</div>
+<div class="bar relative x-md-padding height-40" ng-if="customer.companyName ">
+    <a ng-click="gotoParent()" href="javascript:void(0)" class="icon-back size-20 relative backIcon-align"></a>
+    <span class="line-height-40 size-14">{{customer.companyName}}</span>
+    <a ui-sref="customers.customersList.getCustomer.editCustomer($state.params)">
+        <p class="pull-right line-height-40 size-14" ng-if="userDetails.rolePermissions['Customer Management']==2"><i class="icon-edit size-16  relative" aria-hidden="true"></i> Edit</p>
+    </a>
+</div>
+<s-gray-gap></s-gray-gap>
+<div class="scroll top-97">
+<div class="x-md-padding y-padding">
+    <p class="no-margin no-padding no-line-height show-details"><span class="inline-block cursor weight-500"  ng-click="showDetails = !showDetails;$event.stopPropagation();">{{ showDetails ? "- Details" : "+ Details" }} </span></p>
+    <div class="details-drop" ng-show="showDetails" ng-if="customer">
+        <gap></gap>
+        <p class="no-margin">
+           Customer ID: {{customer.customerCode}}&nbsp;
+        </p>
+        <p class="no-margin">
+            Address: {{customer.addressLine1}},&nbsp;{{!customer.addressLine2 ? '': customer.addressLine2+', ' }}{{customer.cityName}},&nbsp;{{customer.stateCode}}<span ng-if="customer.zipCode != ''">&nbsp;&nbsp;{{customer.zipCode}}</span>
+        </p>
+        <p class="no-margin">
+            Degree Preferences: {{customer.degreePreference}}
+        </p>
+        <p class="no-margin">
+            Thermostat Preferences: {{prefrencesOptionsArray.join(', ')}}<span class="no-margin" ng-if="customer.thermostateMinSetPoint && customer.thermostateMaxSetPoint"><span ng-if="customer.thermostateMinSetPoint">, Min SP: {{customer.thermostateMinSetPoint}}</span><span ng-if="customer.thermostateMaxSetPoint">, Max SP: {{customer.thermostateMaxSetPoint}},</span></span>
+            <span class="no-margin" ng-if="customer.lockPref == 1">Partial</span><span class="no-margin" ng-if="customer.lockPref == 0">Unlock</span><span class="no-margin" ng-if="customer.lockPref == 2">Full</span> 
+        </p> 
+        <p class="no-margin">
+            Status: {{customer.customerStatus}}
+        </p>
+        <br/>    
+    </div>
+</div>
+<!-- Nav tabs -->
+<div class="navigation-list">
+<ul class="nav nav-tabs x-md-padding" role="tablist">
+    <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'groups'}" ng-show="userDetails.rolePermissions.hasOwnProperty('Group Management')">
+        <a ng-click="gotoGroups()" data-target="#groups" aria-controls="profile" role="tab" data-toggle="tab">Groups ({{customeTabCounts.groupCount}})</a>
+    </li>
+  
+<!--     <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'sites'}" ng-show="userDetails.rolePermissions.hasOwnProperty('Site Management')">
+        <a ui-sref="customers.customersList.getCustomer.sites($state.params)" data-target="#Locations" aria-controls="settings" role="tab" data-toggle="tab">Sites ({{customeTabCounts.siteCount}})</a>
+    </li> -->
+     <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'sites'}" ng-show="userDetails.rolePermissions.hasOwnProperty('Site Management')">
+        <a ng-click="gotoSites()" data-target="#Locations" aria-controls="settings" role="tab" data-toggle="tab">Sites ({{customeTabCounts.siteCount}})</a>
+    </li>
+    
+    <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'devices'}" ng-show="userDetails.rolePermissions.hasOwnProperty('Device Management')">
+        <a ng-click="gotoDevices()" data-target="#Devices" aria-controls="settings" role="tab" data-toggle="tab">Devices ({{customeTabCounts.deviceCount}})</a>
+    </li>
+    <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'schedule'}" ng-show="userDetails.rolePermissions.hasOwnProperty('Schedule Management')">
+        <a ng-click="gotoSchedules()" data-target="#Schedule" aria-controls="settings" role="tab" data-toggle="tab">Schedule ({{customeTabCounts.scheduleCount}})</a>
+    </li>
+    <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'alerts'}">
+        <a data-target="#Alerts" aria-controls="settings" role="tab" data-toggle="tab" ng-click="gotoAlerts()">Alerts ({{customeTabCounts.alertsCount}})</a>
+    </li>
+    <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'users'}" ng-if="userDetails.rolePermissions.hasOwnProperty('User Management')">
+    	<a ng-click="gotoUsers()" data-target="#users" aria-controls="home" role="tab" data-toggle="tab">Users ({{customeTabCounts.userCount}})</a>
+    </li>
+
+        <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'activityLog'}">
+        <a ng-click="gotoActivityLog()" data-target="#Activity" aria-controls="settings" role="tab" data-toggle="tab">Activity Log ({{customeTabCounts.activityLogCount}})</a>
+    </li>
+
+</ul>
+</div>
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="customer-info-sub-views" ui-view="customer-info"></div>
+    <div ui-view="site-info"></div>
+</div>
+</div>

@@ -1,0 +1,1011 @@
+<div class="blue-bg-bar min-height-52 relative"></div>
+<div class="bar line-height-40 relative x-md-padding">
+    <span class="size-14 weight-500 line-height-40">Edit Site Information</span>
+</div>
+<s-gray-gap></s-gray-gap>
+<div class="clear"></div>
+<form role="form" name="createLocationForm" novalidate="" ng-submit="createLocation(createLocationForm)" id="createLocationForm" enctype="multipart/form-data" autocomplete="off">
+    <div class="scroll top-97">
+        <gap></gap>
+        <div class="col-lg-6 col-md-8">
+            <p class="no-margin no-padding no-line-height show-details inline-block cursor" ng-click="showLocationDetails = !showLocationDetails;$event.stopPropagation();">{{ !showLocationDetails ? "- Details" : "+ Details" }}</p>
+            <gap></gap>
+            <div class="details-drop" ng-show="!showLocationDetails">
+
+                <div class="row">
+                    <div class="form-group required col-xs-6">
+                        <label for="email" class="weight-400 control-label size-14">Site Name</label>
+                        <input type="hidden" ng-model="site.customerId" name="customerId" class="form-control">
+                        <input type="hidden" ng-model="site.siteId" name="siteId" class="form-control">
+                        <input type="text" maxlength="50" class="form-control" ng-model="site.siteName" name="siteName" required>
+                        <div class="error-container last-error-container" ng-show="createLocationForm.siteName.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteName.$error">
+                            <div ng-messages-include="error-list.html"></div>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label for="email" class="weight-400 size-14">Store #</label>
+                        <input type="text" maxlength="20" class="form-control" ng-pattern="/^[0-9]*$/" ng-model="site.siteInternalId" name="siteInternalId">
+                        <div class="error" ng-show="createLocationForm.siteInternalId.$error.pattern && createLocationForm.$submitted">Store # should contain numbers only</div>
+                        <div class="error-container last-error-container" ng-show="createLocationForm.siteInternalId.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteInternalId.$error">
+                            <div ng-messages-include="error-list.html"></div>
+                        </div>
+                        <div class="error" ng-model="siteInternalIdError" ng-show="errors.internalId">{{siteInternalIdError}}</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-12">
+                        <label for="email" class="weight-400 control-label size-14">Site ID</label>
+                        <input type="text" readonly class="form-control" ng-model="site.siteCode" name="siteCode">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-12">
+                        <label for="email" class="weight-400 size-14">Type</label>
+                        <ui-select allow-free-text="true" ng-model="opt.selected" theme="bootstrap" title="Choose a type">
+                            <ui-select-match allow-clear="true" placeholder="Select or search a type in the list...">{{$select.selected.lable}}</ui-select-match>
+                            <ui-select-choices repeat="opt in siteTypeOptions | filter: $select.search">
+                                <span ng-bind-html="opt.lable | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <input type="text" ng-model="site.siteTypeNew" maxlength="50" name="siteTypeNew" ng-show="opt.selected.value==0" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-12 required">
+                        <label for="email" class="weight-400 control-label size-14">Address</label>
+                        <input type="text" maxlength="50" class="form-control" ng-model="site.siteAddLine1" name="siteAddLine1" required>
+                        <div class="error-container last-error-container" ng-show="createLocationForm.siteAddLine1.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteAddLine1.$error">
+                            <div ng-messages-include="error-list.html"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-12">
+                        <input type="text" maxlength="50" ng-model="site.siteAddLine2" name="siteAddLine2" class="form-control">
+                        <div class="error-container last-error-container" ng-show="createLocationForm.siteAddLine2.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteAddLine2.$error">
+                            <div ng-messages-include="error-list.html"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    
+                    <div class="form-group required col-xs-12 col-sm-4">
+                        <label for="email" class="weight-400 control-label size-14">City</label>
+  
+                        <input type="text" class="form-control site-city-name" ng-model="site.siteCityName" name="city" required>
+                        <div class="error-container last-error-container" ng-show="(createLocationForm.city.$error && createLocationForm.$submitted) || siteCityNameRequired" ng-messages="createLocationForm.city.$error">
+                            <div ng-messages-include="error-list.html"></div>
+                        </div>
+   
+                    </div>
+                    
+                    <div class="form-group required  col-xs-12 col-sm-4">
+                        <label for="email" class="weight-400 control-label size-14">State</label>
+ 
+                        <input type="text" class="form-control site-state-name" ng-model="site.siteStateName" name="state" required>
+                        <div class="error-container last-error-container" ng-show="(createLocationForm.state.$error && createLocationForm.$submitted) || siteStateNameRequired" ng-messages="createLocationForm.state.$error">
+                            <div ng-messages-include="error-list.html"></div>
+                        </div>
+              
+                    </div>
+
+                    <div class="form-group required col-xs-12 col-sm-4">
+                        <label for="email" class="weight-400 control-label size-14">Zip Code</label>
+                        <input type="text" minlength="5" maxlength="5" class="form-control" ng-pattern="/^[0-9]*$/" ng-model="site.siteZipCode" name="siteZipCode" required ng-click="makeDisable = true;getStateCityValidate()" ng-blur="getStatesAndCities(site.siteZipCode)">
+                        <div class="error" ng-show="createLocationForm.siteZipCode.$error.pattern && createLocationForm.$submitted">Zip Code should contain numbers only</div>
+                        <div class="error-container last-error-container" ng-show="createLocationForm.siteZipCode.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteZipCode.$error">
+                            <div class="error size15" ng-message="required">This field is required</div>
+                        </div>
+                        <div class="error-container last-error-container" ng-show="createLocationForm.siteZipCode.$error && createLocationForm.siteZipCode.$touched && !createLocationForm.siteZipCode.$error.pattern" ng-messages="createLocationForm.siteZipCode.$error">
+                    
+                            <div class="error" ng-message="minlength">Length of this field should be 5 characters</div>
+                        </div>
+                        <div class="error" ng-model="siteZipcodeError" ng-show="errors.zipcode">{{siteZipcodeError}}</div>
+                    </div>
+
+                </div>
+   
+                <div class="row">
+                    <div class="form-group col-xs-12 required">
+                        <label for="email" class="weight-400 control-label size-14">Site Phone</label>
+                        <input type="text" maxlength="20" ui-mask="(999) 999-9999" ui-mask-placeholder ui-mask-placeholder-char="_" ng-model="site.sitePhNo" name="sitePhNo" class="form-control" required>
+                        <div class="error-container last-error-container" ng-show="createLocationForm.sitePhNo.$error && createLocationForm.$submitted" ng-messages="createLocationForm.sitePhNo.$error">
+                            <div ng-messages-include="error-list.html"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-12">
+                        <label for="email" class="weight-400 size-14">District</label>
+                        <input type="text" maxlength="50" ng-model="site.siteDistrict" name="siteDistrict" class="form-control">
+                        <div class="error-container last-error-container" ng-show="createLocationForm.siteDistrict.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteDistrict.$error">
+                            <div ng-messages-include="error-list.html"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-12">
+                        <label for="email" class="weight-400 size-14">Region</label>
+                        <input type="text" maxlength="50" ng-model="site.siteRegion" name="siteRegion" class="form-control">
+                        <div class="error-container last-error-container" ng-show="createLocationForm.siteRegion.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteRegion.$error">
+                            <div ng-messages-include="error-list.html"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-12">
+                        <label for="email" class="weight-400 size-14">Area</label>
+                        <input type="text" maxlength="50" ng-model="site.siteArea" name="siteArea" class="form-control">
+                        <div class="error-container last-error-container" ng-show="createLocationForm.siteArea.$error && createLocationForm.$submitted" ng-messages="createLocationForm.siteArea.$error">
+                            <div ng-messages-include="error-list.html"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="weight-400 size-14">Time zone</label>
+                </div>
+                <div class="row" ng-init="">
+                    <div class="col-lg-6 col-sm-6 ">
+                        <gap></gap>
+                        <input type="text" readonly class="form-control" ng-model="site.siteTimeZone" name="siteTimeZone">
+                    </div>
+                    <div class="col-lg-3 col-sm-3">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" ng-model="site.siteHrsFormate" id="siteHrsFormate12" ng-value="1" name="siteHrsFormate" ng-click="changeTimeFormat(true)"> 12hr Format
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-3">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" ng-model="site.siteHrsFormate" id="siteHrsFormate24" ng-value="0" name="siteHrsFormate" ng-click="changeTimeFormat(false)"> 24hr Format
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="form-group">
+                    <label for="email" class="weight-400 size-14">Store Hours</label>
+                </div>
+                <div class="total-site-hours">
+                    <div class="row site-hours " ng-repeat="siteHrs in siteHrs track by $index">
+                        <div class="form-group col-xs-4 relative">
+                            <label for="email" class="weight-400 size-14"></label>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" ng-checked="site.siteHours[$index+1].dayOfWeekChecked" ng-model="site.siteHours[$index+1].dayOfWeek" name="dayOfWeek" ng-true-value="{{siteHrs.value}}" ng-false-value="0" ng-click="site.siteHours[$index+1].dayOfWeekChecked = !site.siteHours[$index+1].dayOfWeekChecked;clearStoreDate($index+1, site.siteHours[$index+1].dayOfWeek);changeOStoreHorsData();"> {{siteHrs.lable}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-4">
+                            <b ng-if="$index == '0' "><label for="email" class="weight-400 size-14">Open</label></b>
+                            <div class="input-group" disable-all="!site.siteHours[$index+1].dayOfWeekChecked">
+                                <div show-spinners="false" ng-change="copyStoreHoursEdit();changeOStoreHorsData();" mousewheel="false" uib-timepicker ng-model="site.siteHours[$index+1].openHrs" hour-step="hstep" minute-step="mstep" show-meridian="getMeridian" my-enter></div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-4">
+                            <b ng-if="$index == '0' "><label for="email" class="weight-400 size-14">Close</label></b>
+                            <div class="input-group" disable-all="!site.siteHours[$index+1].dayOfWeekChecked">
+                                <div show-spinners="false" ng-change="copyStoreHoursEdit();changeOStoreHorsData();" mousewheel="false" uib-timepicker ng-model="site.siteHours[$index+1].closeHrs" min="site.siteHours[$index+1].openHrs" hour-step="hstep" minute-step="mstep" show-meridian="getMeridian" my-enter></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="size-16 weight-700">Groups</h1>
+                <hr class="no-margin" />
+                <gap></gap>
+                <ui-select multiple allow-free-text="true" ng-model="opt.group" theme="bootstrap" title="Choose a group">
+                    <ui-select-match placeholder="Select or search a group in the list...">{{$item.lable}}</ui-select-match>
+                    <ui-select-choices repeat="opt in siteGroupOptions | filter: $select.search">
+                        <span ng-bind-html="opt.lable | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+                <h1 class="size-16 weight-700">Degree Preferences</h1>
+                <hr class="no-margin" />
+                <gap></gap>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <select class="form-control" name="degreePreference" ng-model="site.degreePreference" ng-options="option.value as option.label for option in degreePreferenceOptions" ng-init="0" ng-disabled="true"></select>
+                    </div>
+                </div>
+                <h1 class="size-16 weight-700">Thermostat Preferences</h1>
+                <hr class="no-margin" />
+                <gap></gap>
+                <div class="row">
+                    <div class="col-xs-6 col-sm-4">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="thermostatePreferenceFan" ng-model="site.fanOn" value="1"> Fan On</label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="thermostatePreferenceFan" ng-model="site.fanOn" value="0"> Fan Auto</label>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="radio">
+                            <label>
+                                <input type="checkbox" ng-value="true" ng-model="site.isHVACModeToAuto" name="isHVACModeToAuto"> Reset HVAC to Auto</label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="checkbox" ng-value="true" ng-model="site.resetHoldMode" name="resetHoldMode"> Reset Hold to Off</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 col-xs-12">
+                        <div class="radio">
+                            <label><input type="radio" name="lockPref" ng-model="site.lock" ng-value="0"> Unlock </label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="lockPref" ng-model="site.lock" ng-value="1"> Partial </label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="lockPref" ng-model="site.lock" ng-value="2"> Full </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group required col-xs-6">
+                        <label for="email" class="weight-400 control-label size-14">Min SP</label>
+                        <input type="hidden" ng-model="site.customerId" class="form-control">
+                        <input type="number" class="form-control" empty-zero name="minSP" ng-model="site.minSP" min="45" max="90" required/>
+                        <div ng-show="createLocationForm.minSP.$error.required && createLocationForm.$submitted" ng-messages="createLocationForm.minSP.$error">
+                            <div ng-messages-include="error-list.html"></div>
+                        </div>
+                        <div ng-show="createLocationForm.minSP.$error.number && createLocationForm.$submitted && !createLocationForm.minSP.$error.required">
+                            <div class="error size-15">Please enter valid number</div>
+                        </div>
+                        <p class="error" ng-if="!createLocationForm.minSP.$error.required && createLocationForm.$submitted" ng-show="createLocationForm.minSP.$error.min || createLocationForm.minSP.$error.max">Please enter value between 45 to 90</p>
+                    </div>
+                    <div class="form-group required col-xs-6">
+                        <label for="email" class="weight-400 control-label size-14">Max SP</label>
+                        <input type="number" class="form-control" empty-zero name="maxSP" ng-model="site.maxSP" min="{{site.minSP*1+1}}" max="90" required/>
+                        <div ng-if="createLocationForm.maxSP.$error.required && createLocationForm.$submitted" ng-messages="createLocationForm.maxSP.$error">
+                            <div ng-messages-include="error-list.html"></div>
+                        </div>
+                        <div ng-if="createLocationForm.maxSP.$error.number && createLocationForm.$submitted && !createLocationForm.maxSP.$error.required">
+                            <div class="error size-15">Please enter valid number</div>
+                        </div>
+                        <p class="error" ng-if="!createLocationForm.maxSP.$error.required && createLocationForm.maxSP.$error.max">Please enter value between {{site.minSP*1+1}} to 90</p>
+                        <p class="error" ng-if="!createLocationForm.maxSP.$error.required && createLocationForm.maxSP.$error.min">Max SP has to be greater than Min SP</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-value="true" ng-model="site.nightlyScheduleDownload" name="nightlyScheduleDownload"> Nightly Schedule Download</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-12 required">
+                        <label for="email" class="weight-400 control-label size-14">Status</label>
+                        <select class="form-control" ng-model="site.siteStatus" ng-options="option.id as option.label for option in statusOptions">
+                        </select>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="clear"></div>
+            <gap></gap>
+            <hr class="no-margin" />
+            <gap></gap>
+            <b><p class="no-margin no-padding no-line-height show-details inline-block cursor" ng-click="showMoreDetails = !showMoreDetails;$event.stopPropagation();">{{ showMoreDetails ? "- " : "+ " }} More Info</p></b>
+            <div class="details-drop" ng-show="showMoreDetails">
+                <div class="col-lg-12">
+                    <span class="line-height-40">Site Information</span>
+                    <b class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showSiteInfo = !showSiteInfo;$event.stopPropagation();">
+                    	<i class="icon-down-arrow size-26 top-4 relative" ng-show="showSiteInfo" aria-hidden="true"></i>
+						<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showSiteInfo"></i>
+                    </p></b>
+                    <hr class="no-margin" />
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showSiteInfo" class="col-xs-12 col-lg-12">
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Actual Site Survey Date</label>
+                                <input type="text" name="datepicker" class="form-control" maxlength="10" ng-blur="dateSurvey(createLocationForm.datepicker.$error.date)" uib-datepicker-popup="MM/dd/yyyy" placeholder="MM/DD/YYYY" ng-model="site.surveyDate" is-open="popup1.opened" close-text="Close" ng-click="open1()" />
+                                <div class="error-container last-error-container" ng-if="createLocationForm.datepicker.$error.date && dateSurveyFlag">
+                                    <div class="error">Please enter correct Date format (MM/DD/YYYY)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Occupy hours</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-sm-4">
+                                <label>
+                                    <input type="checkbox" ng-model="sameAsStore" ng-click="sameAsStoreHour()"> Same as Store Hours</label>
+                            </div>
+                            <div class="col-lg-4 col-sm-4">
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" ng-model="site.siteOccupyHrsFormate" id="occupyHrsFormate12" ng-value="1" name="siteOccupyHrsFormate" ng-click="changeTimeFormatOccupy(true)"> 12hr Format</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-sm-4">
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" ng-model="site.siteOccupyHrsFormate" id="occupyHrsFormate24" ng-value="0" name="siteOccupyHrsFormate" ng-click="changeTimeFormatOccupy(false)"> 24hr Format</label>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="total-site-hours">
+                            <div class="row site-hours" ng-repeat="siteHrs in siteHrs track by $index">
+                                <div class="form-group col-xs-4 relative">
+                                    <label for="email" class="weight-400 size-14"></label>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" ng-checked="site.occupyHours[$index+1].dayOfWeekCheckedSame" ng-model="site.occupyHours[$index+1].dayOfWeek" name="dayOfWeek" ng-true-value="{{siteHrs.value}}" ng-false-value="0" ng-click="site.occupyHours[$index+1].dayOfWeekCheckedSame = !site.occupyHours[$index+1].dayOfWeekCheckedSame;clearOccupyDate($index+1, site.occupyHours[$index+1].dayOfWeek);changeOccupyHorsData();"> {{siteHrs.lable}}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-xs-4">
+                                    <b ng-if="$index == '0' "><label for="email" class="weight-400 size-14">Open</label></b>
+                                    <div class="input-group" disable-all="!site.occupyHours[$index+1].dayOfWeekCheckedSame">
+                                        <div show-spinners="false" ng-change="copySOccupyHoursEdit();changeOccupyHorsData();" mousewheel="false" uib-timepicker ng-model="site.occupyHours[$index+1].openHrs" hour-step="hstep" minute-step="mstep" show-meridian="getMeridianOccupy" my-enter></div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-xs-4">
+                                    <b ng-if="$index == '0' "><label for="email" class="weight-400 size-14">Close</label></b>
+                                    <div class="input-group" disable-all="!site.occupyHours[$index+1].dayOfWeekCheckedSame">
+                                        <div show-spinners="false" ng-change="copySOccupyHoursEdit();changeOccupyHorsData();" mousewheel="false" uib-timepicker ng-model="site.occupyHours[$index+1].closeHrs" hour-step="hstep" minute-step="mstep" min="site.occupyHours[$index+1].openHrs" show-meridian="getMeridianOccupy" my-enter></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Square Footage</label>
+                                <input type="text" name="squareFootage" maxlength="48" ng-model="site.squareFootage" ng-pattern="/^[0-9]+(?:\.[0-9]+)?$/" class="form-control">
+                                <div class="error" ng-show="createLocationForm.squareFootage.$error.pattern && createLocationForm.$submitted">Square Footage should contain numbers and dot only</div>
+                                <div class="error-container last-error-container" ng-show="createLocationForm.squareFootage.$error && createLocationForm.$submitted" ng-messages="createLocationForm.squareFootage.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Building Layout and location of thermostats and sensors</label>
+                                <input type="text" class="form-control" maxlength="48" name="buildingLayout" ng-model="site.buildingLayout">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.buildingLayout.$error && createLocationForm.$submitted" ng-messages="createLocationForm.buildingLayout.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                                <br>
+                                <span class="btn btn-default btn-file">
+						    	<i class='fa fa-camera' aria-hidden='true'></i>&nbsp; Add Photo 
+						        <input type="file" class="btn btn-default buildingLayoutImageClass" name="buildingLayoutImage" classname="buildingLayoutImageClass" tagname="buildingLayoutImage" onchange="angular.element(this).scope().imageUpload(event)" />
+						        <input type="text" ng-model="site.buildingLayoutImage" style="display: none">
+						    </span>
+                                <b ng-if="site.buildingLayoutImage"> 
+								<img class="thumb buildingLayoutImage" ng-src="fileUpload/loadImage?imageName={{site.buildingLayoutImage}}"  alt="{{site.buildingLayoutImage}}"  ng-click="openLightboxModal('fileUpload/loadImage?imageName='+site.buildingLayoutImage)"/>
+							</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Is there a floor plan on the wall? If so, please take a picture and mark location of thermostats and remote sensors</label>
+                                <input type="text" class="form-control" maxlength="48" name="floorPlan" ng-model="site.floorPlan">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.floorPlan.$error && createLocationForm.$submitted" ng-messages="createLocationForm.floorPlan.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                                <br>
+                                <span class="btn btn-default btn-file">
+						    	<i class='fa fa-camera' aria-hidden='true'></i>&nbsp; Add Photo 
+						        <input type="file" class="btn btn-default floorImageClass" name="floorImage" classname="floorImageClass" tagname="floorImage" onchange="angular.element(this).scope().imageUpload(event)" />
+						        <input type="text" ng-model="site.floorImage" style="display: none"/>
+						    </span>
+                                <b ng-if="site.floorImage">
+						    	<img class="thumb floorImage" ng-src="fileUpload/loadImage?imageName={{site.floorImage}}" alt="{{site.floorImage}}" ng-click="openLightboxModal('fileUpload/loadImage?imageName='+site.floorImage)"/>
+						    </b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <span class="line-height-40">Site Contact</span>
+                    <b class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showSiteContact = !showSiteContact;$event.stopPropagation();">
+                    	<i class="icon-down-arrow size-26 top-4 relative" ng-show="showSiteContact" aria-hidden="true"></i>
+						<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showSiteContact"></i>
+                    </p></b>
+                    <hr class="no-margin" />
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showSiteContact" class="col-xs-12 ">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 control-label size-14">Local Site Contact</label>
+                                <input type="text" maxlength="48" name="localSiteContact" ng-model="site.localSiteContact" class="form-control">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.localSiteContact.$error && createLocationForm.$submitted" ng-messages="createLocationForm.localSiteContact.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 size-14">Local Contact Phone</label>
+                                <input type="text" maxlength="20" name="localContactPhone" ng-model="site.localContactPhone" class="form-control" ui-mask="(999) 999-9999" ui-mask-placeholder ui-mask-placeholder-char="_">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.localContactPhone.$error && createLocationForm.$submitted" ng-messages="createLocationForm.localContactPhone.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 control-label size-14">Local Contact Email</label>
+                                <input type="email" maxlength="30" name="localContactEmail" ng-model="site.localContactEmail" class="form-control">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.localContactEmail.$error && createLocationForm.$submitted" ng-messages="createLocationForm.localContactEmail.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 size-14">Local Contact Mobile</label>
+                                <input type="text" maxlength="15" name="localContactMobile" ng-model="site.localContactMobile" class="form-control" ui-mask="(999) 999-9999" ui-mask-placeholder ui-mask-placeholder-char="_">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.localContactMobile.$error && createLocationForm.$submitted" ng-messages="createLocationForm.localContactMobile.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 control-label size-14">Alternate Site Contact</label>
+                                <input type="text" maxlength="48" name="alternateSiteContact" ng-model="site.alternateSiteContact" class="form-control">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.alternateSiteContact.$error && createLocationForm.$submitted" ng-messages="createLocationForm.alternateSiteContact.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 size-14">Alternate Contact Phone</label>
+                                <input type="text" maxlength="15" name="alternateContactPhone" ng-model="site.alternateContactPhone" class="form-control" ui-mask="(999) 999-9999" ui-mask-placeholder ui-mask-placeholder-char="_">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.alternateContactPhone.$error && createLocationForm.$submitted" ng-messages="createLocationForm.alternateContactPhone.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 control-label size-14">Escort Contact Name</label>
+                                <input type="text" maxlength="48" name="escortContactName" ng-model="site.escortContactName" class="form-control">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.escortContactName.$error && createLocationForm.$submitted" ng-messages="createLocationForm.escortContactName.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 size-14">Escort Contact Number</label>
+                                <input type="text" maxlength="15" name="escortContactNumber" ng-model="site.escortContactNumber" class="form-control" ui-mask="(999) 999-9999" ui-mask-placeholder ui-mask-placeholder-char="_">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.escortContactNumber.$error && createLocationForm.$submitted" ng-messages="createLocationForm.escortContactNumber.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <span class="line-height-40">Site Access</span>
+                    <b class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showSiteAccess = !showSiteAccess;$event.stopPropagation();">
+                    	<i class="icon-down-arrow size-26 top-4 relative" ng-show="showSiteAccess" aria-hidden="true"></i>
+						<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showSiteAccess"></i>
+                    </p></b>
+                    <hr class="no-margin" />
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showSiteAccess" class="col-xs-12 ">
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">List any access restrictions different from normal business hours</label>
+                                <input type="text" maxlength="105" name="listaAccessRestrictionsFromFormalHours" ng-model="site.listaAccessRestrictionsFromFormalHours" class="form-control">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.listaAccessRestrictionsFromFormalHours.$error && createLocationForm.$submitted" ng-messages="createLocationForm.listaAccessRestrictionsFromFormalHours.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Special Room Access Information (Security contact, out-of-hours access, is escort required, etc.)</label>
+                                <input type="text" maxlength="104" name="specialRoomAccessInformation" ng-model="site.specialRoomAccessInformation" class="form-control">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.specialRoomAccessInformation.$error && createLocationForm.$submitted" ng-messages="createLocationForm.specialRoomAccessInformation.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Is there a lock box on thermostat, if so who has access?</label>
+                                <input type="text" maxlength="104" name="lockBoxOnThermostat" ng-model="site.lockBoxOnThermostat" class="form-control">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.lockBoxOnThermostat.$error && createLocationForm.$submitted" ng-messages="createLocationForm.lockBoxOnThermostat.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Who has access or who manages the thermostat?</label>
+                                <input type="text" maxlength="104" name="accessOrManagesThermostat" ng-model="site.accessOrManagesThermostat" class="form-control">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.accessOrManagesThermostat.$error && createLocationForm.$submitted" ng-messages="createLocationForm.accessOrManagesThermostat.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <span class="line-height-40">Building Environment</span>
+                    <b class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showBuilding = !showBuilding;$event.stopPropagation();">
+                    	<i class="icon-down-arrow size-26 top-4 relative" ng-show="showBuilding" aria-hidden="true"></i>
+						<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showBuilding"></i>
+                    </p></b>
+                    <hr class="no-margin" />
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showBuilding" class="col-xs-12 ">
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Select One</label>
+                                <select class="form-control" name="buildingType" ng-model="site.buildingType" ng-options="option.value as option.label for option in buildingTypeOptions"></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Notes</label>
+                                <input type="text" maxlength="1024" class="form-control" name="buildingNotes" ng-model="site.buildingNotes">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.buildingNotes.$error && createLocationForm.$submitted" ng-messages="createLocationForm.buildingNotes.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <span class="line-height-40">HVAC Unit</span>
+                    <b class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showRTU = !showRTU;$event.stopPropagation();">
+                    	<i class="icon-down-arrow size-26 top-4 relative" ng-show="showRTU" aria-hidden="true"></i>
+						<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showRTU"></i>
+                    </p></b>
+                    <hr class="no-margin" />
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showRTU" class="col-xs-12 ">
+                        <div ng-repeat="rtu in site.rTUList">
+                            <ng-form name="rtuForm" class="rtublock{{$index}} rtublock">
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <b><label for="email" class="weight-400 control-label size-14">HVAC Unit {{$index+1}}</label><span class="pull-right"><a><i ng-click="removeRTUBlock($event)" index="{{$index}}" class="icon-close size-20 cursor" aria-hidden="true"></i></a></span></b>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label for="email" class="weight-400 control-label size-14">HVAC Model</label>
+                                        <input type="text" maxlength="48" class="form-control" name="rtumodel" ng-model="site.rTUList[$index].model">
+                                        <div class="error-container last-error-container" ng-show="rtuForm.rtumodel.$error" ng-messages="rtuForm.rtumodel.$error">
+                                            <div ng-messages-include="error-list.html"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label for="email" class="weight-400 size-14">Unit #</label>
+                                        <input type="text" maxlength="48" class="form-control" name="rtuunit" ng-model="site.rTUList[$index].unit" onblur="angular.element(this).scope().checkUniqueUnit(event)" index="{{$index}}">
+                                        <div class="error" style="display: none;">Please enter unique HVAC unit #</div>
+                                        <div class="error-container last-error-container" ng-show="rtuForm.rtuunit.$error" ng-messages="rtuForm.rtuunit.$error">
+                                            <div ng-messages-include="error-list.html"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label for="email" class="weight-400 size-14">HVAC Unit ID</label>
+                                        <input type="text" maxlength="48" class="form-control" name="hVACUnitId" ng-disabled="true" ng-model="site.rTUList[$index].hVACUnit">
+                                        <div class="error-container last-error-container" ng-show="createLocationForm.hVACUnit.$error && createLocationForm.$submitted" ng-messages="createLocationForm.hVACUnit.$error">
+                                            <div ng-messages-include="error-list.html"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label for="email" class="weight-400 control-label size-14">Select where it&apos;s located</label>
+                                        <select class="form-control" name="location" ng-model="site.rTUList[$index].location" ng-options="option.value as option.label for option in locationOptions"></select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label for="email" class="weight-400 size-14">Heat Temperature</label>
+                                        <input type="text" class="form-control" maxlength="10" ng-pattern="/^[0-9]+(?:\.[0-9]+)?$/" name="heating" ng-model="site.rTUList[$index].heating">
+                                        <div class="error" ng-show="rtuForm.heating.$error.pattern && createLocationForm.$submitted">Heat Temperature should contain numbers and dot only</div>
+                                        <div class="error-container last-error-container" ng-show="rtuForm.heating.$error" ng-messages="rtuForm.heating.$error">
+                                            <div ng-messages-include="error-list.html"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label for="email" class="weight-400 control-label size-14">Cool Temperature</label>
+                                        <input type="text" class="form-control" maxlength="10" ng-pattern="/^[0-9]+(?:\.[0-9]+)?$/" name="cooling" ng-model="site.rTUList[$index].cooling">
+                                        <div class="error" ng-show="rtuForm.cooling.$error.pattern && createLocationForm.$submitted">Cool Temperature should contain numbers and dot only</div>
+                                        <div class="error-container last-error-container" ng-show="rtuForm.cooling.$error" ng-messages="rtuForm.cooling.$error">
+                                            <div ng-messages-include="error-list.html"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-form>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 size-14">How do employees believe the system has been running?</label>
+                                <input type="text" maxlength="1024" class="form-control" name="isHvacRunning" ng-model="site.isHvacRunning">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.isHvacRunning.$error && createLocationForm.$submitted" ng-messages="createLocationForm.isHvacRunning.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-xs-12 col-sm-12 col-md-12">
+                            <a ng-click="addRTU()"><span class="icon-add size-20 relative top-4 relative"><span class="path1"></span><span class="path2"></span></span> &nbsp;Add <span ng-show="site.rTUList.length > 0">another</span> HVAC</a>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <span class="line-height-40">Thermostat</span>
+                    <b class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showThermostat = !showThermostat;$event.stopPropagation();">
+                    	<i class="icon-down-arrow size-26 top-4 relative" ng-show="showThermostat" aria-hidden="true"></i>
+						<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showThermostat"></i>
+                    </p></b>
+                    <hr class="no-margin" />
+                    <div class="clear"></div>
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showThermostat" class="thermostat col-xs-12 ">
+                        <div ng-repeat="rtu in site.thermostatList">
+                            <ng-form name="thermostatForm">
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <b><label for="email" class="weight-400 control-label size-14">Thermostat {{$index+1}}</label><span class="pull-right"><a><i ng-click="removeThermostatBlock($event)" index="{{$index}}" class="icon-close size-20 cursor" aria-hidden="true"></i></a></span></b>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label for="email" class="weight-400 control-label size-14">Select HVAC Unit #</label>
+                                        <input class="form-control" name="hVACUnit" ng-model="site.thermostatList[$index].hVACUnit" ng-hide="true">
+                                        <select class="form-control" name="data" ng-model="data[$index]" ng-options="item for item in hVACUnitOptionsValues | arrayDiff:data:data[$index]">
+                                            <option value="">-- choose an option --</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group required col-sm-6">
+                                        <label for="email" class="weight-400 control-label size-14">Unit #</label>
+                                        <input type="text" maxlength="48" id="unit{{$index}}" class="form-control" name="unit" ng-model="site.thermostatList[$index].unit" required>
+                                        <div class="error-container last-error-container" ng-show="thermostatForm.unit.$error && createLocationForm.$submitted" ng-messages="thermostatForm.unit.$error">
+                                            <div ng-messages-include="error-list.html"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group required col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">Location of thermostat, attach photo</label>
+                                        <select class="form-control" name="locationType" id="locationType{{$index}}" select-validation="site.thermostatList[$index].locationType" ng-model="site.thermostatList[$index].locationType" ng-options="option.value as option.label for option in thermostatListOptions" required></select>
+                                        <div class="form-group" ng-show="site.thermostatList[$index].locationType==23">
+                                        	<br/><input type="text" ng-model="site.thermostatList[$index].otherLocation" maxlength="50" name="otherLocation" class="form-control" ng-required="site.thermostatList[$index].locationType==23">
+    									</div>
+    									<div class="error-container last-error-container" ng-show="thermostatForm.otherLocation.$error && site.thermostatList[$index].locationType==23 && createLocationForm.$submitted" ng-messages="thermostatForm.otherLocation.$error">
+                                            <div ng-messages-include="error-list.html"></div>
+                                        </div>
+                                        <div class="error-container last-error-container" ng-show="thermostatForm.locationType.$error && createLocationForm.$submitted" ng-messages="thermostatForm.locationType.$error">
+                                            <div ng-messages-include="error-list.html"></div>
+                                        </div>
+                                        <br>
+                                        <span class="btn btn-default btn-file">
+							    			<i class='fa fa-camera' aria-hidden='true'></i>&nbsp; Add Photo 
+							        		<input type="file" class="btn btn-default locationImageClass{{$index}}" name="locationImage" classname="locationImageClass{{$index}}" tagname="locationImage{{$index}}" index="{{$index}}" onchange="angular.element(this).scope().imageUpload(event)" />
+											<input type="text" ng-model="site.thermostatList[$index].locationImage" style="display: none"/>
+						    			</span>
+                                        <b ng-if="site.thermostatList[$index].locationImage">
+							       			<img class="thumb locationImage{{$index}}" ng-src="fileUpload/loadImage?imageName={{site.thermostatList[$index].locationImage}}" alt="{{site.thermostatList[$index].locationImage}}" ng-click="openLightboxModal('fileUpload/loadImage?imageName='+site.thermostatList[$index].locationImage)"/>
+							    		</b>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">Is the mounting space large enough</label>
+                                        <div>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="spaceEnough{{$index}}" ng-value="1" ng-model="site.thermostatList[$index].spaceEnough" /> Yes</label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="spaceEnough{{$index}}" ng-value="0" ng-model="site.thermostatList[$index].spaceEnough" /> No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label for="email" class="weight-400 control-label size-14">Make of Thermostat</label>
+                                        <input type="text" maxlength="48" class="form-control" name="make" ng-model="site.thermostatList[$index].make">
+                                        <div class="error-container last-error-container" ng-show="thermostatForm.make.$error" ng-messages="thermostatForm.make.$error">
+                                            <div ng-messages-include="error-list.html"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label for="email" class="weight-400 size-14">Model of Thermostat</label>
+                                        <input type="text" maxlength="48" class="form-control" name="model" ng-model="site.thermostatList[$index].model">
+                                        <div class="error-container last-error-container" ng-show="thermostatForm.model.$error" ng-messages="thermostatForm.model.$error">
+                                            <div ng-messages-include="error-list.html"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">Please describe current wiring configuration of Thermostats</label>
+                                        <input type="text" maxlength="48" class="form-control" name="wiringConfigThermostat" ng-model="site.thermostatList[$index].wiringConfigThermostat">
+                                        <div class="error-container last-error-container" ng-show="thermostatForm.wiringConfigThermostat.$error" ng-messages="thermostatForm.wiringConfigThermostat.$error">
+                                            <div ng-messages-include="error-list.html"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label for="email" class="weight-400 control-label size-14">Wiring configuration, attach photo</label>
+                                        <br>
+                                        <span class="btn btn-default btn-file">
+							    			<i class='fa fa-camera' aria-hidden='true'></i>&nbsp; Add Photo 
+							        		<input type="file" class="btn btn-default wiringThermostatImageClass{{$index}}" name="wiringThermostatImage" classname="wiringThermostatImageClass{{$index}}" tagname="wiringThermostatImage{{$index}}" index="{{$index}}" onchange="angular.element(this).scope().imageUpload(event)" />
+							        		<input type="text" ng-model="site.thermostatList[$index].wiringThermostatImage" style="display: none" />							        
+							    		</span>
+                                        <b ng-if="site.thermostatList[$index].wiringThermostatImage">
+							        		<img class="thumb wiringThermostatImage{{$index}}" ng-src="fileUpload/loadImage?imageName={{site.thermostatList[$index].wiringThermostatImage}}" alt="{{site.thermostatList[$index].wiringThermostatImage}}" ng-click="openLightboxModal('fileUpload/loadImage?imageName='+site.thermostatList[$index].wiringThermostatImage)"/>
+							    		</b>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">Confirm 24VDC between the RC/R and C</label>
+                                        <div>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="rCAndCPower{{$index}}" ng-model="site.thermostatList[$index].rCAndCPower" ng-value="1" /> Yes</label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="rCAndCPower{{$index}}" ng-model="site.thermostatList[$index].rCAndCPower" ng-value="0" /> No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">If there is "C" wire attached?</label>
+                                        <div>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="cWireAttached{{$index}}" ng-model="site.thermostatList[$index].cWireAttached" ng-value="1" /> Yes</label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="cWireAttached{{$index}}" ng-model="site.thermostatList[$index].cWireAttached" ng-value="0" /> No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">If there is no "C" attached, check if there is a spare unused wire in the bundle of HVAC wiring</label>
+                                        <div>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="noCWireAttached{{$index}}" ng-model="site.thermostatList[$index].noCWireAttached" ng-value="1" /> Yes</label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="noCWireAttached{{$index}}" ng-model="site.thermostatList[$index].noCWireAttached" ng-value="0" /> No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">Does thermostat have an automated schedule, if so collect schedule</label>
+                                        <div>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="automatedSchedule{{$index}}" ng-model="site.thermostatList[$index].automatedSchedule" ng-value="1" /> Yes</label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="automatedSchedule{{$index}}" ng-model="site.thermostatList[$index].automatedSchedule" ng-value="0" /> No</label>
+                                        </div>
+                                        <input type="text" maxlength="500" name="automatedScheduleNote" ng-model="site.thermostatList[$index].automatedScheduleNote" class="form-control">
+                                        <div class="error-container last-error-container" ng-show="thermostatForm.automatedScheduleNote.$error" ng-messages="thermostatForm.automatedScheduleNote.$error">
+                                            <div ng-messages-include="error-list.html"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">Location of remote sensors for this thermostat</label>
+                                        <input type="text" class="form-control" maxlength="48" name="locationOfRemoteSensor" ng-model="site.thermostatList[$index].locationOfRemoteSensor">
+                                        <div class="error-container last-error-container" ng-show="thermostatForm.locationOfRemoteSensor.$error" ng-messages="thermostatForm.locationOfRemoteSensor.$error">
+                                            <div ng-messages-include="error-list.html"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">If sensors are present, validate which sensor is connected to which thermostat</label>
+                                        <input type="text" class="form-control" maxlength="48" name="validateSensor" ng-model="site.thermostatList[$index].validateSensor">
+                                        <div class="error-container last-error-container" ng-show="thermostatForm.validateSensor.$error" ng-messages="thermostatForm.validateSensor.$error">
+                                            <div ng-messages-include="error-list.html"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">Please describe wiring to current sensor if applicable</label>
+                                        <input type="text" maxlength="1024" class="form-control" name="wiringConfigSensor" ng-model="site.thermostatList[$index].wiringConfigSensor">
+                                        <div class="error-container last-error-container" ng-show="thermostatForm.wiringConfigSensor.$error" ng-messages="thermostatForm.wiringConfigSensor.$error">
+                                            <div ng-messages-include="error-list.html"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">Wiring to current sensor, attach photo</label>
+                                        <br>
+                                        <span class="btn btn-default btn-file">
+							    			<i class='fa fa-camera' aria-hidden='true'></i>&nbsp; Add Photo 
+							        		<input type="file" class="btn btn-default wiringSensorImageClass{{$index}}" name="wiringSensorImage" classname="wiringSensorImageClass{{$index}}" tagname="wiringSensorImage{{$index}}" index="{{$index}}" onchange="angular.element(this).scope().imageUpload(event)" />
+							        		<input type="text" ng-model="site.thermostatList[$index].wiringSensorImage" style="display: none" />
+							    		</span>
+                                        <b ng-if="site.thermostatList[$index].wiringSensorImage">
+									    	<img class="thumb wiringSensorImage{{$index}}" ng-src="fileUpload/loadImage?imageName={{site.thermostatList[$index].wiringSensorImage}}" alt="{{site.thermostatList[$index].wiringSensorImage}}" ng-click="openLightboxModal('fileUpload/loadImage?imageName='+site.thermostatList[$index].wiringSensorImage)"/>
+									    </b>
+                                    </div>
+                                </div>
+                            </ng-form>
+                        </div>
+                        <div class="row col-xs-12 col-sm-12 col-md-12">
+                            <a ng-click="addThermostat()"><span class="icon-add relative top-4 size-20 relative"><span class="path1"></span><span class="path2"></span></span> &nbsp;Add <span ng-show="site.thermostatList.length > 0">another</span> Thermostat</a>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <span class="line-height-40">Survey Technician Information</span>
+                    <b class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showSurvey = !showSurvey;$event.stopPropagation();">
+                    	<i class="icon-down-arrow size-26 top-4 relative" ng-show="showSurvey" aria-hidden="true"></i>
+						<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showSurvey"></i>
+                    </p></b>
+                    <hr class="no-margin" />
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showSurvey" class="col-xs-12 ">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 control-label size-14">Name</label>
+                                <input type="text" maxlength="48" class="form-control" name="technicianName" ng-model="site.technicianName">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.technicianName.$error && createLocationForm.$submitted" ng-messages="createLocationForm.technicianName.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 size-14">Phone Number</label>
+                                <input type="text" class="form-control" maxlength="15" name="technicianPhone" ng-model="site.technicianPhone" ui-mask="(999) 999-9999" ui-mask-placeholder ui-mask-placeholder-char="_">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.technicianPhone.$error && createLocationForm.$submitted" ng-messages="createLocationForm.technicianPhone.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Notes</label>
+                                <input type="text" maxlength="1024" class="form-control" name="technicianNotes" ng-model="site.technicianNotes">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.technicianNotes.$error && createLocationForm.$submitted" ng-messages="createLocationForm.technicianNotes.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <span class="line-height-40">Install Location Information</span>
+                    <b class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showInstallLocation = !showInstallLocation;$event.stopPropagation();">
+                    	<i class="icon-down-arrow size-26 top-4 relative" ng-show="showInstallLocation" aria-hidden="true"></i>
+						<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showInstallLocation"></i>
+                    </p></b>
+                    <hr class="no-margin" />
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showInstallLocation" class="col-xs-12 ">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 control-label size-14">Cellular Mode</label>
+                                <input type="text" maxlength="48" class="form-control" name="cellularMode" ng-model="site.cellularMode">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.cellularMode.$error && createLocationForm.$submitted" ng-messages="createLocationForm.cellularMode.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 size-14">Cellular Coverage</label>
+                                <input type="text" maxlength="48" class="form-control" name="cellularCoverage" ng-model="site.cellularCoverage">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.cellularCoverage.$error && createLocationForm.$submitted" ng-messages="createLocationForm.cellularCoverage.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Cellular Provider</label>
+                                <input type="text" maxlength="48" class="form-control" name="cellularProvide" ng-model="site.cellularProvide">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.cellularProvide.$error && createLocationForm.$submitted" ng-messages="createLocationForm.cellularProvide.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 control-label size-14">Wi-Fi/MiFi SSID and Password</label>
+                                <input type="text" maxlength="48" class="form-control" placeholder="SSID" name="cellularWIFI" ng-model="site.cellularWIFI">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.cellularWIFI.$error && createLocationForm.$submitted" ng-messages="createLocationForm.cellularWIFI.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 control-label size-14">&nbsp;</label>
+                                <input type="text" maxlength="48" class="form-control" placeholder="Password" name="cellularWIFIPWD" ng-model="site.cellularWIFIPWD">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.cellularWIFIPWD.$error && createLocationForm.$submitted" ng-messages="createLocationForm.cellularWIFIPWD.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <span class="line-height-40">Install Cellular Modem Information</span>
+                    <b class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showCellular = !showCellular;$event.stopPropagation();">
+                    	<i class="icon-down-arrow size-26 top-4 relative" ng-show="showCellular" aria-hidden="true"></i>
+						<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showCellular"></i>
+                    </p></b>
+                    <hr class="no-margin" />
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showCellular" class="col-xs-12 ">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 control-label size-14">Modem Type</label>
+                                <select class="form-control" name="modemType" ng-model="site.modemType" ng-options="option.value as option.label for option in modemTypeOptions"></select>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 size-14">SIM Card Number</label>
+                                <input type="text" maxlength="48" class="form-control" name="simCardNumber" ng-model="site.simCardNumber">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.simCardNumber.$error && createLocationForm.$submitted" ng-messages="createLocationForm.simCardNumber.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 control-label size-14">Cellular Modem Serial Number</label>
+                                <input type="text" maxlength="48" class="form-control" name="modemSerialNumber" ng-model="site.modemSerialNumber">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.modemSerialNumber.$error && createLocationForm.$submitted" ng-messages="createLocationForm.modemSerialNumber.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="email" class="weight-400 size-14">Cellular Modem Static IP Address</label>
+                                <input type="text" maxlength="48" class="form-control" ng-pattern="/^[0-9.]*$/" name="modemIPAddress" ng-model="site.modemIPAddress">
+                                <div class="error" ng-show="createLocationForm.modemIPAddress.$error.pattern">Cellular Modem Static IP Address should contain numbers and dot only</div>
+                                <div class="error-container last-error-container" ng-show="createLocationForm.modemIPAddress.$error && createLocationForm.$submitted" ng-messages="createLocationForm.modemIPAddress.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Cellular Modem Phone Number</label>
+                                <input type="text" maxlength="48" class="form-control" name="modemPhoneNumber" ng-model="site.modemPhoneNumber" ui-mask="(999) 999-9999" ui-mask-placeholder ui-mask-placeholder-char="_">
+                                <div class="error-container last-error-container" ng-show="createLocationForm.modemPhoneNumber.$error && createLocationForm.$submitted" ng-messages="createLocationForm.modemPhoneNumber.$error">
+                                    <div ng-messages-include="error-list.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="col-xs-12">
+            <button type="button" onclick="history.back()" class="btn btn-default pull-right margin-left10 mob-bottom-10">Cancel</button>
+            <button class="btn btn-primary pull-right margin-left10 mob-bottom-10" ng-disabled="makeDisable">Save</button>
+            <button type="button" ng-if="userDetails.rolePermissions['Site Management']==2" data-toggle="modal" data-target="#modelDialog" class="btn btn-default pull-right margin-left10 mob-bottom-10" ng-click="deleteSite()">Delete</button>
+        </div>
+        <div class="clear"></div>
+        <gap></gap>
+    </div>
+</form>
+<script id="error-list.html" type="text/ng-template">
+    <div class="error" ng-message="email">Please enter valid email address</div>
+    <div class="error size15" ng-message="required">This field is required</div>
+    <div class="error" ng-message="maxlength255">Maximum length of this field is 255 characters</div>
+    <div class="error" ng-message="maxlength105">Maximum length of this field is 105 characters</div>
+    <div class="error" ng-message="maxlength104">Maximum length of this field is 104 characters</div>
+    <div class="error" ng-message="maxlength50">Maximum length of this field is 50 characters</div>
+    <div class="error" ng-message="maxlength48">Maximum length of this field is 48 characters</div>
+    <div class="error" ng-message="maxlength30">Maximum length of this field is 30 characters</div>
+    <div class="error" ng-message="maxlength20">Maximum length of this field is 20 characters</div>
+    <div class="error" ng-message="maxlength15">Maximum length of this field is 15 characters</div>
+    <div class="error" ng-message="maxlength10">Maximum length of this field is 10 characters</div>
+    <div class="error" ng-message="maxlength5">Maximum length of this field is 5 characters</div>
+    <div class="error" ng-message="selectValidation">This field is required</div>
+    <div class="error" ng-message="minlength">Minimum length of this field is 5 characters</div>
+</script>

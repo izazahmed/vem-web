@@ -1,0 +1,155 @@
+<div class="blue-bg-bar min-height-52 relative">
+</div>
+<div class="form-group no-margin white-bg x-md-padding">
+    <h1 class="size-14 weight-500 line-height-40 no-margin pull-left">New Log Entry</h1>
+    <div class="clear"></div>
+</div>
+<div class="clear"></div>
+<s-gray-gap></s-gray-gap>
+
+<form role="form" class="checkboxform form-horizontal top-97 scroll" name="createActivityForm" novalidate="" ng-submit="createActivity(createActivityForm)" autocomplete="off">
+    <gap></gap>
+    <gap></gap>
+    <div class="clear"></div>
+    <div class="col-sm-12 col-md-10 col-lg-7">
+    <div class="form-group required ">
+        <label for="email" class="weight-400 size-14 col-xs-12 col-sm-3 text-left-imp control-label">Subject</label>
+        <div class="col-xs-12 col-sm-9">
+            <input type="text" class="form-control" ng-model="activity.subject" name="subject" required>
+            <div class="error-container last-error-container" ng-show="createActivityForm.subject.$error && createActivityForm.$submitted" ng-messages="createActivityForm.subject.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="col-sm-12 col-md-10  col-lg-7">
+    <div class="form-group  required">
+        <label for="email" class="weight-400 size-14 col-xs-12 col-sm-3 text-left-imp control-label">Type</label>
+        <div class="col-xs-12 col-sm-9">
+        <div class="row">
+        	<div class="col-xs-12 col-sm-6">Customer Correspondence&nbsp;&nbsp;</div>
+        	<div class="col-xs-12 col-sm-6">
+	            <select class="form-control customers-dropdown no-rounded " name="type" ng-model="activity.type" required>
+	            	<option value="" selected>Select Type</option>
+		         	<option value="1">Phone Call</option>
+		         	<option value="2">Email</option>
+		         	<option value="3">SMS</option>
+		        </select>
+		        <div class="error-container last-error-container" ng-show="createActivityForm.type.$error && createActivityForm.$submitted" ng-messages="createActivityForm.type.$error">
+                	<div ng-messages-include="error-list.html"></div>
+            	</div>
+	        </div>
+        </div>
+        </div>
+    </div>
+    </div>
+    <div class="col-sm-12 col-md-10 col-lg-7">
+    <div class="form-group  required">
+        <label for="email" class="weight-400 size-14 col-xs-12 col-sm-3 control-label text-left-imp">Time Stamp</label>
+        <div class="col-xs-12 col-sm-9">
+        <div class="form-inline relative inline-block pull-left mob-bottom-10">
+            <input id="timestamp" type="text" class="form-control no-bg padding-right-5" readonly uib-datepicker-popup="MM/dd/yyyy" name="date" ng-model="date" is-open="popup1.opened" ng-required="true" close-text="Close" ng-click="open1()" datepicker-options="options"/>
+            <label class="icon-calander size-20 select-date " for="timestamp"></label>  
+            <div class="error-container last-error-container" ng-show="createActivityForm.date.$error && createActivityForm.$submitted" ng-messages="createActivityForm.date.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+        </div>
+        <div class="inline-block pull-left padding-left-5">            
+            <div show-spinners="false" name="hhmm" uib-timepicker ng-model="hhmm" required hour-step="hstep" minute-step="mstep" show-meridian="getMeridian" my-enter></div>
+            <div class="error-container last-error-container" ng-show="createActivityForm.hhmm.$error.required && !createActivityForm.hhmm.$error.time && createActivityForm.$submitted" ng-messages="createActivityForm.hhmm.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+            <div class="error-container last-error-container" ng-show="createActivityForm.hhmm.$error.time && createActivityForm.hhmm.$error.required  && createActivityForm.$submitted" ng-messages="createActivityForm.hhmm.$error">
+               <p class="error">Please enter correct Time</p>
+            </div>
+        </div>
+        </div>
+    </div>
+	</div>
+	<div class="col-sm-12 col-md-10 col-lg-7">
+    <div class="form-group ">
+        <label for="email" class="weight-400 size-14 col-xs-12 col-sm-3 text-left-imp">Contact</label>
+        <div class="col-xs-12 col-sm-9">
+            <input type="text" ng-model="activity.contact" name="contact" class="form-control">
+        </div>
+    </div>
+    </div>
+    <div class="col-sm-12 col-md-10 col-lg-7">
+    <div class="form-group ">
+        <label for="email" class="weight-400 size-14 col-xs-12 col-sm-3 text-left-imp">Contact Number</label>
+        <div class="col-xs-12 col-sm-9">
+            <input type="text" ui-mask="(999) 999-9999" ui-mask-placeholder ui-mask-placeholder-char="_" class="form-control" ng-model="activity.contactNumber" name="contactNumber">
+        </div>
+    </div>
+    </div>
+    <div class="col-sm-12 col-md-10 col-lg-7">
+    <div class="form-group  required">
+        <label for="email" class="weight-400 size-14 col-xs-12 col-sm-3 text-left-imp">Customer</label>
+        <div class="col-xs-12 col-sm-9">
+        	<select class="form-control customers-dropdown no-rounded" ng-disabled="disableCustomer" name="customerId" ng-model="customerId" ng-change="getGroups()" required
+            	ng-options="option.id as option.label for option in customers">
+	         	<option value="" selected>Select Customer</option>
+	        </select>
+	        <div class="error-container last-error-container" ng-show="createActivityForm.customerId.$error && createActivityForm.$submitted" ng-messages="createActivityForm.customerId.$error">
+            	<div ng-messages-include="error-list.html"></div>
+           	</div>
+        </div>
+    </div>
+    </div>
+    <div class="col-sm-12 col-md-10 col-lg-7">
+    <div class="form-group">
+        <label for="email" class="weight-400 size-14 col-xs-12 col-sm-3 text-left-imp">Group</label>
+        <div class="col-xs-12 col-sm-9">
+             <select class="form-control group-dropdown no-rounded" name="groupId" ng-model="groupId" ng-change="getSites()"
+             ng-options="option.groupId as option.groupName for option in groups">
+	                    <option value="" selected>Select Group</option>
+	                </select>
+        </div>
+    </div>
+    </div>
+    <div class="col-sm-12 col-md-10 col-lg-7">
+    <div class="form-group">
+        <label for="email" class="weight-400 size-14 col-xs-12 col-sm-3 text-left-imp">Site</label>
+        <div class="col-xs-12 col-sm-9">
+            <select class="form-control group-dropdown no-rounded" name="siteId" ng-model="siteId"  ng-change="getDevices()"
+            ng-options="option.siteId as option.siteName for option in sites" >
+                    <option value="" selected>Select Site</option>
+                </select>
+        </div>
+    </div>
+    </div>
+    <div class="col-sm-12 col-md-10 col-lg-7">
+    <div class="form-group">
+        <label for="email" class="weight-400 size-14 col-xs-12 col-sm-3 text-left-imp">Device</label>
+        <div class="col-xs-12 col-sm-9">	
+            <select class="form-control group-dropdown no-rounded" name="deviceId" ng-model="deviceId" 
+            ng-options="option.deviceId as option.name for option in devices">
+                    <option value="" selected>Select Device</option>
+                </select>
+        </div>
+    </div>
+    </div>
+    <div class="col-sm-12 col-md-10 col-lg-7">
+     <div class="form-group">
+        <label for="email" class="weight-400 size-14 col-xs-12 col-sm-3 text-left-imp">Description</label>
+        <div class="col-xs-12 col-sm-9">
+            <textarea maxlength="1028" class="form-control" ng-model="activity.description" name="description"></textarea>
+            <div class="error-container last-error-container" ng-show="createActivityForm.description.$error && createActivityForm.$submitted" ng-messages="createActivityForm.description.$error">
+            	<div ng-messages-include="error-list.html"></div>
+           	</div>
+        </div>
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="col-xs-12">
+    	<button type="button" onclick="history.back()" class="btn btn-default pull-right margin-left10">Cancel</button>
+   	    <button class="btn btn-primary pull-right margin-left-10">Save</button>
+    </div>
+    <div class="clear"></div>
+    <gap></gap>
+</form>
+<script id="error-list.html" type="text/ng-template">
+    <div class="error size15" ng-message="required">This field is required</div>
+	<div class="error size15" ng-message="time">Please enter valid time format</div>
+    <div class="error" ng-message="maxlength500">Maximum length of this field is 500 characters</div>
+</script>

@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <h1 class="no-margin no-padding text-center size-20 weight-700 text-center modal-title">Apply Forecast to</h1>
+    </div>
+    <div class="clear"></div>
+    <gap></gap> 
+    <div class="clear"></div>
+    <div class="col-xs-12 col-sm-12 col-md-12">
+
+        <form role="form" name="applyDeviceForecastForm" novalidate="" ng-submit="applyForecast(applyDeviceForecastForm)">
+         
+            <div class="form-group col-xs-12">
+                <label class="weight-400 size-14" for="email">Devices</label>
+                  <div ng-dropdown-multiselect="" class="sites-dropdown width-percent-100 text-left-imp" options="devicesDataArry" name="device-field" selected-model="selectedDevices" events="devicesDropdownEvents" checkboxes="true" extra-settings="multiSelectDeviceSettings" required></div>
+             
+                <div class="error size15" ng-show="applyDeviceForecastForm.$submitted && selectedDevices.length == 0">This field is required</div>
+                <br/>
+                <div class="col-xs-12">         
+                <button class="btn btn-default pull-right margin-left10" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary pull-right margin-left10" type="submit">Apply</button>
+                </div>
+                <div class="clearfix"></div>
+                <gap></gap>
+            </div>
+        </form>
+
+    </div>
+    <style>
+        .modal-dialog {
+            max-width: 400px;
+        }
+    </style>
+</div>

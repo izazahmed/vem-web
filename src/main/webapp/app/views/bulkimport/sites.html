@@ -1,0 +1,58 @@
+<div role="tabpanel" class="tab-pane" id="sites">
+	<br /> <br />
+	<hr class="no-margin" />
+
+	<ul class="listhover scroll top-104">
+		<span ng-repeat="record in records">
+			<li class="border-bottom" ng-if="record.bulkUploadStatus == 'inprogress'">
+				<div class="padding y-md-padding">
+					<div class="col-lg-4">
+						{{record.bulkUploadSuccessCount}}/{{record.bulkUploadTotalRecords}} Added. <span>{{record.bulkUploadFailedCount}} Failed</span>
+					</div>
+					<div class="col-lg-5 text-right">
+						In Progress:
+					</div>
+
+					<div class="col-lg-3 text-left">
+						
+						<div class="col-lg-10"><uib-progressbar animate="false"
+								value="100 - makeParseInt(100 - (record.bulkUploadCounter / record.bulkUploadTotalRecords * 100))"
+								type="success" class="progress-striped active no-margin">
+							<b class="progress-label" ng-class="{'white-text':(100 - makeParseInt(100 - (record.bulkUploadCounter / record.bulkUploadTotalRecords * 100))) > 50}">
+								{{100 - makeParseInt(100 - (record.bulkUploadCounter / record.bulkUploadTotalRecords * 100))}}%</b></uib-progressbar>
+						</div>
+						<div class="col-lg-2 text-right no-padding-right">
+							<i class="normal-hide icon icon-delete-bulk size-16 top-2 relative"
+								data-toggle="modal" data-target="#modelDialog"
+								ng-click="deleteSiteUpload(record)"></i>
+						</div>
+						
+					</div>
+					
+
+					<div class="clearfix"></div>
+				</div>
+		</li>
+			<li class="border-bottom" ng-if="record.bulkUploadStatus == 'completed'">
+				<div class="padding y-md-padding">
+					<div class="col-lg-4">
+						{{record.bulkUploadSuccessCount}}/{{record.bulkUploadTotalRecords}} Added. <span>{{record.bulkUploadFailedCount}} Failed</span>
+					</div>
+					<div class="col-lg-5 text-right">
+						<u><a href="fileUpload/loadExcel?excelName={{record.bulkUploadSheet}}" class="link">{{getFileName(record.bulkUploadSheet)}}</a></u>
+					</div>
+					<!-- <div class="col-lg-2 text-right">{{makeFormat(record.recordUploadAt,'MM/DD/YYYY')}}</div> -->
+					<div class="col-lg-3 text-right">
+						<div class="col-lg-10">{{makeFormat(record.recordUploadAt,'MM/DD/YYYY')}} {{makeFormat(record.recordUploadAt,'hh:mm A')}}</div>
+						<div class="col-lg-2 text-right no-padding-right">
+							<i class="normal-hide icon icon-delete-bulk size-16 top-2 relative"
+								data-toggle="modal" data-target="#modelDialog"
+								ng-click="deleteSiteUpload(record)"></i>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+		</li>
+		</span>
+	</ul>
+</div>

@@ -1,0 +1,15 @@
+<div>	
+<gap></gap>
+<label for="email" class="weight-500 control-label size-14 col-xs-12 text-left-imp">Schedule Details</label>
+<div class="chart-scroll">
+	<div class="calendar-area">
+		<div my-calendar class="calendar" my-events="schedule.timepointsmap"></div>
+	</div>    
+	<div class="x-md-padding" ng-if="userDetails.rolePermissions['Schedule Management']==2">
+		<button class="btn pull-right t-margin-10 x-md-padding" ng-click="applySchedule(schedule);$event.stopPropagation();" ng-class="{'btn-primary':((schedule.scheduleName | lowercase) != 'custom schedule')}" ng-disabled="(schedule.scheduleName | lowercase) == 'custom schedule'">Apply To</button>
+	</div>
+	</div>
+	<div class="clearfix"></div>
+	<gap></gap>
+	<gap></gap>
+</div>

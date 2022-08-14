@@ -1,0 +1,132 @@
+<ul class="blue-bg-bar">
+    <li class="pull-right">
+        <div>
+            <span class="line-height-40 white-text size-14 weight-500">Filter By &nbsp;</span>
+
+            <select class="border text-muted xs-padding" ng-model="activityObj.filterBy" ng-change="filterByChange()">
+                <option value="">All</option>
+                <option ng-if="userDetails.rolePermissions.hasOwnProperty('Customer Management')" value="Customer"  ng-if="customers.length > 1">Customer</option>
+                <option ng-if="userDetails.rolePermissions.hasOwnProperty('Group Management')" value="Group">Group</option>
+                <option ng-if="userDetails.rolePermissions.hasOwnProperty('Site Management')" value="Site">Site</option>
+                <option ng-if=" userDetails.rolePermissions.hasOwnProperty('Device Management')" value="Device">Device</option>
+                <option value="Module">Module</option>
+                <option value="Action">Action</option>
+            </select>
+           <!--  <select class="border text-muted xs-padding" ng-show="filterBy!='All'" ng-model="filterSearch" ng-init="filterSearch='All'" ng-change="filterBySearch()">
+                    <option value="All">All</option>
+                    <option value="{{filterdatas.key}}" ng-repeat="filterdatas in filterdata">{{filterdatas.value}}</option>
+                </select>-->
+
+
+            <select ng-show="activityObj.filterBy=='Customer'" class="border text-muted xs-padding" ng-change="filterByChange()" ng-model="activityObj.customerId">
+                <option value="">--- Select Customer ---</option>
+                <option ng-repeat="option in customers" value="{{option.id}}">{{option.name}}</option>
+            </select>
+            <select ng-show="activityObj.filterBy=='Group'" class="border text-muted xs-padding" ng-change="filterByChange()" ng-model="activityObj.groupId">
+                <option value="">--- Select Group ---</option>
+                <option ng-repeat="option in groups" value="{{option.id}}">{{option.name}}</option>
+            </select>
+            <select ng-show="activityObj.filterBy=='Site'" class="border text-muted xs-padding" ng-change="filterByChange()" ng-model="activityObj.siteId">
+                <option value="">--- Select Site ---</option>
+                <option ng-repeat="option in sites" value="{{option.id}}">{{option.name}}</option>
+            </select>
+            <select ng-show="activityObj.filterBy=='Device'" class="border text-muted xs-padding" ng-change="filterByChange()" ng-model="activityObj.deviceId">
+                <option value="">--- Select Device ---</option>
+                <option ng-repeat="option in devices" value="{{option.id}}">{{option.name}}</option>
+            </select>
+            <select ng-show="activityObj.filterBy=='Module'" class="border text-muted xs-padding" ng-change="filterByChange()" ng-model="activityObj.filterByModule">
+                <option value="">All</option>
+                <option value="Alerts">Alert</option>
+                <option ng-if="userDetails.rolePermissions.hasOwnProperty('Device Management')" value="Device">Device</option>
+                <option ng-if="userDetails.rolePermissions.hasOwnProperty('Group Management')" value="Group">Group</option>
+                <option value="Logout">Logout</option>
+                <option value="Login">Login</option>
+                <option ng-if="userDetails.isSuper" value="Role">Roles</option>
+                <option ng-if="userDetails.rolePermissions.hasOwnProperty('Schedule Management')" value="Schedule">Schedule</option>
+                <option ng-if="userDetails.rolePermissions.hasOwnProperty('Site Management')" value="Site">Site</option>
+                <option ng-if="userDetails.rolePermissions.hasOwnProperty('User Management')" value="Users">User</option>
+            </select>
+            <!-- <select ng-show="activityObj.filterBy=='Action'" class="border text-muted xs-padding" ng-model="activityObj.filterByAction">
+            </select> -->
+            <select ng-show="activityObj.filterBy=='Action'" class="border text-muted xs-padding" ng-change="filterByChange()" ng-model="activityObj.filterByAction">
+                <option value="">All</option>
+                <option value="Added">Added</option>
+                <option value="Alerted">Alerted</option>
+                <option value="Called">Called</option>
+                <option value="Cleared">Cleared</option>
+                <option value="Deleted">Deleted</option>
+                <option value="Emailed">Emailed</option>
+                <option value="Failed">Failure</option>
+                <option value="Success">Success</option>
+                <option value="Texted">Texted</option>
+                <option value="Updated">Updated</option>
+            </select>
+            <input type="text" class="border xs-padding" ng-focus="showSearch" ng-keyup="searchLog($event)" ng-show="showSearch" ng-model="filterActivity" />&nbsp;<i class="icon-search size-20 white-text cursor show-search y-padding v-middle" aria-hidden="true" ng-click="showSearch = !showSearch"></i>
+        </div>
+    </li>
+    <div class="clear"></div>
+</ul>
+<div class="clear"></div>
+<div class="border-bottom">
+    <div class="x-md-padding">
+        <div class="pull-left" id="activity-log-dates">
+            <!-- <div class="mob-blk-desk-inline"><span class="line-height-40 weight-500">{{filteredLogs.length}} / {{logs.length}} Logs &nbsp;&nbsp;&nbsp;&nbsp;</span><i class="icon-download size-30 v-middle text-dark cursor" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp;&nbsp;{{screenWidth}}
+            </div> -->
+
+            <!-- pagination implementation -->
+
+            <div class="mob-blk-desk-inline">
+            	<span class="line-height-40 weight-500" >
+            		<span ng-if="dataLoaded && activityObj.recordsPerPage < totalRecords">{{(activityObj.currentPage)+1}} - {{(activityObj.currentPage)+(activityObj.recordsPerPage)}} / {{totalRecords}} Logs &nbsp;&nbsp;&nbsp;&nbsp;</span>
+            		<span ng-if="dataLoaded && activityObj.recordsPerPage >= totalRecords">{{(activityObj.currentPage)+1}} - {{totalRecords}} / {{totalRecords}} Logs &nbsp;&nbsp;&nbsp;&nbsp;</span>
+            	</span>
+            	<i class="icon-download size-30 v-middle text-dark cursor" aria-hidden="true"></i>
+	 		&nbsp;&nbsp;&nbsp;&nbsp;{{screenWidth}}</div>
+
+
+
+	 		<!-- <div class="mob-blk-desk-inline"><span class="line-height-40 weight-500">{{filteredLogs.length}} / {{logs.length}} Logs &nbsp;&nbsp;&nbsp;&nbsp;</span><i class="icon-download size-30 v-middle text-dark cursor" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp;&nbsp;{{screenWidth}}
+            </div> -->
+
+            <div class="mob-blk-desk-inline">
+                <form class="form-inline mob-blk-desk-inline mob-left">
+                    <div class="form-group relative">
+                        <label class="weight-400" for="inputfrom">From</label>&nbsp;<span class="relative"><span class="relative mob-blk-desk-inline"><input id="inputfrom" type="text" class="no-bg form-control height-30" style="width:110px" readonly uib-datepicker-popup="MM/dd/yyyy" ng-model="startDate" is-open="popup1.opened" ng-required="true" close-text="Close" max-date="endDate" ng-click="open1()" datepicker-options="options"/>
+	    <label class="icon-calander size-20 select-date" for="inputfrom"></label></span></span>
+                    </div>
+                    <div class="form-group relative">
+                        <label class="weight-400" for="inputto">To</label>&nbsp;<span class="relative"><span class="relative mob-blk-desk-inline"><input id="inputto" type="text" class="no-bg form-control height-30" style="width:110px" readonly uib-datepicker-popup="MM/dd/yyyy" ng-model="endDate" is-open="popup2.opened" ng-required="true" close-text="Close" min-date="startDate" ng-click="open2()" datepicker-options="options" />
+	    <label class="icon-calander size-20 select-date" for="inputto"></label></span></span>
+                    </div>
+                    <button type="button" ng-click="dateFilterData()" class="btn btn-primary height-30 mob-bottom-10">Submit</button>
+                </form>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="pull-right mob-left">
+            <a href="" ng-if="userDetails.createActivityLogFlag==1" ng-click="addActivity()">
+                <p class="title size-14 weight-400 pull-right add no-margin line-height-40">
+                    <span class="icon-add size-20 verticalTxt-btm plus-icon">
+               	<span class="path1"></span><span class="path2"></span>
+                    </span>Add New Log Entry
+                </p>
+            </a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<s-gray-gap></s-gray-gap>
+<ul id="tablescroll" class="scroll top-104 alternate-list-bg">
+
+    <div ng-show="!isDataAvailable" style="opacity:0" id="nodRata">
+        <br/>
+        <br/>
+        <div class="text-center error col-centered">No Data Found</div>
+    </div>
+    <table id="entry-grid" ng-show="logs" datepicker-options="options" datatable="" dt-options="dtOptions" dt-instance="dtInstance" dt-columns="dtColumns" class="table activitylog-table table-striped">
+			</table>
+
+    <div class="clear "></div>
+</ul>
+<div class="clear"></div>

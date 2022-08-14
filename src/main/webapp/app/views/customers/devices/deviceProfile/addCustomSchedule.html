@@ -1,0 +1,167 @@
+<div class="blue-bg-bar min-height-52 relative">
+
+</div>
+<div class="bar height-50 relative">
+    <a href="javascript:void(0)" onclick="history.back()" class="icon-back size-20 x-padding top-4 relative"></a>
+    <span class="line-height-50 size-14">Custom Schedule</span>
+</div>
+<s-gray-gap></s-gray-gap>
+<gap></gap>
+<div class="scroll top-107">
+
+     <gap></gap>
+    <gap></gap>
+        <div class="x-md-padding">
+        
+        <form role="form" name="updateScheduleForm" novalidate="" ng-submit="editShedule(updateScheduleForm)" id="updateScheduleForm">
+            <gap></gap>
+            <div class="row">
+            <div class="form-group">
+                <label class="weight-400 control-label size-14 col-xs-4 col-sm-3 col-md-2 text-left-imp" for="email">Running On</label>
+                <div class="col-xs-6 col-sm-9 col-md-10 check-days">
+                    <div class="checkbox-inline line-height-26">
+	                    <input type="checkbox" ng-model="checkAll" ng-click="checkAllDays()"><b>Check all</b>
+	                </div>
+                    
+		        <div class="checkbox-inline line-height-26" ng-repeat="day in daysOfWeek track by $index">	
+                    <input type="checkbox" ng-model="schedule.daysOfWeek[$index+1]" name="dayOfWeek" ng-true-value="{{day.value}}" ng-false-value="-1" ng-click="populateTimePoints($index+1,$event)"> {{day.label}}
+                </div>
+                </div>
+                <div class="clear"></div>
+                <div class="col-xs-offset-4 col-sm-offset-3 col-md-offset-2 col-xs-6 col-sm-9 col-md-10 check-days" ng-hide="!updateScheduleForm.$submitted">
+                    <p class="error" ng-hide="schedule.daysOfWeek[1] ||schedule.daysOfWeek[2] ||schedule.daysOfWeek[3] ||schedule.daysOfWeek[4] || schedule.daysOfWeek[5] ||schedule.daysOfWeek[6] || schedule.daysOfWeek[7]">Please Select at least one day</p>
+                </div>
+            </div>
+            </div>
+            <div class="clearfix"></div>
+            <gap></gap>
+            <gap></gap>
+            <gap></gap>
+
+		<div class="row">
+            <div class="form-group">
+                <div class="col-xs-4 col-md-3 col-lg-2">
+                    Time
+                </div>
+                <div class="col-xs-4 col-md-3">
+                    Heat SP
+                    <br>
+                </div>
+                <div class="col-xs-4 col-md-3">
+                    Cool SP
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+          <div class="row">
+            <div class="form-group" ng-repeat="rowids in noofrows track by $index">
+                <ng-form name="timeForm">
+                       <div class="col-xs-4 col-md-3 col-lg-2">
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-12 required">
+                            <div class="inline-block" uib-timepicker ng-model="schedule.timePoints[$index].time" name="time" show-spinners="false" hour-step="1" minute-step="30" show-meridian="true" mousewheel="false" required ng-change="timeChange()" arrowkeys="false" ng-keypress="timeKeydownPrevent($event)"></div>
+                                    <div class="error-container last-error-container" ng-show="timeForm.time.$error && updateScheduleForm.$submitted" ng-messages="timeForm.time.$error">
+                                        <p class="error" ng-show="timeForm.time.$error.required && !timeForm.time.$error.time">This field is required</p>
+                                        <p class="error" ng-show="errorMsg[$index]">Please maintain 30 minutes time gap between each time period</p>
+                                    </div>
+                        </div>
+						</div>
+                    </div>
+                </ng-form>
+                <ng-form name="timePointsForm">
+                       <div class="col-xs-4 col-md-3">
+						<div class="row">
+
+                        <div class="col-sm-6 col-lg-6 ">
+                            <input type="number" string-to-number min="45" max="90" class="form-control orange-bg" ng-model="schedule.timePoints[$index].htpoint" name="htpoint" required>
+                            <div class="error-container last-error-container" ng-show="timePointsForm.htpoint.$error && updateScheduleForm.$submitted" ng-messages="timePointsForm.htpoint.$error">
+                                <p class="error" ng-show="timePointsForm.htpoint.$error.required">This field is required</p>
+                                
+                                <p class="error" ng-show="timePointsForm.htpoint.$error.number">Please enter valid number</p>
+                                <p class="error" ng-if="!timePointsForm.htpoint.$error.required" ng-show="timePointsForm.htpoint.$error.min || timePointsForm.htpoint.$error.max">Please enter value between 45° to 90° F</p>
+                            </div>
+
+                        </div>
+                        
+                        <div class="col-sm-5 col-lg-4">
+                            <select name="htunit" class="form-control" ng-model="schedule.timePoints[$index].htunit" ng-init="schedule.timePoints[$index].htunit='1'" disabled="disabled">
+                                <option value="1" selected>F</option>
+                                <option value="2">C</option>
+                            </select>
+                        </div>
+                    </div>
+                    </div>
+                </ng-form>
+
+                <ng-form name="clPointForm">
+                    <div class="col-xs-4 col-md-3">
+					<div class="row">
+
+                        <div class="col-sm-6 col-lg-6 ">
+
+                            <input type="number" string-to-number max="90" class="form-control blue-bg"  ng-model="schedule.timePoints[$index].clpoint" min="{{schedule.timePoints[$index].htpoint*1+1}}" name="clPoint" required>
+                            
+                            <div class="error-container last-error-container" ng-show="clPointForm.clPoint.$error && updateScheduleForm.$submitted" ng-messages="clPointForm.clPoint.$error">
+                                <p class="error" ng-show="clPointForm.clPoint.$error.required">This field is required</p>
+                                <p class="error" ng-show="clPointForm.clPoint.$error.number">Please enter valid number</p>
+                                <p class="error" ng-if="!clPointForm.clPoint.$error.required" ng-show="clPointForm.clPoint.$error.max">Please enter value between {{schedule.timePoints[$index].htpoint ? schedule.timePoints[$index].htpoint*1+1 : 45}}° to 90° F</p>
+                                
+                                <p class="error" ng-if="!clPointForm.clPoint.$error.required" ng-show="clPointForm.clPoint.$error.min">Cool SP has to be greater than Heat SP</p>
+                            </div>
+
+                         
+
+                        </div>
+                        <div class="col-sm-5 col-lg-4">
+                            <select name="clunit" class="form-control" ng-model="schedule.timePoints[$index].clunit" ng-init="schedule.timePoints[$index].clunit='1'" disabled="disabled">
+                                <option value="1" selected>F</option>
+                                <option value="2">C</option>
+                            </select>
+                        </div>
+                    </div>
+                    </div>
+                </ng-form>
+                <div class="clear"></div>
+            </div>
+            <div class="col-xs-12">
+	            <button class="btn btn-default pull-right margin-left10" type="button" ng-click="cancelSchedule(updateScheduleForm)">Cancel</button>
+	            <button class="btn btn-primary pull-right margin-left10">Apply</button>
+            </div>
+			</div>
+
+        </form>
+    </div>
+
+        <div class="clear"></div>
+
+            <div class="clearfix"></div>
+           
+            <hr class="hr-line ">
+            <div class="x-md-padding">
+    		<div class="row">
+            <label for="" class="weight-500 control-label size-14 col-xs-12 text-left-imp">Schedule Details</label>
+            <div class="clearfix"></div>
+            <div class="chart-scroll">
+            <div class="calendar-area" ng-if="events">
+                <div my-calendar class="calendar" my-events="events"></div>
+			</div>
+            </div>
+
+            <div class="clearfix"></div>
+            <gap></gap>
+            <gap></gap>
+            <div class="col-xs-12">
+            	<a href="#" onclick="history.back()" class="btn btn-default pull-right margin-left10">Cancel</a>
+            	<button class="btn btn-primary pull-right margin-left12" type="button" ng-click="updateSchedule(updateScheduleForm)">Save</button>
+			</div>
+			<div class="clearfix"></div>
+			<gap></gap>
+        </div>
+
+    </div>
+    
+</div>
+<script id="error-list.html" type="text/ng-template">
+    <div class="error size15" ng-message="required">This field is required</div>
+    <div class="error" ng-message="maxlength">Maximum length of this field is 30 characters</div>
+</script>

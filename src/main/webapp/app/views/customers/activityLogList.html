@@ -1,0 +1,95 @@
+<div class="border-bottom">
+<div class="x-md-padding">
+
+<div class="pull-right">
+		<div>
+			<span class="line-height-45 size-14 weight-500">Filter By &nbsp;</span>
+            <select class="border text-muted xs-padding" ng-model="activityObj.filterBy" ng-change="filterByChange()">
+                <option value="">All</option>
+                <option ng-if="userDetails.rolePermissions.hasOwnProperty('Group Management')" value="Group">Group</option>
+                <option ng-if="userDetails.rolePermissions.hasOwnProperty('Site Management')" value="Site">Site</option>
+                <option ng-if=" userDetails.rolePermissions.hasOwnProperty('Device Management')" value="Device">Device</option>
+                <option value="Action">Action</option>
+            </select>
+	        <select ng-show="activityObj.filterBy=='Group'" class="border text-muted xs-padding" ng-model="activityObj.groupId">
+            	<option value="">--- Select Group ---</option>
+	         	<option ng-repeat="option in groups" value="{{option.value}}">{{option.lable}}</option>
+	        </select>
+	        <select ng-show="activityObj.filterBy=='Site'" class="border text-muted xs-padding" ng-model="activityObj.siteId">
+            	<option value="">--- Select Site ---</option>
+	         	<option ng-repeat="option in sites" value="{{option.value}}">{{option.lable}}</option>
+	        </select>
+	        <select ng-show="activityObj.filterBy=='Device'" class="border text-muted xs-padding" ng-model="activityObj.deviceId">
+            	<option value="">--- Select Device ---</option>
+	         	<option ng-repeat="option in devices" value="{{option.value}}">{{option.lable}}</option>
+	        </select>
+            <select ng-show="activityObj.filterBy=='Action'" class="border text-muted xs-padding" ng-model="activityObj.filterByAction">
+                <option value="">All</option>
+                <option value="Added">Added</option>
+                <option value="Alerted">Alerted</option>
+                <option value="Called">Called</option>
+                <option value="Cleared">Cleared</option>
+                <option value="Deleted">Deleted</option>
+                <option value="Emailed">Emailed</option>
+                <!-- <option value="Failed">Failure</option>
+                <option value="Success">Success</option> -->
+                <option value="Texted">Texted</option>
+                <option value="Updated">Updated</option>
+            </select>
+			<input type="text" class="border padding-1" ng-focus="showSearch"
+				ng-show="showSearch" ng-model="filterActivity" />&nbsp;<i
+				class="icon-search size-20 cursor show-search y-padding v-middle" aria-hidden="true"
+				ng-click="showSearch = !showSearch"></i>
+		</div>
+	</div>
+
+<div class="clearfix"></div>
+
+	<div class="pull-left">
+		<span class="line-height-40 weight-500">{{filteredLogs.length}} / {{logs.length}} Logs &nbsp;&nbsp;&nbsp;&nbsp;</span><i class="icon-download size-30 v-middle text-dark" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;
+	    <div class="mob-blk-desk-inline">
+		<form class="form-inline mob-blk-desk-inline mob-left">
+		  <div class="form-group relative">
+		    <label class="weight-400" for="inputfrom">From</label>&nbsp;<span class="relative mob-blk-desk-inline"><input id="inputfrom" style="width:110px" type="text" class="no-bg form-control height-30" readonly uib-datepicker-popup="MM/dd/yyyy" ng-model="startDate" is-open="popup1.opened" ng-required="true" close-text="Close" max-date="endDate" ng-click="open1()"/>
+		    <label class="icon-calander size-20 select-date" for="inputfrom"></label></span>
+		  </div>&nbsp;&nbsp;
+		  <div class="form-group relative">
+		    <label class="weight-400" for="inputto">To</label>&nbsp;<span class="relative mob-blk-desk-inline"><input id="inputto" style="width:110px" type="text" class="no-bg form-control height-30" readonly uib-datepicker-popup="MM/dd/yyyy" ng-model="endDate" is-open="popup2.opened" ng-required="true" close-text="Close" min-date="startDate" ng-click="open2()"/>	
+		    <label class="icon-calander size-20 select-date" for="inputto"></label></span>    
+		  </div>
+		  <button type="button" ng-click="dateFilterData()" class="btn btn-primary  height-30">Submit</button>
+		</form>
+		</div>
+	</div>
+</div>
+
+<div class="clear"></div>
+</div>
+ <ul class="alternate-list-bg border-top">
+       	<div ng-hide="filteredLogs.length" style="opacity:0" id="nodata">
+           <br/><br/><div class="text-center error col-centered">No Data Found</div>
+        </div>
+        <li class="border-bottom y-padding" ng-repeat="log in filteredLogs = (logs | orderBy: '-alNumber' | filter: logActivityFilter | filter: searchActivity)">
+	        <div class="col-xs-12 col-sm-2 col-md-2 size-14">
+                 {{log.alNumber}}.&nbsp;{{log.userName}}
+            </div> 
+            <div class="col-xs-12 col-sm-2 col-md-1 size-14 text-capitalize">
+                 {{log.alAction}}
+            </div>
+            <div class="col-xs-12 col-sm-2 size-14 col-md-2">
+                 {{log.alSpecificName}}
+            </div>
+            <div class="col-xs-12 col-sm-2 col-md-2 size-14">
+                {{log.alWhere}}
+            </div>
+            <div class="col-xs-12 col-sm-2 col-md-3 no-padding size-14">
+                 {{log.aldescription}}
+            </div>
+            <div class="col-xs-12 col-sm-2 size-14 col-md-2 text-right">
+                 {{log.alCreatedOn}}
+            </div>
+            <div class="clear "></div>
+        </li>
+        <div class="clear "></div>
+    </ul>
+<div class="clear"></div>

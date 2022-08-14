@@ -1,0 +1,130 @@
+<div role="tabpanel" class="tab-pane" id="alerts">
+	<form name="alertsForm" id="alertsForm" novalidate="" autocomplete="off">
+	<div>
+		<gap></gap>
+		<!-- <div class="col-xs-12 options-bar min-height-50 mob-pad-bottom-10 " ng-class="{'border-bottom': $state.current.name != 'alerts.customerAlerts'}"> -->
+		<div class="col-xs-12 options-bar min-height-50 mob-pad-bottom-10 border-bottom">
+			<div class="pull-left configurationUL">
+				<span class="size-16 weight-700 y-padding no-margin show-details">
+				<input type="checkbox" ng-model="checkAll" ng-click="checkAllValues()" ng-true-value="true" ng-false-value="false" /></span>
+				
+				<div class="btn-group alert-btn-group x-padding btn-group-sm" role="group">
+				  <button type="button" class="btn btn-default" ng-click="updateAlertStatus('new')">New</button>
+				  <button type="button" class="btn btn-default" ng-click="updateAlertStatus('acknowledge')">Acknowledge</button>
+				  <button type="button" class="btn btn-default" ng-click="updateAlertStatus('ignore')">Ignore</button>
+				  <button type="button" class="btn btn-default" ng-click="updateAlertStatus('resolve')">Resolve</button>
+				</div>
+				
+				<span class="line-height-40 weight-500 inline-block">{{filteredAlerts.length}} / {{alertsInfo.length}} Alerts</span>
+				<i class="icon-download size-30 v-middle cursor" aria-hidden="true"></i>
+			</div>
+			<div class="pull-right">
+		        <div>
+		            <span class="line-height-40 weight-500">Filter by</span>
+		            <select class="border text-muted xs-padding" ng-model="filterBy" ng-change="filterByChange()">
+		                <!-- <option value="All">All</option> -->
+		                <option value="Customers">Customer</option>
+		                <option value="Groups">Group</option>
+		                <option value="Sites">Site</option>
+		                <option value="Devices">Device</option>
+		                
+		            </select>
+		            <select ng-show="filterBy=='Customers'" class="border text-muted xs-padding" ng-model="customerData" ng-init="customerData='all'" ng-change="uncheckCheckAll()" id="alertCustomer" >
+			            <option value="all">All</option>
+			            <option value="{{key}}" ng-repeat="(key, value) in customerList">{{value}}</option>
+					</select> 
+					<select ng-show="filterBy=='Groups'" class="border text-muted xs-padding" ng-model="group" ng-init="group='all'" ng-change="uncheckCheckAll()">
+			            <option value="all">All</option>
+			            <option value="{{key}}" ng-repeat="(key, value) in groupList">{{value}}</option>
+					</select>
+					<select ng-show="filterBy=='Sites'" class="border text-muted xs-padding" ng-model="site" ng-init="site='all'" ng-change="uncheckCheckAll()">
+			            <option value="all">All</option>
+			            <option value="{{key}}" ng-repeat="(key, value) in siteList">{{value}}</option>
+					</select>
+					<select ng-show="filterBy=='Devices'" class="border text-muted xs-padding" ng-model="device" ng-init="device='all'" ng-change="uncheckCheckAll()">
+			            <option value="all">All</option>
+			            <option value="{{key}}" ng-repeat="(key, value) in deviceList">{{value}}</option>
+					</select>
+					<select class="border text-muted xs-padding" ng-model="LevelTwoFilter" ng-change="filterByChange()">
+		                <!-- <option value="All">All</option> -->
+		                <option value="AlarmType">Alert Status</option>
+		                <option value="Priority">Priority</option>
+		            </select>
+		            <select ng-show="LevelTwoFilter=='Priority'" class="border text-muted xs-padding" ng-model="priority" ng-init="priority='all'" ng-change="uncheckCheckAll()" id="alertPriority">
+			            <option value="all">All</option>
+			            <option value="{{key}}" ng-repeat="(key, value) in priorityList">{{value}}</option>
+					</select>
+		            <select class="border text-muted xs-padding" ng-show="LevelTwoFilter=='AlarmType'" ng-model="alertListStatus" 
+		            	 ng-change="fetchAlertData()">
+		                <option value="all">All</option>
+		                <option value="new">New</option>
+		                <option value="acknowledge">Acknowledge</option>
+		                <option value="open">Open</option>
+		                <option value="ignore">Ignore</option>
+		                <option value="resolve">Resolve</option>
+		                <option value="cleared">Cleared</option>
+		            </select>
+		            <input type="text" class="border" ng-show="showSearch" ng-focus="showSearch" ng-model="alertName" />&nbsp;<i class="icon-search size-20 cursor show-search v-middle" aria-hidden="true" ng-click="showSearch = !showSearch"></i>
+		        </div>
+		    </div> 
+			<div class="clear"></div>
+			<div>
+		        <p class="error" ng-show="checkAtleatOne">Please select at least one alert</p>
+		    </div>
+		    <div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+    	<gap></gap>
+	</div>
+	<div class="alerts-info-sub-views">
+		<!-- <ul class="listhover_nocursor users-list" ng-class="{'scroll top-195 border-top': $state.current.name == 'alerts.customerAlerts'}"> -->
+		<ul class="listhover_nocursor users-list" ng-class="{'scroll top-195': $state.current.name == 'alerts.customerAlerts'}">
+		<div ng-hide="filteredAlerts.length > 0" style="opacity:0" id="nodata">
+	        <br/><br/>
+	        <div class="text-center error col-centered">No Data Found</div>
+	    </div>
+        <li class="border-bottom y-padding" ng-repeat="alerts in filteredAlerts = ( alertsInfo | orderBy: 'rowid' | filter: alertsFilter | filter: alertName | filter: alertsFilterLevelTwo)">
+            <div class="col-xs-12 col-lg-12">
+                <span class="size-14  show-details">
+               		<input class="absolute" type="checkbox" value="{{alerts.deviceStateStgId}}" ng-true-value="{{alerts.deviceStateStgId}}" ng-model="alertsFormData[$index]" ng-false-value="" 
+               		class="top-3" ng-click="checkAllFlag();$event.stopPropagation();" name="subChk" />
+               		<div class="margin-left25">
+	               		<span ng-class="{'weight-500': alerts.statusId=='new', 'weight-500 thick-gray italic': alerts.statusId=='ignore'}">
+	               		{{alerts.alertName}} {{alerts.alertProrityName}} - </span>
+	               		<span ng-class="{'redfont': alerts.statusId=='new', 'thick-gray italic': alerts.statusId=='ignore'}">{{alerts.alertMessage}}</span>
+               	    </div>
+               	</span>
+               	<div class="thick-gray"> 
+                 <span class="pull-right mob-left mob-left-25"  ng-if="(!(alerts.alertRaisedTime.indexOf('Minutes') !== -1) && !(alerts.alertRaisedTime.indexOf('Hours') !== -1))"
+                 > {{(makeFormat(alerts.alertRaisedTime,'MM/DD/YYYY hh:mm a') | uppercase)}}</span>
+                 	<span class="pull-right mob-left mob-left-25" ng-if="((alerts.alertRaisedTime.indexOf('Minutes') !== -1) || (alerts.alertRaisedTime.indexOf('Hours') !== -1))">{{alerts.alertRaisedTime}}</span>
+<!-- 	               	<span class="pull-right mob-left mob-left-25">{{alerts.alertRaisedTime}}</span> -->
+	               	<span ng-if="alerts.statusId=='resolve'" class="pull-right trueSign">
+	               		<i class="icon-right size-16 relative weight-500 gray-border circle-border margin-right10"  aria-hidden="true"></i>
+	               	</span>
+	               	 <span ng-if="alerts.statusId=='cleared'" class="pull-right trueSignWhite">
+	               		<i class="icon-right size-16 relative weight-500 green-circle margin-right10"  aria-hidden="true"></i>
+	               	</span>
+	               	<span ng-if="alerts.statusId=='ignore'" class="pull-right padding-right10">
+	               		<i class="icon-close-popup size-20 weight-500 relative" aria-hidden="true"></i>
+	               	</span>
+	                <div class="margin-left25 details-drop ">{{alerts.customerName}}<span ng-if="alerts.groupName != '-' &&  alerts.groupName != '' " >,</span> {{alerts.groupName}}</div>
+	                <div class="margin-left25 details-drop ">{{alerts.siteName}}, 
+	                		<a ng-if=" userDetails.rolePermissions.hasOwnProperty('Device Management')" ng-click="gotoDeviceProfile(alerts.deviceId,alerts.customerId)"><span ng-class="{'skycolor': alerts.statusId=='new'}">{{alerts.deviceName}}</span></a>
+	                		<a ng-if="!userDetails.rolePermissions.hasOwnProperty('Device Management')" ><span ng-class="{'skycolor': alerts.statusId=='new'}">{{alerts.deviceName}}</span></a>
+	                </div>
+	                <div class="margin-left25 details-drop ">Alert ID: {{alerts.deviceStateStgId}}</div>
+	                <div class="margin-left25 details-drop" ng-show="alerts.actionItems.length > 0">
+	                	<div ng-click="showDetails = !showDetails;$event.stopPropagation();" class="skycolor">{{ !showDetails ? "+" : "-" }}&nbsp;Action List</div>
+	                	<div ng-show="showDetails" ng-if="actionItem.itemName" class="padding-left-5" ng-repeat="actionItem in alerts.actionItems">
+	                		<span ng-class="{'middle-dot': actionItem.itemName}"></span>&nbsp;&nbsp;<span ng-class="{'line-through' : actionItem.itemStatus==1}">{{actionItem.itemName}}</span>
+	                	</div>
+	                </div>
+                </div>	
+            </div>
+            <div class="clear"></div>
+        </li>
+		</ul>
+	</div>
+</form>
+</div>

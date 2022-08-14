@@ -1,0 +1,12 @@
+<div class="min-height-52 blue-bg-bar "></div>
+<gap></gap>
+<div class="navigation-list">
+<ul class="nav nav-tabs x-md-padding" role="tablist">
+	<li role="presentation" ng-class="{active: $state.current.activeSubTab== 'alerts'}"><a ui-sref="alerts.customerAlerts($state.params)" data-target="#alerts/customerAlerts" aria-controls="settings" role="tab" data-toggle="tab">Alerts <span ng-if=" (totalAlertCount *1 | number) > 0 " >({{totalAlertCount}})</span></a></li>
+	<li role="presentation" ng-class="{active: $state.current.activeSubTab== 'actionItems'}"><a ui-sref="alerts.actionitems($state.params)" data-target="#actionItems" aria-controls="settings" role="tab" data-toggle="tab">Action Items</a></li>
+	<li role="presentation" ng-class="{active: $state.current.activeSubTab== 'configuration'}"><a ui-sref="alerts.configuration($state.params)" ng-if="userDetails.isSuper==1" data-target="#configuration" aria-controls="settings" role="tab" data-toggle="tab">Configuration</a></li>
+</ul>
+</div>
+<div class="tab-content">
+	<div class="alerts-info-sub-views" ui-view="alerts-info"></div>
+</div>

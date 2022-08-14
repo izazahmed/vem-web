@@ -1,0 +1,322 @@
+<div class="blue-bg-bar min-height-52 relative"></div>
+<div class="bar relative x-md-padding">
+    <span class="line-height-40 size-14">New Device</span>
+</div>
+<s-gray-gap></s-gray-gap>
+
+<form role="form" class="form-horizontal scroll top-98 col-xs-12" name="addDeviceForm" novalidate="" ng-submit="addDevice(addDeviceForm)" autocomplete="off">
+    <gap></gap>
+    <div class="col-lg-7 col-md-10">
+    <div class="form-group required">
+    	<div class="row">
+        <label for="email" class="weight-400 control-label size-14 col-xs-12 col-sm-4 text-left-imp">Device Name</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" name="name" ng-model="device.name" maxlength="50" maxlength50="device.name" required>
+            <div ng-show="addDeviceForm.name.$error && addDeviceForm.$submitted" ng-messages="addDeviceForm.name.$error">
+                <div ng-messages-include="error-list1.html"></div>
+            </div>
+        </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="col-lg-7 col-md-10">
+    <div class="form-group required" disable-all="true">
+    	<div class="row">
+        <label for="email" class="weight-400 control-label size-14 col-sm-4 text-left-imp">Device Type</label>
+        <div class="col-sm-8">
+            <select class="form-control" required ng-model="device.deviceType" name="deviceType" select-validation="device.deviceType" ng-init="device.deviceType='2'">
+                <option value="2" selected>Thermostat</option>
+            </select>
+            <div ng-show="addDeviceForm.deviceType.$error && addDeviceForm.$submitted" ng-messages="addDeviceForm.deviceType.$error">
+                <div ng-messages-include="error-list1.html"></div>
+            </div>
+        </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="clear"></div>
+    <div class="col-lg-7 col-md-10">
+    <div class="form-group">
+    	<div class="row">
+        <label for="email" class="weight-400 control-label size-14 col-sm-4 text-left-imp">Device Tag</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" name="deviceTag" ng-model="device.deviceTag" maxlength="30">
+            <div ng-show="addDeviceForm.deviceTag.$error && addDeviceForm.$submitted" ng-messages="addDeviceForm.deviceTag.$error">
+                <div ng-messages-include="error-list1.html"></div>
+            </div>
+        </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="col-lg-7 col-md-10">
+    <div class="form-group required">
+    	<div class="row">
+        <label for="email" class="weight-400 control-label size-14 col-sm-4 text-left-imp">Make/Model</label>
+        <div class="col-sm-8">
+            <select class="form-control" required ng-model="device.model" name="model" select-validation="model">
+                <option value="">Select model</option>
+                <option value="Pro1 T855i">Pro1 T855i</option>                                
+                <option value="Pro1 T855i2">Pro1 T855i2</option>
+                <option value="Jackson T-32-P">Jackson T-32-P</option>
+            </select>
+            <div ng-show="addDeviceForm.model.$error && addDeviceForm.$submitted" ng-messages="addDeviceForm.model.$error">
+                <div ng-messages-include="error-list1.html"></div>
+            </div>
+        </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="col-lg-7 col-md-10">
+    <div class="form-group required ">
+    	<div class="row">
+        <label for="email" class="weight-400 control-label size-14 col-sm-4 text-left-imp">Mac ID</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" name="macId" ng-model="device.macId" ng-change="device.macId = device.macId.toUpperCase()" ui-mask="**-**-**-**-**-**"  ui-mask-placeholder ui-mask-placeholder-char="_" ui-options="{clearOnBlur:false,allowInvalidValue:true }" model-view-value="true" required>
+            <div ng-show="addDeviceForm.macId.$error && addDeviceForm.$submitted" ng-messages="addDeviceForm.macId.$error">
+                <div ng-messages-include="error-list1.html"></div>
+            </div>
+            <div class="error" ng-show="preventSpaces && addDeviceForm.$submitted">This field should not contain spaces</div>
+        </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="col-lg-7 col-md-10">
+    <div class="form-group ">
+    	<div class="row">
+        <label for="email" class="weight-400 control-label size-14 col-sm-4 text-left-imp">Version</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" name="version" ng-model="device.version" maxlength="32" maxlength32="device.version">
+        </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="col-lg-7 col-md-10">
+    <div class="form-group" ng-if="device.model=='Jackson T-32-P'">
+    	<div class="row">
+        <label for="email" class="weight-400 control-label size-14 col-sm-4 text-left-imp">SF22 HW Version</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" name="sf22HwVersion" ng-model="device.sf22HwVersion">
+            <div ng-show="addDeviceForm.sf22HwVersion.$error && addDeviceForm.$submitted" ng-messages="addDeviceForm.sf22HwVersion.$error">
+                <div ng-messages-include="error-list1.html"></div>
+            </div>
+        </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="col-lg-7 col-md-10">
+    <div class="form-group ">
+    	<div class="row">
+        <label for="email" class="weight-400 control-label size-14 col-sm-4 text-left-imp">Wi-Fi Key</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" name="wifiKey" ng-model="device.wifiKey" maxlength="20">
+        </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    </div>
+    <div class="clear"></div>
+	<div class="col-lg-7 col-md-10">
+    <div class="form-group required">
+    	<div class="row">
+        <label for="email" class="weight-400 control-label size-14 col-sm-4 text-left-imp">Site</label>
+        <div class="col-sm-8" disable-all="$state.params.siteId">
+            <select class="form-control" ng-model="device.siteId" name="siteId" required ng-change="changeSite()"  ng-options="item.siteId as item.siteName for item in sites">
+                <option value="" selected>Select site</option>
+            </select>
+
+            <div ng-show="addDeviceForm.siteId.$error && addDeviceForm.$submitted" ng-messages="addDeviceForm.siteId.$error">
+                <div ng-messages-include="error-list1.html"></div>
+            </div>
+        </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+	</div>
+
+    <div class="clear"></div>
+    <gap></gap>
+    <gap></gap>
+
+
+    <div class="clear"></div>
+    <div class="col-lg-7 col-md-10">
+    <div class="form-group">
+    	<div class="row">
+        <label for="email" class="weight-400 control-label size-14 col-sm-4 text-left-imp">Site Survey Thermostat Unit #</label>
+        <div class="col-sm-8">
+            <select class="form-control" ng-model="device.unit" name="unit" ng-change="getUnit()">
+                <option value="" selected>Select Unit</option>
+                <option ng-repeat="unit in units track by $index" value="{{unit.tstatUnit}}" ng-selected="device.unit == unit.tstatUnit">{{unit.tstatUnit}}</option>
+
+            </select>
+        </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+	</div>
+    <div class="clear"></div>
+    <div class="col-lg-7 col-md-10">
+    <div class="form-group">
+    	<div class="row">
+        <label for="email" class="weight-400 control-label size-14 col-sm-4 text-left-imp">Location</label>
+        <div class="col-sm-8">
+
+            <select class="form-control" name="location" ng-model="device.location">
+                <option value="" selected>Select Location</option>
+                <option ng-repeat="location in locations track by $index" value="{{location.value}}" ng-selected="device.location == location.value">{{location.label}}</option>
+            </select>
+        </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+        
+        <div class="form-group required" ng-if="device.location == 23">
+    	<div class="row">
+        <label for="email" class="weight-400 control-label size-14 col-sm-4 text-left-imp">Please specify other location</label>
+        <div class="col-sm-8">
+
+            <input class="form-control" name="location" skip-disable required ng-model="device.otherLocation"/>
+            <div ng-show="addDeviceForm.location.$error && addDeviceForm.$submitted" ng-messages="addDeviceForm.location.$error">
+                    <div ng-messages-include="error-list1.html"></div>
+                </div>
+        </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    </div>
+    <div class="clear"></div>
+	<div class="row">
+	    <div class="form-group no-margin">
+	        <h1 class="size-16 weight-700 line-height-40 x-md-padding no-margin pull-left">Thermostat Preferences</h1> 
+	    </div>
+    </div>
+    <hr class="no-margin" />
+    <gap></gap>
+    <div class="clear"></div>
+    <div class="col-lg-7 col-md-10">
+    <div class="form-group">
+    	<div class="row">
+        <div class="col-xs-6 col-sm-6" ng-init="device.fanPref='2'">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="fanPref" ng-model="device.fanPref" ng-value="1"> Fan On </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="fanPref" ng-model="device.fanPref" ng-value="0" checked> Fan Auto </label>
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-6">
+            <div class="radio">
+                <label class="no-padding">
+                    <input type="checkbox" name="hvacToAuto" ng-true-value="1" ng-false-value="0" ng-model="device.hvacToAuto"> Reset HVAC to Auto </label>
+            </div>
+            <div class="radio">
+                <label class="no-padding">
+                    <input type="checkbox" name="holdToAuto" ng-true-value="1" ng-false-value="0" ng-model="device.holdToAuto"> Reset Hold to Off </label>
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-init="device.lockPref='0'">
+        	<div class="radio">
+                <label class="">
+                    <input type="radio" name="lockPref" ng-model="device.lockPref" ng-value="0"> Unlock </label>
+            </div>
+            <div class="radio">
+                <label class="">
+                    <input type="radio" name="lockPref" ng-model="device.lockPref" ng-value="1"> Partial </label>
+            </div>
+            <div class="radio">
+                <label class="">
+                    <input type="radio" name="lockPref" ng-model="device.lockPref" ng-value="2"> Full </label>
+            </div>
+        </div>
+
+        <div class="clear"></div>
+        <gap></gap>
+        <div class="col-xs-6 col-sm-6">
+            <div class="form-group required col-xs-12">
+            <label for="email" class="weight-400 size-14 control-label">Min SP</label>
+
+            <input type="number" class="form-control" empty-zero name="minSP" ng-model="device.minSP" min="45" max="90" required/>
+
+                 <div ng-show="addDeviceForm.minSP.$error.required && addDeviceForm.$submitted" ng-messages="addDeviceForm.minSP.$error">
+                <div ng-messages-include="error-list1.html"></div>
+            </div>
+                
+            <div ng-show="addDeviceForm.minSP.$error.number && addDeviceForm.$submitted && !addDeviceForm.minSP.$error.required">
+                <div class="error size-15">Please enter valid number</div>
+            </div>
+            <p class="error" ng-if="!addDeviceForm.minSP.$error.required && addDeviceForm.$submitted" ng-show="addDeviceForm.minSP.$error.min || addDeviceForm.minSP.$error.max">Please enter value between 45 to 90</p>
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-6">
+            <div class="form-group required col-xs-12">
+            <label for="" class="weight-400 size-14 control-label">Max SP</label>
+            <input type="number" class="form-control" empty-zero name="maxSP" ng-model="device.maxSP" min="{{device.minSP*1+1}}" max="90" required/>
+
+                  <div ng-show="addDeviceForm.maxSP.$error.required && addDeviceForm.$submitted" ng-messages="addDeviceForm.maxSP.$error">
+                <div ng-messages-include="error-list1.html"></div>
+            </div>
+                
+            <div ng-show="addDeviceForm.maxSP.$error.number && addDeviceForm.$submitted && !addDeviceForm.maxSP.$error.required">
+                <div class="error size-15">Please enter valid number</div>
+            </div>
+            <p class="error" ng-if="!addDeviceForm.maxSP.$error.required && addDeviceForm.maxSP.$error.max && addDeviceForm.$submitted">Please enter value between {{(device.minSP) ? (device.minSP*1+1) : 45 }} to 90</p>                               
+			<p class="error" ng-if="!addDeviceForm.maxSP.$error.required && addDeviceForm.maxSP.$error.min && addDeviceForm.$submitted">Max SP has to be greater than Min SP</p>  
+                
+            </div>
+        </div>
+
+        <div class="clear"></div>
+        <div class="col-lg-6 col-xs-12">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="device.nightSchedule" name="nightSchedule" ng-true-value="1" ng-false-value="0"> Nightly Schedule Download </label>
+            </div>
+        </div>
+		</div>
+        <div class="clear"></div>
+    </div>
+    </div>
+    <div class="clear"></div>
+    <hr/>
+    <div class="form-group">
+        <div class="" ng-init="device.registerType='0'">
+            <label class="checkbox-inline padding x-lg-padding">
+            <input type="checkbox" name="registerType" ng-true-value="1" ng-false-value="0" ng-model="device.registerType" checked>Connect to device</label>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="">
+	    <a href="javascript:void(0)" onclick="history.back()" class="btn btn-default pull-right margin-left10">Cancel</a>
+	    <button type="submit" class="btn btn-primary pull-right margin-left10">Save</button>
+    </div>
+    <div class="clear"></div>
+    <gap></gap>
+</form>
+<script id="error-list1.html" type="text/ng-template">
+    <div class="error size15" ng-message="required">This field is required</div>
+    <div class="error size15" ng-message="compareTo">Repeat password doesn't match the new password</div>
+    <div class="error size15" ng-message="noSpaces">This field should not contain spaces</div>
+    <div class="error size15" ng-message="pattern">Password should contain at least 8 alphanumeric characters</div>
+    <div class="error" ng-message="maxlength20">Maximum length of this field is 20 characters</div>
+    <div class="error" ng-message="maxlength50">Maximum length of this field is 50 characters</div>
+    <div class="error" ng-message="maxlength32">Maximum length of this field is 32 characters</div>
+    <div class="error size15" ng-message="comparePrevious">Repeat password doesn't match the new password</div>
+<div class="error size15" ng-message="mask">Please enter valid mac id</div>
+</script>

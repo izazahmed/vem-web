@@ -1,0 +1,61 @@
+<div role="tabpanel x-md-padding" class="tab-pane" id="Locations" ng-if="userDetails.rolePermissions.hasOwnProperty('Customer Management') ? true : false">
+    <ul class="options-bar x-md-padding">
+      <li class="pull-right">
+                <div>
+                    <input type="text" class="border" ng-focus="showSearch" ng-show="showSearch" ng-model="companyName.companyName" />&nbsp; <i class="icon-search size-20 cursor show-search v-middle y-padding" aria-hidden="true" ng-click="showSearch = !showSearch"></i>
+                </div>
+            </li>
+             <div class="clear"></div>
+            <li class="pull-left">
+                <div>
+                    <span class="line-height-40">{{filteredCustomers.length}}
+					Customers</span> <i class="icon-download size-30 v-middle text-dark cursor" aria-hidden="true"></i>
+                </div>
+            </li>
+        </ul>
+         <div class="clear"></div>
+        <ul class="listhover customers-list border-top">
+         <div ng-hide="filteredCustomers.length" style="opacity:0" id="nodata">
+            <br/>
+            <br/>
+            <div class="text-center error col-centered">
+                No Data Found
+            </div>
+            <div class="clear"></div>
+        </div>
+            <li ng-click="getCustomerProfile(customer.customerId)" ng-repeat="customer in filteredCustomers  = ( user.customersList | orderBy: 'companyName' | filter: companyName)" class="x-md-padding border-bottom padding" ng-class="{'disabled':(!customer.isActive || customer.customerStatus==6)}">
+				<div class="row">
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-8">
+                    <div class="v-middle">
+                        <h1 class="size-14  y-padding no-margin show-details"> {{customer.companyName}}</h1>
+                    </div>
+                </div>
+                  <div class="col-xs-3 col-sm-2 col-md-2 col-lg-1" ng-if="userDetails.rolePermissions.hasOwnProperty('Group Management')">
+                    <a ui-sref="customers.customersList.getCustomer.groups(mergeObject($state.params,{customerId: customer.customerId,sourcePage:getSourcePageId(customer.customerId)}))" ng-click="$event.stopPropagation()">
+                        <h1 class="size-14 weight-400 y-padding no-margin text-center">{{customer.groups}}</h1>
+                        <p class="no-margin no-padding no-line-height text-center"><i>Groups</i></p>
+                    </a>
+                </div>
+                 <div class="col-xs-3 col-sm-2 col-md-2 col-lg-1" ng-if="userDetails.rolePermissions.hasOwnProperty('Site Management')">
+                    <a ui-sref="customers.customersList.getCustomer.sites(mergeObject($state.params,{customerId: customer.customerId,sourcePage:getSourcePageId(customer.customerId)}))" ng-click="$event.stopPropagation()">
+                        <h1 class="size-14 weight-400 y-padding no-margin text-center">{{customer.locations}}</h1>
+                        <p class="no-margin no-padding no-line-height text-center"><i>Sites</i></p>
+                    </a>
+                </div>
+                <div class="col-xs-3 col-sm-2 col-md-2 col-lg-1" ng-if="userDetails.rolePermissions.hasOwnProperty('Device Management')">
+                    <a ui-sref="customers.customersList.getCustomer.devices(mergeObject($state.params,{customerId: customer.customerId,sourcePage:getSourcePageId(customer.customerId)}))" ng-click="$event.stopPropagation()">
+                        <h1 class="size-14 weight-400 y-padding no-margin text-center">{{customer.devices}}</h1>
+                        <p class="no-margin no-padding no-line-height text-center"><i>Devices</i></p>
+                    </a>
+                </div>
+                <div class="col-xs-3 col-sm-2 col-md-2 col-lg-1">
+                       <a ui-sref="customers.customersList.getCustomer.alerts(mergeObject($state.params,{customerId: customer.customerId,sourcePage:getSourcePageId(customer.customerId)}))" ng-click="$event.stopPropagation()">
+                        <h1 class="size-14 weight-400 y-padding no-margin text-center">{{customer.alerts}}</h1>
+                        <p class="no-margin no-padding no-line-height text-center"><i>Alerts</i></p>
+                    </a>
+                </div>
+                </div>
+                <div class="clear"></div>
+            </li>
+        </ul>
+</div>

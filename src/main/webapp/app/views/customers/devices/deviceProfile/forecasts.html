@@ -1,0 +1,262 @@
+<form role="form" name="forecastForm" novalidate="" ng-submit="addForecast(forecastForm)" autocomplete="off">
+   <span ng-if="userDetails.rolePermissions['Schedule Management'] == '2'"> 
+<h1 class="size-14 x-md-padding">Forecast Mode</h1>
+
+    <div class="col-xs-12" ng-init="forecast.mode=0" disable-all="!data.length">
+        <div class="radio-inline">
+            <label class="weight-400">
+                <input type="radio" ng-model="forecast.mode" name="temp_hold" ng-value="1" ng-click="startStopForecast(1)">On</label>
+        </div>
+        <div class="radio-inline">
+            <label class="weight-400">
+                <input type="radio" ng-model="forecast.mode" name="temp_hold" ng-value="0" ng-click="startStopForecast(0)">Off</label>
+        </div>
+    </div>
+
+    <div class="clear"></div>
+       <span ng-if="showForm">
+	<div class="border-bottom x-md-padding" ng-click="showDetails = !showDetails"> 
+		<span class="weight-500 pull-left size-14 line-height-40">Advanced Settings</span>
+	    <span class="pull-right y-padding">
+		    <i class="icon-down-arrow size-15 thick-border" ng-show="!showDetails"></i>
+		    <i class="icon-right-arrow size-15 thick-outline margin-left-right-1" ng-show="showDetails"></i>
+		    <div class="clear"></div>
+	    </span>
+		<div class="clear"></div>
+	</div>
+	
+    <div class="col-lg-12 forecast-form" ng-show="!showDetails">
+
+        <h1 class="size-14">Forecast Name</h1>
+        <div class="row col-lg-4 col-md-4 col-sm-6">
+          
+            <input type="text" class="form-control" name="name" ng-model="forecast.forecastName" required maxlength="40">
+            <div ng-show="forecastForm.name.$error && forecastForm.$submitted" ng-messages="forecastForm.name.$error">
+                <div ng-messages-include="error-list1.html"></div>
+            </div>
+        </div>
+
+        <div class="clear"></div>
+        <h1 class="size-14">Forecast Date</h1>
+        <div class="row">
+            <div class="col-lg-1 col-sm-2 col-xs-12" ng-if="showDaily && data.length == 0">
+                <div class="checkbox-inline relative top-5">
+                    <label class="weight-400">
+                        <input type="checkbox" ng-model="schedule.daily" name="temp_hold" ng-change="checkedDaily()">Daily</label>
+                </div>
+            </div>          
+            <div class="form-inline col-lg-11 col-sm-10 col-xs-12" disable-all="schedule.daily && !edit">
+	            <div class="form-group">
+	                <label class="weight-400 control-label   relative line-height-30">From</label>&nbsp;
+	                <div class="relative mdInline-xsBlock">
+	              
+	                	<input id="inputfrom" type="text" class="no-bg form-control height-30 BigScreen-date-field" uib-datepicker-popup="MM/dd" name="startDate" ng-model="forecast.fromDate" is-open="popup1.opened" ng-required="true" close-text="Close" datepicker-options="{maxDate:maxDate,minDate:minDate,maxMode:'month'}" ng-click="open1()" ng-change="changedFromDate()" placeholder="MM/DD"/>
+	                	<label class="icon-calander size-20 select-date" for="inputfrom"></label>
+	                </div>
+	                <div ng-show="forecastForm.startDate.$error && forecastForm.$submitted" ng-messages="forecastForm.startDate.$error">
+	                    <div ng-messages-include="error-list1.html"></div>
+	                </div>
+                      <div ng-show="forecastForm.startDate.$error.date && forecastForm.$submitted">
+	                    <div class="error size15">Please enter correct Date format (MM/DD)</div>
+	                </div>
+	               
+	            </div>
+	            <div  class="form-group">
+	                <label class="weight-400 control-label relative line-height-30">To &nbsp;</label>
+	                <div class="relative mdInline-xsBlock">
+	                    <input id="inputto" type="text" class="no-bg form-control height-30 BigScreen-date-field" uib-datepicker-popup="MM/dd" name="endDate" ng-model="forecast.toDate" is-open="popup2.opened" ng-required="true" close-text="Close" datepicker-options="{minDate:forecast.fromDate,maxDate:maxDate,maxMode:'month'}" ng-click="open2()"  placeholder="MM/DD" ng-change="changedToDate()"/>
+	                    <label class="icon-calander size-20 select-date" for="inputto"></label>
+                    </div>
+                    <div ng-show="forecastForm.endDate.$error && forecastForm.$submitted" ng-messages="forecastForm.endDate.$error">
+                        <div ng-messages-include="error-list1.html"></div>
+                    </div>
+                    <div ng-show="forecastForm.endDate.$error.date && forecastForm.$submitted">
+	                    <div class="error size15">Please enter correct Date format (MM/DD)</div>
+	                </div>
+	            </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <h1 class="size-14">Forecast Temperature</h1>
+
+        <div class="row">
+            <div class="col-lg-1 col-sm-2 col-xs-4">
+                <div class="form-group">
+                    <p for="usr" class="text-center">Min</p>
+                    <p class="text-center">
+                        < </p>
+                            <gap></gap>
+                            <input type="number" class="form-control no-margin" name="min" ng-model="forecast.min" required/>
+                            <div ng-show="forecastForm.min.$error && forecastForm.$submitted" ng-messages="forecastForm.min.$error">
+                                <div ng-messages-include="error-list1.html"></div>
+                            </div>
+                            <gap></gap>
+                            <gap></gap>
+                            <p class="text-center">
+                                {{forecast.max+1}} </p>
+                </div>
+            </div>
+            <div class="col-lg-1 col-sm-2 col-xs-4">
+                <div class="form-group">
+                    <p for="usr" class="text-center">Max</p>
+
+                    <p class="text-center">
+                        {{forecast.min-1}} </p>
+                    <gap></gap>
+                    <input type="number" class="form-control no-margin" name="max" ng-min="{{forecast.min+1}}" ng-model="forecast.max" required/>
+
+                    <div ng-show="forecastForm.max.$error && forecastForm.$submitted" ng-messages="forecastForm.max.$error">
+                        <div ng-messages-include="error-list1.html"></div>
+                    </div>
+                    <div ng-show="forecastForm.max.$error.min && forecastForm.$submitted">
+                        <p class="error">Max temperature value should be greater than minimum temperature value</p>
+                    </div>
+                    <gap></gap>
+                    <gap></gap>
+                    <p class="text-center">
+                        > </p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-4 col-xs-12">
+                <p for="usr">Schedule</p>
+                <select type="text" class="form-control no-margin" name="minSchedule" ng-model="forecast.minSchedule" ng-options="item.id as item.label for item in schedules" required>
+                    <option selected value="">Select schedule</option>
+                </select>
+                <div ng-show="forecastForm.minSchedule.$error && forecastForm.$submitted" ng-messages="forecastForm.minSchedule.$error">
+                    <div ng-messages-include="error-list1.html"></div>
+                </div>
+                <gap></gap>
+                <select type="text" class="form-control no-margin" name="middleSchedule" ng-model="forecast.middleSchedule" ng-options="item.id as item.label for item in schedules" required>
+                    <option selected value="">Select schedule</option>
+                </select>
+                <div ng-show="forecastForm.middleSchedule.$error && forecastForm.$submitted" ng-messages="forecastForm.middleSchedule.$error">
+                    <div ng-messages-include="error-list1.html"></div>
+                </div>
+                <gap></gap>
+                <select type="text" class="form-control no-margin" name="maxSchedule" ng-model="forecast.maxSchedule" ng-options="item.id as item.label for item in schedules" required>
+                    <option selected value="">Select schedule</option>
+                </select>
+                <div ng-show="forecastForm.maxSchedule.$error && forecastForm.$submitted" ng-messages="forecastForm.maxSchedule.$error">
+                    <div ng-messages-include="error-list1.html"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="t-margin-10">
+
+            <button type="button" class="btn btn-default pull-right margin-left10" ng-click="cancelData(forecastForm)">Cancel</button>
+            <button type="submit" class="btn btn-primary pull-right margin-left10"><span ng-if="!edit">Save</span><span ng-if="edit">Update</span></button>
+        </div>
+        
+        <div class="clear"></div>
+        <hr/>
+
+    </div>
+</span>
+</span>
+</form>
+<div class="clear"></div>
+
+<div class="forecasts" ng-repeat="item in data track by $index">   
+	<div class="border-bottom x-md-padding" ng-click="showFirst = !showFirst"> 
+		<span class="weight-500 pull-left size-14 line-height-40">{{item.forecastName}} - <span class="weight-400">From {{makeFormat(item.fromDate,'MM/DD')}} To {{makeFormat(item.toDate,'MM/DD')}}</span></span> 
+	    <span class="pull-right y-padding">
+		    <i class="icon-down-arrow size-15 thick-border" ng-show="showFirst"></i>
+		    <i class="icon-right-arrow size-15 thick-outline margin-left-right-1" ng-show="!showFirst"></i>
+		    <div class="clear"></div>
+	    </span>
+	    <span class="pull-right t-margin-10 mob-margin-right-3" ng-if="userDetails.rolePermissions['Schedule Management'] == '2'">
+    		<i class="icon-close pull-right size-30 relative top-minus-7 show-hover" aria-hidden="true" ng-click="deleteForecast($index);$event.stopPropagation();"></i>
+	    	<i class="icon-edit pull-right size-18 show-hover" aria-hidden="true" ng-click="editForecast($index);$event.stopPropagation();"></i>
+		</span>
+		<div class="clear"></div>
+	</div>
+	
+
+    <div ng-show="showFirst">
+        <div class="border-bottom">
+            <div class="col-lg-1 col-xs-3">
+
+                <p for="usr" class="text-center weight-700 line-height-40 no-margin">Min</p>
+
+            </div>
+            <div class="col-lg-1 col-xs-3">
+
+                <p for="usr" class="text-center weight-700 line-height-40 no-margin">Max</p>
+
+            </div>
+            <div class="col-lg-3 col-xs-6  no-margin">
+                <p for="usr" class="weight-700 y-padding no-margin">Schedule</p>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="border-bottom break-word">
+
+            <div class="col-lg-1 col-xs-3">
+
+                <p class="text-center line-height-40 no-margin">
+                    <
+                    </p>
+
+
+            </div>
+            <div class="col-lg-1 col-xs-3">
+
+                <p class="text-center line-height-40 no-margin">{{item.min - 1}}</p>
+
+            </div>
+            <div class="col-lg-3 col-xs-6">
+                <p class="y-padding no-margin">{{getScheduleLabel(item.minSchedule)}}</p>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="border-bottom break-word">
+
+            <div class="col-lg-1 col-xs-3">
+                <div class="form-group  no-margin">
+                    <p class="text-center line-height-40 no-margin">{{item.min}}</p>
+                </div>
+            </div>
+            <div class="col-lg-1 col-xs-3">
+                <p class="text-center line-height-40 no-margin">{{item.max}}</p>
+            </div>
+            <div class="col-lg-3 col-xs-6">
+                <p class="y-padding no-margin">{{getScheduleLabel(item.middleSchedule)}}</p>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="border-bottom break-word">
+
+            <div class="col-lg-1 col-xs-3">
+                <div class="form-group">
+
+                    <p class="text-center line-height-40 no-margin">{{item.max + 1}}</p>
+                </div>
+            </div>
+            <div class="col-lg-1 col-xs-3">
+                <div class="form-group">
+                    <p class="text-center line-height-40 no-margin">></p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-xs-4">
+                <p class="y-padding no-margin">{{getScheduleLabel(item.maxSchedule)}}</p>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="clear"></div>
+ <button class="btn btn-default pull-right margin" ng-if="data.length && $state.current.name == 'sites.sitesList.viewSite.forecasts' && userDetails.rolePermissions['Schedule Management'] == '2'" ng-click="applyToDevice()">Apply To</button>
+<br/>
+<div class="clear"></div>
+<br/>
+<script id="error-list1.html" type="text/ng-template">
+    <div class="error size15" ng-message="required">This field is required</div>
+</script>

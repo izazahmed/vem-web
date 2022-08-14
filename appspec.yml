@@ -1,0 +1,11 @@
+version: 0.0
+os: linux
+files:
+  - source: /target/vemcodedeploy.war
+    destination: /tmp/codedeploy-deployment-staging-area/
+hooks:
+  ApplicationStart:
+    - location: scripts/start_application
+      timeout: 300
+  ValidateService:
+    - location: scripts/basic_health_check.sh

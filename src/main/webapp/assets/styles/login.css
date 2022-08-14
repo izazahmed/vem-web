@@ -1,0 +1,146 @@
+body{
+    background: url(../images/BG.png);
+    background-size: cover;
+    background-position: center top;
+}
+html,
+body,
+.container-table {
+    height: 100%;
+}
+.container-table {
+    display: table;
+}
+.vertical-center-row {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+/****** LOGIN MODAL ******/
+
+.loginmodal-container {
+    padding: 30px 30px 10px 30px;
+    max-width: 350px;
+    width: 100% !important;
+   /* background-color: #EBEBEB;*/
+    margin: 0 auto;
+  /*  border-radius: 2px;*/
+   /* box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);*/
+    overflow: hidden;
+}
+.loginmodal-container h1 {
+    text-align: center;
+    font-size: 1.8em;
+}
+.loginmodal-container input[type=submit] {
+    width: 100%;
+    display: block;
+    outline:none;
+    margin-bottom: 10px;
+    position: relative;
+}
+.loginmodal-container input[type=text],.loginmodal-container input[type=email],
+input[type=password] {
+    height: 44px;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 3px;
+    background:transparent;
+    -webkit-appearance: none;
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    padding: 0 8px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+.loginmodal-container input[type=text]:hover,.loginmodal-container input[type=email]
+input[type=password]:hover {
+    border: 1px solid #b9b9b9;
+    border-top: 1px solid #a0a0a0;
+    -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+.loginmodal {
+    text-align: center;
+    font-size: 14px;
+    font-family: 'Arial', sans-serif;
+    font-weight: 700;
+    height: 36px;
+    padding: 0 8px;
+    /* border-radius: 3px; */
+    /* -webkit-user-select: none;
+  user-select: none; */
+}
+.login-help {
+    font-size: 12px;
+}
+.no-rounded {
+    border-radius: 0;
+}
+.clear {
+    clear: both;
+}
+.blue {
+    color: #349ADB;
+    font-weight: bold;
+}
+.forgot.radio{
+	margin-top:0;
+}
+.forgot .blue{
+	color:#186693 !important;
+	margin-top:0px;
+}
+.signin-blue{
+	color:#1a6394;
+}
+.btn-custom {
+    background-color: #1a6394;
+   /* border-color: #3498DB; */
+    color: #fff !important;
+    box-shadow: inset 0px 0px 5px 0px #EEE;
+    border:0;
+}
+.btn-custom:hover,
+.btn-custom:focus,
+.btn-custom:active,
+.btn-custom.active {
+    background-color: #258cd1;
+    border-color: #217dbb;
+    color: #fff !important;
+}
+.btn-custom.disabled:hover,
+.btn-custom.disabled:focus,
+.btn-custom.disabled:active,
+.btn-custom.disabled.active,
+.btn-custom[disabled]:hover,
+.btn-custom[disabled]:focus,
+.btn-custom[disabled]:active,
+.btn-custom[disabled].active,
+fieldset[disabled] .btn-custom:hover,
+fieldset[disabled] .btn-custom:focus,
+fieldset[disabled] .btn-custom:active,
+fieldset[disabled] .btn-custom.active {
+    background-color: #3498DB;
+    border-color: #3498DB;
+    color: #fff !important;
+}
+.title{
+    font-size: 16px;
+    font-weight: bold;
+}
+
+
+/**/
+
+.loginmodal-container .input-rounded {
+    border-radius: 7px;
+}
+.signin-info{
+	color:#6f7073;
+	font-size:12px;
+}
+.sign-in-label{
+    letter-spacing: .6px;
+}

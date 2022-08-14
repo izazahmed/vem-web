@@ -1,0 +1,639 @@
+<div class="blue-bg-bar min-height-52 relative">
+	<img ng-if="userDetails.companyLogo" class="customer-thumg" ng-src="fileUpload/loadImage?imageName={{userDetails.companyLogo}}" alt="Company Logo" />
+</div>
+<div class="bar relative x-md-padding height-40">
+    <a ng-show="$state.params.singlePage != 'true'" ng-click="gotoParent()" href="javascript:void(0)" class="icon-back size-20 relative backIcon-align"></a>
+    <span class="line-height-40 size-14 weight-500">{{site.siteName}} <b ng-if="site.siteInternalId">#</b>{{site.siteInternalId}}</span>
+    <a ng-click="editLocations()" class="size-14 line-height-40 pull-right relative" ng-if="userDetails.rolePermissions['Site Management']==2"><i class="icon-edit size-16  relative" aria-hidden="true"></i> Edit</a>
+</div>
+<s-gray-gap></s-gray-gap>
+<div class="scroll top-97">
+   <gap></gap>
+   <div class="x-md-padding">
+	<div class="details-drop row" ng-show="true">
+	    <div class="col-xs-12 col-sm-8 pull-left border-right" ng-show="site.siteName">
+	        <p class="no-margin">{{site.siteAddLine1}}, {{site.siteAddLine2 ? site.siteAddLine2 + ", " : "" }}{{site.siteCity.cityName}}, {{site.siteState.stateCode}} {{site.siteZipCode}}
+	        <span ng-if="site.siteInternalId">&nbsp;<i class="middle-dot" aria-hidden="true"></i>&nbsp;Store #</span>{{site.siteInternalId}}&nbsp;<i class="middle-dot" aria-hidden="true"></i>&nbsp;{{customPhonePattern(site.sitePhNo)}}</p>
+	        <p class="no-margin" ng-show="todayOccupyHours">Today Occupy Hours: {{todayOccupyHours}}</p>
+	        <p class="no-margin">Today Store Hours: {{todayHours ? todayHours : 'Not Specified'}}</p>
+	        <p ng-repeat="(key, value) in storeHours" class="no-margin">
+	            <span>{{value}} - {{key}}</span>
+	        </p>
+	        <p class="no-margin">Site ID: {{site.siteCode}}
+	        <span ng-show="site.siteType.value == 0 ? site.siteTypeNew : site.siteType.lable">&nbsp;<i class="middle-dot" aria-hidden="true"></i>&nbsp;</span>
+	        <span ng-show="site.siteType.value == 0 ? site.siteTypeNew : site.siteType.lable">Type: {{site.siteType.value == 0 ? site.siteType.lable + ' - ' + site.siteTypeNew : site.siteType.lable}}</span></p>	        
+   	        <p class="no-margin" ng-show="otherOptionsArray.length > 0">
+   	        	<span ng-show="site.siteDistrict">District: {{site.siteDistrict}}</span>
+   	        	<span ng-show="site.siteDistrict && site.siteRegion">&nbsp;<i class="middle-dot" aria-hidden="true"></i>&nbsp;</span>
+   	        	<span ng-show="site.siteRegion">Region: {{site.siteRegion}}</span>
+   	        	<span ng-show="(site.siteDistrict || site.siteRegion) && site.siteArea">&nbsp;<i class="middle-dot" aria-hidden="true"></i>&nbsp;</span>
+   	        	<span ng-show="site.siteArea">Area: {{site.siteArea}}</span>
+   	       </p>
+   	       	<p class="no-margin">Customer Name: {{site.customerName}}</p>
+	        <p class="no-margin" ng-if="gArray.length > 0">Groups: {{gArray.join(", ")}}</p>
+	        <p class="no-margin">Degree Preferences: {{degreePreferenceOptions[site.degreePreference].label}}</p>
+	        <p class="no-margin">Thermostat Preferences: {{prefrencesOptionsArray.join(', ')}}</p>
+	        <p class="no-margin">Status: {{site.siteStatusName}}</p>
+	    </div>
+	    <div class="col-xs-12 col-sm-4 pull-right" ng-if="weather">
+	        <div class="v-middle">
+	            <span ng-if="weather.temp_f" class="size-40">{{makeRound(weather.temp_f)}}&deg;	</span> <span class="alignImg"><img ng-src="{{weather.icon_url}}"></span><span class=""> {{weather.weather}}</span>
+	        </div>
+	        <div> <span ng-if="weather.high_temp">H {{makeRound(weather.high_temp)}}&deg;&nbsp;&nbsp;</span><span ng-if="weather.low_temp"><i class="middle-dot" aria-hidden="true"></i>&nbsp;&nbsp;L {{makeRound(weather.low_temp)}}&deg;</span></div>
+	        <div> <span ng-if="weather.feelslike_f"> Feels Like {{makeRound(weather.feelslike_f)}}&deg;</span>&nbsp;&nbsp;<span ng-if="weather.relative_humidity"><i class="middle-dot" aria-hidden="true"></i>&nbsp;&nbsp;{{weather.relative_humidity}} Humidity</span></div>
+
+	    </div>
+	    <div class="clear"></div>
+	</div>
+ </div>
+<b ng-show="$state.params.singlePage != 'true'"><p class="no-margin x-md-padding no-line-height show-details inline-block cursor y-padding" ng-click="showMoreDetails = !showMoreDetails;$event.stopPropagation();">{{ showMoreDetails ? "-" : "+" }} More Info</p></b>
+<div class="">
+    <div class="">
+        <form role="form" name="createLocationForm" novalidate="" ng-submit="createLocation(createLocationForm)" id="createLocationForm">
+        	<div class="col-lg-12">
+            <div class="details-drop" ng-show="showMoreDetails">
+                <div class="col-lg-12">
+                        <span class="line-height-40 moreinfo-title">Site Information</span>
+                        <b class="pull-right">                        
+                        <p class="no-margin no-padding no-line-height show-details cursor" ng-click="showSiteInfo = !showSiteInfo;$event.stopPropagation();">
+                          	<i class="icon-down-arrow size-26 top-4 relative" ng-show="showSiteInfo" aria-hidden="true"></i>
+                          	<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showSiteInfo"></i>
+                        </p>
+                        </b>
+                        <hr class="no-margin" />
+                   
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showSiteInfo" class="col-xs-12 col-lg-6" disable-all="true">
+                    	<div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Store hours</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-xs-4">
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" ng-model="site.siteHrsFormate" id="siteHrsFormate12" ng-value="1" name="siteHrsFormate" ng-click="changeTimeFormat(true)"> 12hr Format
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-xs-4">
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" ng-model="site.siteHrsFormate" id="siteHrsFormate24" ng-value="0" name="siteHrsFormate" ng-click="changeTimeFormat(false)"> 24hr Format
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="total-site-hours">
+                            <div class="row site-hours" ng-repeat="siteHrs in siteHrs track by $index">
+                                <div class="form-group col-xs-4 top-11">
+                                    <label for="email" class="weight-400 size-14"></label>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" ng-checked="site.siteHours[$index+1].dayOfWeekChecked" 
+                                            ng-model="site.siteHours[$index+1].dayOfWeek" name="dayOfWeek" ng-true-value="{{siteHrs.value}}" ng-false-value="0"> {{siteHrs.lable}}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-xs-4">
+                                    <b ng-if="$index == '0' "><label for="email" class="weight-400 size-14">Open</label></b>
+                                    <div class="input-group" disable-all="true">
+                                        <div show-spinners="false" uib-timepicker ng-model="site.siteHours[$index+1].openHrs" hour-step="hstep" minute-step="mstep" show-meridian="getMeridian" my-enter></div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-xs-4">
+                                    <b ng-if="$index == '0' "><label for="email" class="weight-400 size-14">Close</label></b>
+                                    <div class="input-group" disable-all="true">
+                                        <div show-spinners="false" uib-timepicker ng-model="site.siteHours[$index+1].closeHrs" hour-step="hstep" minute-step="mstep" show-meridian="getMeridian" my-enter></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Actual Site Survey Date</label>
+                                <input type="text" name="surveyDate" ng-model="site.surveyDate" class="datepicker form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Occupy hours</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-xs-4">
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" ng-model="site.siteOccupyHrsFormate" id="occupyHrsFormate12" ng-value="1" name="siteOccupyHrsFormate" ng-click="changeTimeFormatOccupy(true)"> 12hr Format
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-xs-4">
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" ng-model="site.siteOccupyHrsFormate" id="occupyHrsFormate24" ng-value="0" name="siteOccupyHrsFormate" ng-click="changeTimeFormatOccupy(false)"> 24hr Format
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="total-site-hours">
+                            <div class="row site-hours" ng-repeat="siteHrs in siteHrs track by $index">
+                                <div class="form-group col-xs-4 top-11">
+                                    <label for="email" class="weight-400 size-14"></label>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" ng-checked="site.occupyHours[$index+1].dayOfWeekCheckedSame" ng-model="site.occupyHours[$index+1].dayOfWeek" 
+                                            name="dayOfWeek" ng-true-value="{{siteHrs.value}}" ng-false-value="0"> {{siteHrs.lable}}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-xs-4">
+                                    <b ng-if="$index == '0' "><label for="email" class="weight-400 size-14">Open</label></b>
+                                    <div class="input-group" disable-all="true">
+                                        <div show-spinners="false" uib-timepicker ng-model="site.occupyHours[$index+1].openHrs" hour-step="hstep" minute-step="mstep" show-meridian="getMeridianOccupy" my-enter></div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-xs-4">
+                                    <b ng-if="$index == '0' "><label for="email" class="weight-400 size-14">Close</label></b>
+                                    <div class="input-group" disable-all="true">
+                                        <div show-spinners="false" uib-timepicker ng-model="site.occupyHours[$index+1].closeHrs" hour-step="hstep" minute-step="mstep" show-meridian="getMeridianOccupy" my-enter></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Square Footage</label>
+                                <input type="text" name="squareFootage" ng-model="site.squareFootage" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Building Layout and location of thermostats and sensors</label>
+                                <input type="text" class="form-control" name="buildingLayout" ng-model="site.buildingLayout">
+                                <br>
+                                <b ng-if="site.buildingLayoutImage">
+									<img class="thumb buildingLayoutImage" ng-src="fileUpload/loadImage?imageName={{site.buildingLayoutImage}}" alt="{{site.buildingLayoutImage}}"/>
+								</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Is there a floor plan on the wall? If so, please take a picture and mark location of thermostats and remote sensors</label>
+                                <input type="text" class="form-control" name="floorPlan" ng-model="site.floorPlan">
+                                <br>                              
+                                <b ng-if="site.floorImage">
+						    		<img class="thumb floorImage" ng-src="fileUpload/loadImage?imageName={{site.floorImage}}" alt="{{site.floorImage}}"/>
+						    	</b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                        <span class="line-height-40">Site Contact</span>
+                        <b class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showSiteContact = !showSiteContact;$event.stopPropagation();">
+                        	<i class="icon-down-arrow size-26 top-4 relative" ng-show="showSiteContact" aria-hidden="true"></i>
+                          	<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showSiteContact"></i>
+                        </p></b>
+                        <hr class="no-margin" />
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showSiteContact" class="col-xs-12 col-lg-6" disable-all="true">
+                        <div class="row">
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 control-label size-14">Local Site Contact</label>
+                                <input type="text" name="localSiteContact" ng-model="site.localSiteContact" class="form-control">
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 size-14">Local Contact Phone</label>
+                                <input type="text" name="localContactPhone" ng-model="site.localContactPhone" class="form-control" ui-mask="(999) 999-9999" ui-mask-placeholder ui-mask-placeholder-char="_">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 control-label size-14">Local Contact Email</label>
+                                <input type="email" name="localContactEmail" ng-model="site.localContactEmail" class="form-control">
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 size-14">Local Contact Mobile</label>
+                                <input type="text" name="localContactMobile" ng-model="site.localContactMobile" class="form-control" ui-mask="(999) 999-9999" ui-mask-placeholder ui-mask-placeholder-char="_">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 control-label size-14">Alternate Site Contact</label>
+                                <input type="text" name="alternateSiteContact" ng-model="site.alternateSiteContact" class="form-control">
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 size-14">Alternate Contact Phone</label>
+                                <input type="text" name="alternateContactPhone" ng-model="site.alternateContactPhone" class="form-control" ui-mask="(999) 999-9999" ui-mask-placeholder ui-mask-placeholder-char="_">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 control-label size-14">Escort Contact Name</label>
+                                <input type="text" name="escortContactName" ng-model="site.escortContactName" class="form-control">
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 size-14">Escort Contact Number</label>
+                                <input type="text" name="escortContactNumber" ng-model="site.escortContactNumber" class="form-control" ui-mask="(999) 999-9999" ui-mask-placeholder ui-mask-placeholder-char="_">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                        <span class="line-height-40">Site Access</span>
+                        <b class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showSiteAccess = !showSiteAccess;$event.stopPropagation();">
+                        	<i class="icon-down-arrow size-26 top-4 relative" ng-show="showSiteAccess" aria-hidden="true"></i>
+                          	<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showSiteAccess"></i>
+                        </p></b>
+                        <hr class="no-margin" />
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showSiteAccess" class="col-xs-12 col-lg-6" disable-all="true">
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">List any access restrictions different from normal business hours</label>
+                                <input type="text" name="listaAccessRestrictionsFromFormalHours" ng-model="site.listaAccessRestrictionsFromFormalHours" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Special Room Access Information (Security contact, out-of-hours access, is escort required, etc.)</label>
+                                <input type="text" name="specialRoomAccessInformation" ng-model="site.specialRoomAccessInformation" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Is there a lock box on thermostat, if so who has access?</label>
+                                <input type="text" name="lockBoxOnThermostat" ng-model="site.lockBoxOnThermostat" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Who has access or who manages the thermostat?</label>
+                                <input type="text" name="accessOrManagesThermostat" ng-model="site.accessOrManagesThermostat" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                 <div class="clear"></div>
+                        <span class="line-height-40">Building Environment</span>
+                        <b class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showBuilding = !showBuilding;$event.stopPropagation();">
+                        	<i class="icon-down-arrow size-26 top-4 relative" ng-show="showBuilding" aria-hidden="true"></i>
+                          	<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showBuilding"></i>
+                        </p></b>
+                        <hr class="no-margin" />
+                 
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showBuilding" class="col-xs-12 col-lg-6" disable-all="true">
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Select One</label>
+                                <select class="form-control" name="buildingType" ng-model="site.buildingType" ng-options="option.value as option.label for option in buildingTypeOptions"></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Notes</label>
+                                <input type="text" class="form-control" name="buildingNotes" ng-model="site.buildingNotes">
+                            </div>
+                        </div>
+                    </div>
+                  <div class="clear"></div>
+                        <span class="line-height-40">HVAC Unit</span>
+                        <b ng-show="site.rTUList.length > 0" class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showRTU = !showRTU;$event.stopPropagation();">
+                        	<i class="icon-down-arrow size-26 top-4 relative" ng-show="showRTU" aria-hidden="true"></i>
+                          	<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showRTU"></i>
+                        </p></b>
+                        <hr class="no-margin" />
+              
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showRTU" class="col-xs-12 col-lg-6" disable-all="true">
+                        <div ng-repeat="rtu in site.rTUList">
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <b><label for="email" class="weight-400 control-label size-14">HVAC Unit {{$index+1}}</label><span class="pull-right"><a><i ng-click="removeRTUBlock($event)" index="{{$index}}" class="icon-close size-20" aria-hidden="true"></i></a></span></b>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-6">
+                                        <label for="email" class="weight-400 control-label size-14">HVAC Model</label>
+                                        <input type="text" class="form-control" name="rtumodel" ng-model="site.rTUList[$index].model">
+                                    </div>
+                                    <div class="form-group col-xs-6">
+                                        <label for="email" class="weight-400 size-14">Unit #</label>
+                                        <input type="text" class="form-control" name="rtuunit" ng-model="site.rTUList[$index].unit" onblur="angular.element(this).scope().checkUniqueUnit(event)" index="{{$index}}">
+                                        <div class="error" style="display: none;">Please enter unique HVAC unit #</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-6">
+                                        <label for="email" class="weight-400 size-14">HVAC Unit ID</label>
+                                        <input type="text" class="form-control" name="hVACUnitId" ng-disabled="true" ng-model="site.rTUList[$index].hVACUnit">
+                                    </div>
+                                    <div class="form-group col-xs-6">
+                                        <label for="email" class="weight-400 control-label size-14">Select where it&apos;s located</label>
+                                        <select class="form-control" name="location" ng-model="site.rTUList[$index].location" ng-options="option.value as option.label for option in locationOptions"></select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-6">
+                                        <label for="email" class="weight-400 size-14">Heat Temperature</label>
+                                        <input type="text" class="form-control" name="heating" ng-model="site.rTUList[$index].heating">
+                                    </div>
+                                    <div class="form-group col-xs-6">
+                                        <label for="email" class="weight-400 control-label size-14">Cool Temperature</label>
+                                        <input type="text" class="form-control" name="cooling" ng-model="site.rTUList[$index].cooling">
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 size-14">How do employees believe the system has been running?</label>
+                                <input type="text" class="form-control" name="isHvacRunning" ng-model="site.isHvacRunning">
+                            </div>
+                        </div>
+                    </div>
+              		<div class="clear"></div>
+                        <span class="line-height-40">Thermostat</span>
+                        <b ng-show="site.thermostatList.length > 0" class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showThermostat = !showThermostat;$event.stopPropagation();">
+                        	<i class="icon-down-arrow size-26 top-4 relative" ng-show="showThermostat" aria-hidden="true"></i>
+                          	<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showThermostat"></i>
+                       	</p></b>
+                        <hr class="no-margin" />
+                	<div class="clear"></div>
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showThermostat" class="thermostat col-xs-12 col-lg-6" disable-all="true">
+                        <div ng-repeat="rtu in site.thermostatList">
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <b><label for="email" class="weight-400 control-label size-14">Thermostat {{$index+1}}</label><span class="pull-right"><a><i ng-click="removeThermostatBlock($event)" index="{{$index}}" class="icon-close size-20" aria-hidden="true"></i></a></span></b>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-6">
+                                        <label for="email" class="weight-400 control-label size-14">Select HVAC Unit #</label>
+                                        <input class="form-control" name="hVACUnit" ng-model="site.thermostatList[$index].hVACUnit" ng-hide="true">
+                                        <select class="form-control" name="data" ng-model="data[$index]" ng-options="item for item in hVACUnitOptionsValues | arrayDiff:data:data[$index]">
+                                            <option value="">-- choose an option --</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group required col-xs-6">
+                                        <label for="email" class="weight-400 control-label size-14">Unit #</label>
+                                        <input type="text" id="unit{{$index}}" class="form-control" name="unit" ng-model="site.thermostatList[$index].unit" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group required col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">Location of thermostat, attach photo</label>
+                                        <select class="form-control" name="locationType" id="locationType{{$index}}" select-validation="site.thermostatList[$index].locationType" ng-model="site.thermostatList[$index].locationType" ng-options="option.value as option.label for option in thermostatListOptions" required></select>
+                                        <br>
+                                        <b ng-if="site.thermostatList[$index].locationImage">
+							       			<img class="thumb locationImage{{$index}}" ng-src="fileUpload/loadImage?imageName={{site.thermostatList[$index].locationImage}}" alt="{{site.thermostatList[$index].locationImage}}"/>
+							    		</b>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">Is the mounting space large enough</label>
+                                        <div>
+                                            <label class="radio-inline"><input type="radio" name="spaceEnough{{$index}}" ng-value="1" ng-model="site.thermostatList[$index].spaceEnough" /> Yes</label>
+                                            <label class="radio-inline"><input type="radio" name="spaceEnough{{$index}}" ng-value="0" ng-model="site.thermostatList[$index].spaceEnough" /> No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-6">
+                                        <label for="email" class="weight-400 control-label size-14">Make of Thermostat</label>
+                                        <input type="text" class="form-control" name="make" ng-model="site.thermostatList[$index].make">
+                                    </div>
+                                    <div class="form-group col-xs-6">
+                                        <label for="email" class="weight-400 size-14">Model of Thermostat</label>
+                                        <input type="text" class="form-control" name="model" ng-model="site.thermostatList[$index].model">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">Please describe current wiring configuration of Thermostats</label>
+                                        <input type="text" class="form-control" name="wiringConfigThermostat" ng-model="site.thermostatList[$index].wiringConfigThermostat">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-6">
+                                        <label for="email" class="weight-400 control-label size-14">Wiring configuration, attach photo</label>
+                                        <br>
+                                        <b ng-if="site.thermostatList[$index].wiringThermostatImage">
+							        		<img class="thumb wiringThermostatImage{{$index}}" ng-src="fileUpload/loadImage?imageName={{site.thermostatList[$index].wiringThermostatImage}}" alt="{{site.thermostatList[$index].wiringThermostatImage}}"/>
+							    		</b>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">Confirm 24VDC between the RC/R and C</label>
+                                        <div>
+                                            <label class="radio-inline"><input type="radio" name="rCAndCPower{{$index}}" ng-model="site.thermostatList[$index].rCAndCPower" ng-value="1" /> Yes</label>
+                                            <label class="radio-inline"><input type="radio" name="rCAndCPower{{$index}}" ng-model="site.thermostatList[$index].rCAndCPower" ng-value="0" /> No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">If there is "C" wire attached?</label>
+                                        <div>
+                                           <label class="radio-inline"> <input type="radio" name="cWireAttached{{$index}}" ng-model="site.thermostatList[$index].cWireAttached" ng-value="1" /> Yes</label>
+                                           <label class="radio-inline"> <input type="radio" name="cWireAttached{{$index}}" ng-model="site.thermostatList[$index].cWireAttached" ng-value="0" /> No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">If there is no "C" attached, check if there is a spare unused wire in the bundle of HVAC wiring</label>
+                                        <div>
+                                           <label class="radio-inline"> <input type="radio" name="noCWireAttached{{$index}}" ng-model="site.thermostatList[$index].noCWireAttached" ng-value="1" /> Yes</label>
+                                           <label class="radio-inline"> <input type="radio" name="noCWireAttached{{$index}}" ng-model="site.thermostatList[$index].noCWireAttached" ng-value="0" /> No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">Does thermostat have an automated schedule, if so collect schedule</label>
+                                        <div>
+                                           <label class="radio-inline"> <input type="radio" name="automatedSchedule{{$index}}" ng-model="site.thermostatList[$index].automatedSchedule" ng-value="1" /> Yes</label>
+                                          <label class="radio-inline">  <input type="radio" name="automatedSchedule{{$index}}" ng-model="site.thermostatList[$index].automatedSchedule" ng-value="0" /> No</label>
+                                        </div>
+                                        <input type="text" name="automatedScheduleNote" ng-model="site.thermostatList[$index].automatedScheduleNote" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">Location of remote sensors for this thermostat</label>
+                                        <input type="text" class="form-control" name="locationOfRemoteSensor" ng-model="site.thermostatList[$index].locationOfRemoteSensor">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">If sensors are present, validate which sensor is connected to which thermostat</label>
+                                        <input type="text" class="form-control" name="validateSensor" ng-model="site.thermostatList[$index].validateSensor">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">Please describe wiring to current sensor if applicable</label>
+                                        <input type="text" class="form-control" name="wiringConfigSensor" ng-model="site.thermostatList[$index].wiringConfigSensor">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <label for="email" class="weight-400 control-label size-14">Wiring to current sensor, attach photo</label>
+                                        <br>
+		                                <b ng-if="site.thermostatList[$index].wiringSensorImage">
+									    	<img class="thumb wiringSensorImage{{$index}}" ng-src="fileUpload/loadImage?imageName={{site.thermostatList[$index].wiringSensorImage}}" alt="{{site.thermostatList[$index].wiringSensorImage}}"/>
+									    </b>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                	<div class="clear"></div>
+                        <span class="line-height-40">Survey Technician Information</span>
+                        <b class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showSurvey = !showSurvey;$event.stopPropagation();">
+                        	<i class="icon-down-arrow size-26 top-4 relative" ng-show="showSurvey" aria-hidden="true"></i>
+                          	<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showSurvey"></i>
+                          </p></b>
+                        <hr class="no-margin" />
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showSurvey" class="col-xs-12 col-lg-6" disable-all="true">
+                        <div class="row">
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 control-label size-14">Name</label>
+                                <input type="text" class="form-control" name="technicianName" ng-model="site.technicianName">
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 size-14">Phone Number</label>
+                                <input type="text" class="form-control" name="technicianPhone" ng-model="site.technicianPhone" ui-mask="(999) 999-9999" ui-mask-placeholder ui-mask-placeholder-char="_">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Notes</label>
+                                <input type="text" class="form-control" name="technicianNotes" ng-model="site.technicianNotes">
+                            </div>
+                        </div>
+                    </div>
+                	<div class="clear"></div>
+                        <span class="line-height-40">Install Location Information</span>
+                        <b class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showInstallLocation = !showInstallLocation;$event.stopPropagation();">
+                        <i class="icon-down-arrow size-26 top-4 relative" ng-show="showInstallLocation" aria-hidden="true"></i>
+                          	<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showInstallLocation"></i>
+                        </p></b>
+                        <hr class="no-margin" />
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showInstallLocation" class="col-xs-12 col-lg-6" disable-all="true">
+                        <div class="row">
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 control-label size-14">Cellular Mode</label>
+                                <input type="text" class="form-control" name="cellularMode" ng-model="site.cellularMode">
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 size-14">Cellular Coverage</label>
+                                <input type="text" class="form-control" name="cellularCoverage" ng-model="site.cellularCoverage">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Cellular Provider</label>
+                                <input type="text" class="form-control" name="cellularProvide" ng-model="site.cellularProvide">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 control-label size-14">Wi-Fi/MiFi SSID and Password</label>
+                                <input type="text" class="form-control" placeholder="SSID" name="cellularWIFI" ng-model="site.cellularWIFI">
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 control-label size-14">&nbsp;</label>
+                                <input type="text" class="form-control" placeholder="Password" name="cellularWIFIPWD" ng-model="site.cellularWIFIPWD">
+                            </div>
+                        </div>
+                    </div>
+                   <div class="clear"></div>
+                        <span class="line-height-40">Install Cellular Modem Information</span>
+                        <b class="pull-right"><p class="no-margin no-padding no-line-height show-details cursor" ng-click="showCellular = !showCellular;$event.stopPropagation();">
+                        <i class="icon-down-arrow size-26 top-4 relative" ng-show="showCellular" aria-hidden="true"></i>
+                          	<i class="icon-right-arrow size-26 top-4 relative" ng-show="!showCellular"></i>
+                        </p></b>
+                        <hr class="no-margin" />
+                  
+                    <div class="clear"></div>
+                    <gap></gap>
+                    <div ng-show="showCellular" class="col-xs-12 col-lg-6" disable-all="true">
+                        <div class="row">
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 control-label size-14">Modem Type</label>
+                                <select class="form-control" name="modemType" ng-model="site.modemType" ng-options="option.value as option.label for option in modemTypeOptions"></select>
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 size-14">SIM Card Number</label>
+                                <input type="text" class="form-control" name="simCardNumber" ng-model="site.simCardNumber">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 control-label size-14">Cellular Modem Serial Number</label>
+                                <input type="text" class="form-control" name="modemSerialNumber" ng-model="site.modemSerialNumber">
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <label for="email" class="weight-400 size-14">Cellular Modem Static IP Address</label>
+                                <input type="text" class="form-control" name="modemIPAddress" ng-model="site.modemIPAddress">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <label for="email" class="weight-400 control-label size-14">Cellular Modem Phone Number</label>
+                                <input type="text" class="form-control" name="modemPhoneNumber" ng-model="site.modemPhoneNumber" ui-mask="(999) 999-9999" ui-mask-placeholder ui-mask-placeholder-char="_">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </form>
+        <div class="clear"></div>
+        <div ng-show="!showMoreDetails">
+            <!-- Nav tabs -->
+            <div class="navigation-list">
+            <ul class="nav nav-tabs x-md-padding" role="tablist">
+                <li role="presentation" ng-class="{active: $state.current.activeSubTab == 'devices'}" ng-show="userDetails.rolePermissions.hasOwnProperty('Device Management')">
+                	<a data-target="#Devices" ng-click="gotoDevices()" aria-controls="home" role="tab" data-toggle="tab">Devices ({{tabCounts.deviceCount}})</a>
+                </li>
+                <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'schedules'}" ng-show="userDetails.rolePermissions.hasOwnProperty('Schedule Management')">
+                	<a data-target="#Schedules" aria-controls="profile" role="tab" data-toggle="tab"  ng-click="gotoSchedules()">Schedules ({{tabCounts.scheduleCount}})</a>
+                </li>
+                <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'forecasts'}">
+                	<a data-target="#Forecasts" aria-controls="profile" role="tab" data-toggle="tab" ng-click="gotoForecasts()">Forecasts</a>
+                </li>
+                <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'alerts'}"><a data-target="#Alerts" aria-controls="profile" role="tab" data-toggle="tab" ng-click="gotoAlerts()">Alerts ({{tabCounts.alertsCount}})</a>
+                </li>
+                <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'users'}" ng-if="userDetails.rolePermissions.hasOwnProperty('User Management')">
+                	<a ng-click="gotoUsers()" data-target="#users" aria-controls="profile" role="tab" data-toggle="tab">Users ({{tabCounts.usersCount}})</a>
+                </li>
+                <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'activityLog'}">
+                	<a ng-click="gotoActivityLog()" data-target="#Activity" aria-controls="profile" role="tab" data-toggle="tab">Activity Log ({{tabCounts.activityLogCount}})</a>
+                </li>
+                
+            </ul>
+            </div>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="customer-info-sub-views sites" ui-view="sites-info"></div>
+            </div>
+        </div>
+    </div>
+</div>    
+</div>

@@ -1,0 +1,29 @@
+<div class="blue-bg-bar min-height-52 relative">
+	<img ng-if="companyLogo && !userDetails.companyLogo" class="customer-thumg pull-left" ng-src="fileUpload/loadImage?imageName={{companyLogo}}" alt="Company Logo" />
+</div>
+<div class="clear"></div>
+<gap></gap>
+<!-- Nav tabs -->
+<div class="navigation-list">
+	<ul class="nav nav-tabs x-md-padding" role="tablist">
+	    <li role="presentation" ng-class="{active: $state.current.activeSubTab == 'reports'}" ng-if="userDetails.rolePermissions['Dashboard Management']!== '4'">
+	        <a ui-sref="report.reports($state.params)" data-target="#Reports" aria-controls="profile" role="tab" data-toggle="tab">Reports</a>
+	    </li>
+	    <li role="presentation" ng-class="{active: $state.current.activeSubTab == 'customers'}" ng-if="userDetails.rolePermissions.hasOwnProperty('Analytics Management') && userDetails.rolePermissions['Dashboard Management']!== '4'">
+	    	<a ui-sref="report.customers($state.params)" data-target="#Customers" aria-controls="profile" role="tab" data-toggle="tab">Customers</a>
+	    </li>
+	    <li role="presentation" ng-class="{active: $state.current.activeSubTab == 'groups'}" ng-if="userDetails.rolePermissions.hasOwnProperty('Analytics Management') && userDetails.rolePermissions['Dashboard Management']!== '4'">
+	    	<a ui-sref="report.groups($state.params)" data-target="#Groups" aria-controls="profile" role="tab" data-toggle="tab">Groups</a>
+	    </li>
+	    <li role="presentation" ng-class="{active: $state.current.activeSubTab == 'sites'}" ng-if="userDetails.rolePermissions.hasOwnProperty('Analytics Management') && userDetails.rolePermissions['Dashboard Management']!== '4'">
+	    	<a ui-sref="report.sites($state.params)" data-target="#Sites" aria-controls="profile" role="tab" data-toggle="tab">Sites</a>
+	    </li>
+	    <li role="presentation" ng-class="{active: $state.current.activeSubTab == 'devices'}" ng-if="userDetails.rolePermissions.hasOwnProperty('Analytics Management')">
+	    	<a ui-sref="report.devices($state.params)" data-target="#Devices" aria-controls="profile" role="tab" data-toggle="tab">Devices</a>
+	    </li>
+	</ul>
+</div>
+<!-- Tab panes -->
+<div class="tab-content scroll top-107">
+    <div class="customer-info-sub-views" ui-view="report-info"></div>
+</div>

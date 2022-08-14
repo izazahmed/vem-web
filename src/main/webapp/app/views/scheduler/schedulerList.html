@@ -1,0 +1,110 @@
+<div>
+    <div class="x-md-padding options-bar" ng-class="{'blue-bg-bar': ($state.current.name == 'scheduler.schedulerList' ||  $state.current.name == 'scheduler.schedulerList.applyView')}">
+        <div class="pull-left">
+            <!-- <div><span class="line-height-40"><strong>{{filteredLength}}/{{totalschedules}} Schedules</strong></span> <span class="vr height-25"></span> <span class="border rounded cloud height-25"><i class="fa fa-download" aria-hidden="true"></i></span> </div> -->
+        </div>
+
+        <div class="pull-right">
+            <div>
+                <span ng-hide="filterHide" class="line-height-40 size-14 weight-500" ng-class="{'white-text' : ($state.current.name == 'scheduler.schedulerList' ||  $state.current.name == 'scheduler.schedulerList.applyView')}">Filter By </span>
+                <select  ng-hide="filterdropHide" class="border text-muted xs-padding size-14 text-black" ng-model="filterBy" ng-change="filterByChange()" ng-init="filterBy='All'">
+                    <option value="All">All</option>
+                    <option value="Customers" >Customer</option>
+                    <option value="Groups" >Group</option>
+                    <option value="Sites" >Site</option>
+                    <option value="Devices">Device</option>
+                    <option value="Status">Status</option>
+
+                </select>
+
+                <select class="border text-muted xs-padding" ng-show="filterBy!='All'" ng-model="filterSearch" ng-init="filterSearch='All'" ng-change="filterBySearch()">
+                    <option value="All">All</option>
+                    <option value="{{filterdatas.key}}" ng-repeat="filterdatas in filterdata">{{filterdatas.value}}</option>
+                </select>
+                <input type="text" class="border padding-1" ng-focus="showSearch" ng-show="showSearch" ng-model="filterSchedules" />&nbsp;
+                <i class="icon-search size-20 cursor show-search y-padding v-middle" aria-hidden="true" ng-click="showSearch = !showSearch" ng-class="{'white-text':($state.current.name == 'scheduler.schedulerList' ||  $state.current.name == 'scheduler.schedulerList.applyView') }"></i>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="white-bg x-md-padding border-bottom">
+        <li class="pull-left">
+            <div>
+            <span ng-click="checkAll()" class="thick-border" style="padding-top:1px;">
+			<span class="icon-plus size-16 verticalTxt-btm" ng-show="!showMain"><span class="path1"></span><span class="path2"></span></span><span class="size-16  minus" ng-show="showMain">-</span></span>&nbsp;&nbsp;
+                <span class="line-height-40 weight-500">{{filteredLength}} / {{totalschedules}} Schedules &nbsp;</span>
+                <i class="icon-download size-30 v-middle text-dark cursor" aria-hidden="true"></i>
+            </div>
+        </li>
+        <li class="pull-right mob-left" ng-show="addbuttonhide">
+            <a href="javascript:void(0)" ng-click="newSchedule()">
+                <p class="title size-14 weight-400 pull-right add line-height-40 no-margin">
+                    <span class="icon-add size-20 verticalTxt-btm plus-icon">
+                		 <span class="path1"></span><span class="path2"></span>
+                    </span>Add New Schedule
+                </p>
+            </a>
+        </li>
+
+    <!--    <div class="dropdown scroll-dropdown pull-right" ng-if="$state.current.name == 'scheduler.schedulerList' && userDetails.rolePermissions['Schedule Management']==2">
+            <p class="title size-14 pull-right add line-height-40 no-margin cursor dropdown-toggle" type="button" data-toggle="dropdown"><span class="icon-add  size-20 top-4 relative">
+        <span class="path1"></span><span class="path2"></span></span> Add New Schedule <span class="caret"></span></p>
+            <ul class="dropdown-menu">
+                <li ng-repeat="customer in customerList | filter:customerFilter"><a href="javascript:void(0)" ng-click="newScheduleFromCustomer(customer.id)">{{customer.label}}</a></li>
+            </ul>
+        </div>-->
+
+        <div class="clear"></div>
+    </div>
+</div>
+<div class="clear"></div>
+<s-gray-gap ng-if="($state.current.name == 'scheduler.schedulerList' ||  $state.current.name == 'scheduler.schedulerList.applyView')"></s-gray-gap>
+<ul class="listhover schedules-list" ng-class="{'alphabets-badge-width reduce-width-80' : (getObjectMergeLength(schedules) > 100 && $state.current.name == 'scheduler.schedulerList'),'scroll top-97' :($state.current.name == 'scheduler.schedulerList')}">
+
+    <div ng-hide="filteredLength" id="nodata" style="opacity:0">
+        <br />
+        <br />
+        <div class="text-center error col-centered">No Data Found</div>
+    </div>
+
+    <div ng-repeat="(letter, group) in schedules">
+
+        <h1 ng-show="getObjectMergeLength(schedules) > 100" ng-if="filteredSchedule.length > 0" class="border-bottom size-14 no-margin padding x-mlg-padding" group="{{letter}}">
+			<strong>{{letter}}</strong>
+		</h1>
+        <li ng-click="getSchedule(schedule.scheduleId)" ng-repeat="schedule in filteredSchedule  = ( group | orderBy: 'scheduleName' | filter: statusFilter | filter: search)" class="line-height-60 x-md-padding border-bottom border-top padding">
+            <div class="row">
+	                <div class="col-xs-6 col-sm-6 col-md-6">
+	                <div class="v-middle-position inline-block">
+	                    <h1 class="size-14 no-margin show-details weight-400">
+	                    	<div class="line-height-20">
+		                  <span ng-click="showDiv = !showDiv;$event.stopPropagation();">{{showPlus ? !showDiv ? "-" : "+" : showDiv ? "-" : "+" }}</span> {{schedule.scheduleName}}</div>
+		                </h1>
+	                    <div class="details-drop no-line-height-inherit padding-left-9" ng-show="showPlus ? !showDiv : showDiv">
+	                       
+	                        <p class="no-margin" ng-if="schedule.devices">Customer Name: {{schedule.devices}}</p>
+	                        <p class="no-margin" ng-if="schedule.groups">Group Name: {{schedule.groups}}</p>
+	                        <p class="no-margin" ng-if="schedule.locations">Site Name: {{schedule.locations}}</p>
+ 						    <p class="no-margin" ng-if="schedule.forecasts">Forecast: {{schedule.forecasts}}</p>
+ 						    <p class="no-margin" ng-if="schedule.forecast_info">Forecast: {{schedule.forecast_info}}</p>
+	                    </div>
+	                    </div>
+	                </div>
+	               <div class="col-xs-6 col-sm-6 col-md-4 col-lg-5 text-right" >
+                		<label class="size-14 weight-400" ng-if="schedule.modifieddate">{{(makeFormat(schedule.modifieddate,'MM/DD/YYYY hh:mm a') | uppercase) }}</label>
+                	</div>
+	                <div class="col-xs-12 col-sm-6 col-md-2 col-lg-1 no-padding no-margin">
+	                    <label class="icon relative no-margin pull-right top-10" ng-class="{'normal-hide':!isTouchDevice()}">
+	                        <span ng-show="copybuttonhide" class="height-25" title="Copy schedule"><a ng-click="copySchedule(schedule.scheduleId);$event.stopPropagation();"><i class="icon-copy size-30" aria-hidden="true"></i></a></span>
+	                        <span ng-show="applybuttonhide" class="height-25" title="Apply schedule"><a ng-click="applySchedule(schedule);$event.stopPropagation();"><i class="icon-reply size-30" aria-hidden="true"></i></a></span>
+	                    </label>
+                	</div>
+                </div>
+        </li>
+    </div>
+</ul>
+<div class="alphabets-badge scroll top-97" ng-if="$state.current.name == 'scheduler.schedulerList'" ng-show="getObjectMergeLength(schedules) > 100">
+    <ul class="">
+        <li ng-repeat="alphabet in alphabets" class="text-center" style="height: {{alphabetHeight}}" ng-class="{'text-muted':!isProperty(alphabet,schedules)}" ng-click="moveRelatedGroup(alphabet)">{{alphabet}}</li>
+    </ul>
+</div>

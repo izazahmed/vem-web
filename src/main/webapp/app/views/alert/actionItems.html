@@ -1,0 +1,94 @@
+<div role="tabpanel" class="tab-pane border-bottom" id="actionItems">
+		<gap></gap>		
+		<div class="col-xs-12 options-bar">
+			<div class="pull-right">
+		        <div class="inside-space">
+		            <span class="line-height-40 weight-500">Filter by</span> 		            
+		            <select class="border text-muted xs-padding" ng-model="filterBy" ng-change="filterByChange()" ng-init="filterBy='AlarmType'">
+		                <option value="AlarmType">Action Type</option>
+		                <option value="Sites">Site</option>
+		                <option value="Devices">Device</option>
+		            </select>
+		            <select class="border text-muted xs-padding" ng-show="filterBy=='AlarmType'" ng-model="alertListStatus" 
+		            ng-init="alertListStatus='open'"  ng-change="fetchAlertData()">
+		                <option value="all">All</option>
+		                <option value="open">Open</option>
+		                <option value="completed">Completed</option>
+		            </select>
+					<select ng-show="filterBy=='Sites'" class="border text-muted xs-padding" ng-model="site" ng-init="site='all'">
+			            <option value="all">All</option>
+			            <option value="{{key}}" ng-repeat="(key, value) in siteList">{{value}}</option>
+					</select>
+					<select ng-show="filterBy=='Devices'" class="border text-muted xs-padding" ng-model="device" ng-init="device='all'">
+			            <option value="all">All</option>
+			            <option value="{{key}}" ng-repeat="(key, value) in deviceList">{{value}}</option>
+					</select>
+		            <input type="text" class="border" ng-show="showSearch" ng-focus="showSearch" ng-model="alertName" />&nbsp;
+		            <i class="icon-search size-20 cursor show-search v-middle" aria-hidden="true" ng-click="showSearch = !showSearch"></i>
+		        </div>
+		    </div> 
+			<div class="clear"></div>
+		</div>		
+	<div class="clear"></div>
+	    <gap></gap>
+	</div>
+	<div class="alerts-info-sub-views">
+	    <ul class="listhover_nocursor users-list scroll top-165">
+	    	<div ng-hide="filteredActionItems.length > 0" style="opacity:0" id="nodata">
+		        <br/><br/>
+		        <div class="text-center error col-centered">No Data Found</div>
+		    </div>
+			<li class="border-bottom y-padding" ng-repeat="actionItem in filteredActionItems = ( alertsActionItems | orderBy: 'rowId' | filter: alertsFilter | filter: alertName)" ng-if="actionItem.actionItems[0].itemName != '-'">
+				<div class="col-xs-12 col-lg-12">
+					<span class="size-14 show-details">
+		               	<input ng-if="(actionItem.actionItems.length >0) "  type="checkbox" ng-hide="(actionItem.alertStatus | lowercase ) =='resolve'" ng-model="filteredActionItems[$index].mainChk" ng-true-value="1" ng-false-value="0" 
+		               		ng-click="selectMainItem(filteredActionItems[$index], $index)"/>
+		               <span class="left-2 relative">
+		               		<span ng-class="{'weight-500': actionItem.alertStatus=='new', 'weight-500 thick-gray italic': actionItem.alertStatus=='ignore'}">{{actionItem.alertName}} {{actionItem.alertPriority}} - </span>
+		               		<span ng-class="{'redfont': actionItem.alertStatus=='new', 'thick-gray italic': actionItem.alertStatus=='ignore'}">{{filteredActionItems[$index].alertDesc}}</span>
+		               		
+		               		<span ng-if="(actionItem.alertStatus | lowercase )=='resolve' " class="trueSign">
+		               			<i class="icon-right size-16 relative weight-500 gray-border circle-border"  aria-hidden="true"></i>
+		               		</span>
+		               		
+				            <span ng-if="(actionItem.alertStatus | lowercase )=='ignore'" >
+				           		<i class="icon-close-popup size-20 weight-500 relative" aria-hidden="true"></i>
+				           	</span>
+		               		
+	               		</span>
+	               	</span>
+	               	<div class="thick-gray">
+		                <div class="margin-left25 no-padding details-drop">{{filteredActionItems[$index].siteName}}, 
+		                		<a ng-if="userDetails.rolePermissions.hasOwnProperty('Device Management')" ui-sref="devices.devicesList.profile.settings(mergeObject($state.params,{deviceId:filteredActionItems[$index].deviceId}))"><span ng-class="{'skycolor': actionItem.alertStatus=='new'}">{{filteredActionItems[$index].deviceName}}</span>
+		                		</a>
+		                		
+		                		<a ng-if="!userDetails.rolePermissions.hasOwnProperty('Device Management')" ><span ng-class="{'skycolor': actionItem.alertStatus=='new'}">{{filteredActionItems[$index].deviceName}}</span>
+		                		</a>
+		                </div>
+		                <div class="margin-left25 no-padding details-drop">Alert ID: {{filteredActionItems[$index].alertId}}</div>	                
+		                <ul class="insideList" ng-if="(actionItem.actionItems.length >0)">
+		               
+		                	<li ng-repeat="actionObj in actionItem.actionItems track by $index">
+                               
+                               <div class="checkbox">
+                               <label ng-class="{'no-padding':(actionItem.alertStatus | lowercase ) =='resolve'}">
+		                		<input type="checkbox" ng-model="filteredActionItems[$parent.$index].actionItems[$index].itemStatus" 
+		                			ng-checked="filteredActionItems[$parent.$index].actionItems[$index].itemStatus==1"	                		
+		                			ng-true-value="1" ng-false-value="0" ng-click="selectSubItem(filteredActionItems[$index], $parent.$index, $index, filteredActionItems[$parent.$index].actionItems[$index].itemStatus)" 
+		                			 ng-hide="(actionItem.alertStatus | lowercase ) =='resolve'"
+		                			/>
+		                		
+		                		<span ng-class="{'line-through' : filteredActionItems[$parent.$index].actionItems[$index].itemStatus==1}" cal>{{actionObj.itemName}}</span>
+		                			</label>
+		                			</div>
+		                	</li>
+		                	
+		                	<button ng-if="(actionItem.alertStatus | lowercase ) !='resolve' && (actionItem.alertStatus | lowercase ) !='ignore' "  class="btn btn-primary pull-right margin-left10 t-margin-10" ng-click="saveActionItem(filteredActionItems[$index], 'done')">Done</button>
+		            		<button ng-if="(actionItem.alertStatus | lowercase ) !='resolve' && (actionItem.alertStatus | lowercase ) !='ignore' " class="btn btn-default pull-right t-margin-10" ng-click="saveActionItem(filteredActionItems[$index], 'ignore')">Ignore</button>
+		                </ul>
+		            </div>
+		        </div>
+	            <div class="clear"></div>
+	        </li>
+	    </ul>
+	</div>

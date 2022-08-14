@@ -1,0 +1,48 @@
+<div class="blue-bg-bar min-height-52 relative">
+	<div class="pull-right">
+	 	<input type="text" class="border xs-padding" ng-show="showSearch" ng-focus="showSearch" ng-model="filterRoles" />&nbsp;
+        <i class="icon-search size-20 white-text cursor show-search v-middle y-padding" aria-hidden="true" ng-click="showSearch = !showSearch"></i>
+	</div>			
+</div>
+
+<div class="clear"></div>
+<hr class="no-margin" />
+<div class="options-bar x-md-padding">
+    <div class="pull-left"><span class="line-height-40 weight-500">{{filteredRoles.length}} / {{roles.length}} Roles </span> 
+    	<i class="icon-download size-30 v-middle text-dark cursor" aria-hidden="true"></i>
+    </div>
+	<div class="pull-right mob-left">
+			<a href="#/roles/addNew">
+				 <p class="title size-14 pull-right add line-height-40 no-margin"><span class="icon-add size-20 top-4 relative">
+        		<span class="path1"></span><span class="path2"></span></span> Add New Role</p>
+			</a>
+    </div>
+    <div class="clear"></div>
+</div>
+<s-gray-gap></s-gray-gap>
+<div class="scroll roles top-98">
+    <div ng-show="!isDataAvailable" style="opacity:0" id="nodata">
+        <br/><br/><div class="text-center error col-centered">No Data Found</div>
+    </div>
+    <gap class="height-2"></gap>
+    <ul class="rolelist">
+        <li ng-class="{'disabled':!role.isActive}" class="padding x-md-padding border-bottom" ng-repeat="role in filteredRoles = ( roles | orderBy: 'roleName' | filter: search)" ng-click="getRole(role)">
+            <h1 class="size-14 weight-400 no-margin">{{role.roleName}}</h1>
+            <div class="top3-padding">
+            	<i>
+	                <span>{{role.roleTypeName}} Role</span>
+                 	<span ng-if="role.customerSupport == 1">
+                 		- Customer Support Only
+					</span>
+					<span ng-if="role.superAdmin == 1">
+						- EAI Super Admin
+					</span>
+					<span ng-else></span>
+	                <span ng-repeat="(key, value) in role.permissionList">
+	                	<span>&nbsp;<i class="middle-dot" aria-hidden="true"></i>&nbsp;{{value}} - {{key}}</span>
+                	</span>
+                </i>
+            </div>
+        </li>
+    </ul>
+</div>

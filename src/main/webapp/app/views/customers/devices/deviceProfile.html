@@ -1,0 +1,88 @@
+<div class="blue-bg-bar min-height-52 relative">
+    <div class="pull-right line-height-40 white-text cursor" ng-if="$state.current.name == 'devices.devicesList.profile.settings'"><span ng-click="reloadState()" class="relative z-index-10"><i class="icon-reload size-16 top-5" aria-hidden="true"></i> &nbsp; Refresh</span></div>
+</div>
+<div class="bar height-40 relative x-md-padding" ng-if="deviceProfileParentData.name">
+    <a href="javascript:void(0)" ng-click="gotoParent()" class="icon-back size-20 top-4 relative"></a>
+    <span class="line-height-40 size-14">{{deviceProfileParentData.name}}</span>
+    <div class="pull-right line-height-40" ng-if="userDetails.rolePermissions['Device Management']==2"><a ng-click="editDevice(deviceProfileParentData)" class="relative z-index-10"><i class="icon-edit size-16 top-5" aria-hidden="true"></i> Edit</a></div>
+
+</div>
+<s-gray-gap></s-gray-gap>
+<div class="scroll top-97">
+    <gap></gap>
+    <div ng-if="deviceProfileParentData">
+
+
+        <div class="col-lg-8 col-md-8 col-xs-12" ng-class="{'border-right':deviceProfileParentData.weather}">
+
+            <p>
+                <span ng-if="deviceProfileParentData.customerName">Customer Name: <span class="link" ng-click="gotoCustomerProfile(deviceProfileParentData.customerId)">{{deviceProfileParentData.customerName}}</span><br/></span>
+                <span ng-if="deviceProfileParentData.groupName">Group Name<span ng-if="checkSplitMore(deviceProfileParentData.groupName,',') > 1">s</span>: <span ng-click="gotoGroupProfile(deviceProfileParentData.customerId,deviceProfileParentData.groupId)" class="link">{{deviceProfileParentData.groupName}}</span>
+                <br/>
+                </span>
+                <span ng-if="deviceProfileParentData.siteName">Site Name: <span class="link" ng-click="gotoSiteProfile(deviceProfileParentData.customerId,deviceProfileParentData.siteId)">{{deviceProfileParentData.siteName}}</span> <span ng-if="deviceProfileParentData.siteInternalId">#</span>{{deviceProfileParentData.siteInternalId}}
+                <br/>
+                </span>
+                <span ng-if="deviceProfileParentData.location == 23 ? deviceProfileParentData.otherLocation : deviceProfileParentData.location">Location: {{deviceProfileParentData.location == 23 ? deviceProfileParentData.otherLocation : getLocation(deviceProfileParentData.location)}}<br/></span>
+                 Status: {{deviceProfileParentData.isActive ? 'Active' : 'Inactive'}}
+            </p>
+            <p class="cursor inline-block weight-500" ng-click="actionView.showeDetails = !actionView.showeDetails"><span ng-if="!actionView.showeDetails">+</span><span ng-if="actionView.showeDetails">-</span> Details</p>
+            <div ng-show="actionView.showeDetails">
+                <span ng-if="deviceProfileParentData.deviceType">Device Type: {{getThermoStat(deviceProfileParentData.deviceType)}} <span ng-if="deviceProfileParentData.eaiDeviceId">•</span> </span>
+                <span ng-if="deviceProfileParentData.eaiDeviceId">Device ID: {{deviceProfileParentData.eaiDeviceId}} <span ng-if="deviceProfileParentData.unit">•</span> </span>         
+                <span ng-if="deviceProfileParentData.unit"> Unit: {{deviceProfileParentData.unit}}<br/></span>
+                
+                
+                <p class="no-margin"><span ng-if="deviceProfileParentData.model">Model: {{deviceProfileParentData.model}} <span ng-if="deviceProfileParentData.macId">•</span></span> 
+                <span ng-if="deviceProfileParentData.macId">MAC ID: {{deviceProfileParentData.macId}} <span ng-if="deviceProfileParentData.version">•</span></span>                
+                <span ng-if="deviceProfileParentData.version">Version: {{deviceProfileParentData.version}} <span ng-if="deviceProfileParentData.wifiKey">•</span></span>
+                <span ng-if="deviceProfileParentData.wifiKey">Wi-Fi Key: {{deviceProfileParentData.wifiKey}}</span></p>
+                
+                
+                
+                Thermostat Preferences: {{deviceProfileParentData.fanPref ? 'Fan On' : 'Fan Auto'}}{{deviceProfileParentData.hvacToAuto ? ', Reset HVAC to Auto' : ''}}{{deviceProfileParentData.holdToAuto ? ', Reset Hold to Off' : ''}}{{deviceProfileParentData.lockPref == 1 ? ', Lock' : deviceProfileParentData.lockPref == 2 ? ', Full' : ', Unlock'}}{{deviceProfileParentData.nightSchedule ? ', Nightly Schedule Download' : ''}}, Min SP: {{deviceProfileParentData.minSP}}, Max SP: {{deviceProfileParentData.maxSP}}
+                <br/>
+               <!-- <span ng-if="deviceProfileParentData.scheduleStatus != 0 && deviceProfileParentData.scheduleStatus != 4 &&  deviceProfileParentData.registerType"> {{deviceProfileParentData.scheduleName}} Schedule Download:</span> <span ng-if="deviceProfileParentData.scheduleStatus == 1 && deviceProfileParentData.registerType"> Downloading</span><span ng-if="deviceProfileParentData.scheduleStatus == 2 && deviceProfileParentData.registerType"> Success</span><span ng-if="deviceProfileParentData.scheduleStatus == 3 && deviceProfileParentData.registerType"> Failure</span>-->
+
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-xs-12" ng-if="deviceProfileParentData.weather">
+            <div class="relative">
+                <span ng-if="deviceProfileParentData.weather.temp_f" class="size-40">{{makeRound(deviceProfileParentData.weather.temp_f)}}°</span> <span class="alignImg"><img ng-src="{{deviceProfileParentData.weather.icon_url}}"></span> <span class="">{{deviceProfileParentData.weather.weather}}</span>
+            </div>
+            <div> <span ng-if="deviceProfileParentData.weather.high_temp">H {{makeRound(deviceProfileParentData.weather.high_temp)}}° •</span> <span ng-if="deviceProfileParentData.weather.low_temp">L {{makeRound(deviceProfileParentData.weather.low_temp)}}°</span></div>
+            <div> <span ng-if="deviceProfileParentData.weather.feelslike_f"> Feels Like {{makeRound(deviceProfileParentData.weather.feelslike_f)}}°</span> • <span ng-if="deviceProfileParentData.weather.relative_humidity">{{deviceProfileParentData.weather.relative_humidity}} Humidity</span></div>
+        </div>
+
+<div class="clear"></div>
+    </div>
+    <gap></gap>
+    <!--
+
+<h1 class="size-16 weight-700 y-padding no-margin pull-left">{{deviceProfileParentData.name}} test</h1>-->
+
+    <div class="clear"></div>
+    <div class="details-drop">
+
+        <!--  <div class="pull-right">
+                 <p class="no-padding no-margin">OUTSIDE TEMP <i class="fa fa-cloud" aria-hidden="true"></i> 93&deg;</p>
+                 <p class="no-line-height">HUMIDITY 58%</p>
+             </div>-->
+        <div class="clear"></div>
+    </div>
+    <!-- Nav tabs -->
+    <div class="navigation-list">
+        <ul class="nav nav-tabs x-md-padding" role="tablist">
+            <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'current'}"><a data-target="#settings" aria-controls="home" role="tab" data-toggle="tab" ng-click="gotoSettings()">Settings</a></li>
+            <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'forecasts'}"><a data-target="#Forecasts" aria-controls="profile" role="tab" data-toggle="tab" ng-click="gotoForecasts()">Forecasts</a></li>
+            <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'alerts'}"><a data-target="#Alerts" aria-controls="profile" role="tab" data-toggle="tab" ng-click="gotoAlerts()">Alerts ({{deviceProfileParentData.alertCount}})</a></li>
+            <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'activityLog'}"><a ng-click="gotoActivityLog()" data-target="#Activity" aria-controls="profile" role="tab" data-toggle="tab">Activity Log ({{deviceProfileParentData.activityCount}})</a></li>
+        </ul>
+    </div>
+    <!-- Tab panes -->
+    <div class="tab-content">
+
+        <div ui-view="device-info" ng-class="{'min-mised':actionView.showeDetails}"></div>
+
+    </div>
+</div>

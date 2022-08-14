@@ -1,0 +1,65 @@
+<div class="blue-bg-bar min-height-52 relative">
+	<img ng-if="userDetails.companyLogo" class="customer-thumg" ng-src="fileUpload/loadImage?imageName={{userDetails.companyLogo}}" alt="Company Logo" />
+</div>
+<div class="options-bar x-md-padding">
+    <div class="pull-left y-padding">
+        <a href="javascript:void(0)" ng-click="gotoParent()"><i class="icon-back size-20 vertical-middle cursor" aria-hidden="true" ></i>&nbsp;</a>
+        <span class="size-14 weight-500">{{schedule.scheduleName}}</span>
+    </div>
+    <div class="pull-right">
+        <a ng-click="editSchedule()" class="size-14 line-height-40 pull-right z-index-10 relative" ng-show="addbuttonhide"><i class="icon-edit size-16" aria-hidden="true"></i>&nbsp; Edit</a>
+    </div>
+    <div class="clear"></div>
+</div>
+<s-gray-gap></s-gray-gap>
+<div class="scroll top-97">
+    <div class="x-md-padding">
+        <gap></gap>
+        <div class="clear"></div>
+        <p class="no-margin">
+            Status: {{schedule.schdlstatus}}
+        </p>
+        <!-- <p class="no-margin" ng-if="schedule.downloadeddate">
+            Last Download on: {{makeFormat(schedule.downloadeddate,'MM/DD/YYYY HH:mm:ss')}}
+        </p> -->
+         <p class="no-margin" ng-if="schedule.downloadeddate">
+            Last Download on: {{schedule.downloadeddate}}
+        </p>
+        <p class="no-margin" ng-if="schedule.customers">
+            Customer Name<span ng-if="getAssignedNames(schedule.customers).length > 1">s</span>: {{schedule.customers}}
+        </p>
+        <p class="no-margin" ng-if="schedule.groups">
+            Group Name<span ng-if="getAssignedNames(schedule.groups).length > 1">s</span>: {{schedule.groups}}
+        </p>
+        
+        <p class="no-margin" ng-if="schedule.sites">
+            Site Name<span ng-if="getAssignedNames(schedule.sites).length > 1">s</span>: {{schedule.sites}}
+        </p>
+        <p class="no-margin" ng-if="schedule.forecastinfo!=null">
+            Forecast<span ng-if="schedule.forecastinfo">s</span>: {{schedule.forecastinfo}}
+        </p>
+        <gap></gap>
+    </div>
+
+    <!-- Nav tabs -->
+    <div class="navigation-list">
+        <ul class="nav nav-tabs x-md-padding" role="tablist">
+            <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'scheduler', 'disableTab' : !userDetails.rolePermissions.hasOwnProperty('Schedule Management')}">
+                <a ng-click="gotoSchedules()" data-target="#Schedule" aria-controls="profile" role="tab" data-toggle="tab">Schedule</a>
+            </li>
+            <!-- <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'groups'}" ng-if="userDetails.rolePermissions.hasOwnProperty('Group Management')">
+                <a ng-click="gotoGroups()" data-target="#groups" aria-controls="profile" role="tab" data-toggle="tab">Groups ({{schedule.grpCnt}}) </a>
+            </li>
+            <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'sites'}" ng-if="userDetails.rolePermissions.hasOwnProperty('Site Management')">
+                <a ng-click="gotoSites()" data-target="#Locations" aria-controls="settings" role="tab" data-toggle="tab">Sites ({{schedule.siteCnt}})</a>
+            </li> -->
+            <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'devices'}" ng-if="userDetails.rolePermissions.hasOwnProperty('Device Management')">
+                <a data-target="#Devices" ng-click="gotoDevices()" aria-controls="settings" role="tab" data-toggle="tab">Devices ({{schedule.deviceCnt}})</a>
+            </li>
+        </ul>
+    </div>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="customer-info-sub-views" ui-view="scheduler-view-info"></div>
+    </div>
+</div>

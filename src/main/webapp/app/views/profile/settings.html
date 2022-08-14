@@ -1,0 +1,57 @@
+	<div class="clear"></div>
+	<div class="scroll">
+	<div class="blue-bg-bar height-50 relative"></div>
+	<div class="x-md-padding">
+		<h1 class="size-16 weight-700 pull-left  line-height-40 no-margin ng-binding">Settings</h1>
+		<div class="clear"></div>
+	</div>
+	<s-gray-gap></s-gray-gap>
+	    <gap></gap>
+	    <gap></gap>
+	<!-- 
+	    <div class="col-xs-2">
+	        <img src="assets/images/logo.jpg" class="img-responsive" />
+	
+	    </div>
+	    <div class="col-xs-2">
+	        <input type="file" title="Change" class="btn btn-default">
+	    </div>
+	    <div class="clear"></div>
+	
+	    <p class="size-12 x-md-padding">.png images maximum 300px x 60px</p> -->
+		
+		<form role="form" name="settingsForm" novalidate="" ng-submit="uploadCompanyLogo(settingsForm)" autocomplete="off">
+		
+		<div class="form-group col-xs-12">
+			<div class="col-xs-2">
+		        <img ng-src="fileUpload/loadApplicationImage?imageName=uploaded_logo.png&{{newTime}}" class="img-responsive thumb" />
+		    </div>
+	        <span class="btn btn-default btn-file">
+		    	<i class="fa fa-camera" aria-hidden="true"></i>&nbsp; Change 
+		        <input type="file" class="btn btn-default" name="companyLogo" onchange="angular.element(this).scope().imageUpload(event)"/>
+		    </span>
+		   
+		    <p class="error" ng-show="noimage">Please upload the image</p>
+		    <b ng-if="newSettingsFormData.companyLogo">
+				<img class="thumb companyLogo" ng-src="fileUpload/loadApplicationImage?imageName={{applicationImage.fileName}}" alt="{{applicationImage.fileName}}"/>
+			</b>
+	        <p class="size-12">PNG file (max size = 500KB)</p>
+	    </div>
+	    <div class="clear"></div>
+	
+	    <gap></gap>
+	    <gap></gap>
+	    <gap></gap>
+	
+	    <div class="clear"></div>
+	    <hr class="no-margin" />
+	    <div class="clear"></div>
+	    <button class="btn btn-default pull-right margin-left10 margin" ng-click="refreshState()">Cancel</button>
+	    <button type="submit" class="btn btn-primary pull-right margin" ng-disabled="disableAction">Save</button>
+	    <div class="clear"></div>
+	    <br/>
+	    </form>
+	</div>
+
+
+    

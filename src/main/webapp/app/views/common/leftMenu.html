@@ -1,0 +1,48 @@
+<div class="row side-scroll">
+    <div class="menu-list">
+		<a href="#eaidashboard?customer=0&group=0&site=0&time=7" ng-if="userDetails.rolePermissions.hasOwnProperty('Dashboard Management')">
+        	<li ng-class="{active: ($state.current.activeTab== 'dashboard' || $state.params.sourcePage == 'dashboard')}"><i class="icon-dashboard size-26 top-6" aria-hidden="true"></i><span ng-show="!toggle.leftMenuArea"> Dashboard</span></li>
+        </a>
+      	<a href="#alerts/customerAlerts?dashboardAlertStatus=open">
+        	<li ng-class="{active: $state.current.activeTab== 'alerts'}"><i class="icon-alert size-26 top-6" aria-hidden="true"></i><span class="align-badgeIpad"><span ng-show="toggle.leftMenuArea" ng-if="( newAlertCount * 1 | number ) > 0" class="badge badge-danger vertical-super badge-ipad">{{newAlertCount}}</span></span><span ng-show="!toggle.leftMenuArea"> Alerts</span> <span ng-show="!toggle.leftMenuArea" ng-if="( newAlertCount * 1 | number ) > 0" class="badge badge-danger vertical-super">{{newAlertCount}}</span></li>
+	 	</a>
+        <a href="#report/reports?reportType=1&customer=0&time=1&group=0&site=0&device=0&oldType=1">
+			<li ng-class="{active: $state.current.activeTab== 'reports'}"><i class="icon-analytics size-26 top-6" aria-hidden="true"></i> <span ng-show="!toggle.leftMenuArea">Analytics</span></li>
+		</a>
+		 <a href="#pdfreport/reportList">
+			<li ng-class="{active: $state.current.activeTab== 'pdfreports'}"><i class="icon-reports size-26 top-6" aria-hidden="true"></i> <span ng-show="!toggle.leftMenuArea">Reports</span></li>
+		</a>
+        <a href="#customers/customerslist?sourcePage=customers" ng-if="userDetails.rolePermissions.hasOwnProperty('Customer Management')">
+            <li ng-class="{active: $state.current.activeTab== 'customers'}"><i class="icon-customers size-26 top-6" aria-hidden="true"></i> <span ng-show="!toggle.leftMenuArea">Customers</span></li>
+        </a>
+        <a href="#groups/groupList?sourcePage=groups&customerId=-1" ng-if="userDetails.rolePermissions.hasOwnProperty('Group Management')">
+            <li ng-class="{active: $state.current.activeTab== 'groups'}"><i class="icon-group size-26 top-6" aria-hidden="true"></i> <span ng-show="!toggle.leftMenuArea">Groups</span></li>
+        </a>
+        <a href="#sites/sitesList?sourcePage=sites&customerId=-1" ng-if="userDetails.rolePermissions.hasOwnProperty('Dashboard Management') && userDetails.rolePermissions['Dashboard Management']!=4 && userDetails.rolePermissions.hasOwnProperty('Site Management')">
+            <li ng-class="{active: $state.current.activeTab== 'sites' && $state.params.sourcePage != 'dashboard'}"><i class="icon-site size-26 top-6" aria-hidden="true"></i><span ng-show="!toggle.leftMenuArea"> Sites</span></li>
+        </a>
+        <a href="#sites/sitesList?sourcePage=sites&customerId=-1" ng-if="!userDetails.rolePermissions.hasOwnProperty('Dashboard Management') && userDetails.rolePermissions.hasOwnProperty('Site Management')">
+            <li ng-class="{active: $state.current.activeTab== 'sites' && $state.params.sourcePage != 'dashboard'}"><i class="icon-site size-26 top-6" aria-hidden="true"></i><span ng-show="!toggle.leftMenuArea"> Sites</span></li>
+        </a>
+        <a href="#devices/devicesList?sourcePage=devices" ng-if=" userDetails.rolePermissions.hasOwnProperty('Device Management')">
+            <li ng-class="{active: $state.current.activeTab== 'devices'}"><i class="icon-devices size-26 top-6" aria-hidden="true"></i><span ng-show="!toggle.leftMenuArea"> Devices</span></li>
+        </a>
+        <a href="#scheduler/schedulerList?sourcePage=schedules" ng-if="userDetails.rolePermissions.hasOwnProperty('Schedule Management')">
+        	<li ng-class="{active: $state.current.activeTab== 'scheduler'}"><i class="icon-schedules size-26 top-6">
+                <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span><span class="path13"></span><span class="path14"></span><span class="path15"></span><span class="path16"></span><span class="path17"></span></i><span ng-show="!toggle.leftMenuArea"> Schedules</span>
+            </li>
+        </a>
+        <a href="#users/usersList?sourcePage=users" ng-if="userDetails.rolePermissions.hasOwnProperty('User Management')">
+            <li ng-class="{active: $state.current.activeTab== 'users'}"><i class="icon-user size-26 top-6" aria-hidden="true"></i><span ng-show="!toggle.leftMenuArea"> Users</span></li>
+        </a>
+        <a href="#roles/rolesList" ng-if="userDetails.isSuper">
+            <li  ng-class="{active:$state.current.activeTab == 'roles'}"><i class="icon-roles size-26 top-6"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i><span ng-show="!toggle.leftMenuArea"> Roles</span></li>
+        </a>
+        <a href="#activitylog/activityLogList">
+            <li  ng-class="{active:$state.current.activeTab == 'activities'}"><i class="icon-activity-log size-26 top-6" aria-hidden="true"></i><span ng-show="!toggle.leftMenuArea"> Activity Log</span></li>
+        </a>
+        <a href="#bulkImport/sites" ng-if="userDetails.isSuper == 1">
+            <li  ng-class="{active:$state.current.activeTab == 'bulkImport'}"><i class="icon-bulk-import size-26 top-6"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i><span ng-show="!toggle.leftMenuArea"> Bulk Import</span></li>
+        </a>
+    </div>
+</div>

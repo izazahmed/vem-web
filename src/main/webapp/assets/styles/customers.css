@@ -1,0 +1,26 @@
+.customers-menu:after{
+    position: absolute;
+    left: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 8px;
+    content: "";
+    background: #EBEBEB;
+}
+.tab-content{
+    position: relative;
+    height: calc(100% - 180px);
+}
+.tab-pane{
+    position: relative;
+    height: 100%;
+}
+.tab-pane.more{
+    position: relative;
+    height: calc(100% + 50px);
+}
+.overlay-checkbox{
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}

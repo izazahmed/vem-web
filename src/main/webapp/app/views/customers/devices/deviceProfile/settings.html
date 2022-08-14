@@ -1,0 +1,586 @@
+<div role="tabpanel" class="tab-pane active" id="settings" ng-if="deviceProfileData.thingState">
+    <div>
+
+        <h1 class="size-14 x-md-padding">{{deviceProfileData.name}}</h1>
+
+        <div class="col-lg-5 col-md-6 col-xs-12 autoscroll">
+
+
+            <div class="mob-width-350 device-screen {{ (!devicescreenData.deviceStatus && devicescreenData.thingState) ? 'offline' : ((devicescreenData.thingState.op_state == 'OFF' && devicescreenData.thingState.tstat_mode == 'OFF') ? 'OFF' : (devicescreenData.thingState.op_state == 'OFF') ? 'NONE' : devicescreenData.thingState.op_state) | lowercase}}-mode">
+                <div ng-if="!devicescreenData.deviceStatus && devicescreenData.thingState" class="no-connection">
+                    <span class="icon-no-wireless-white col-centered "><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span></span>
+                </div>
+                <p class="week-day size-26 text-black no-line-height no-margin text-uppercase">{{getWeekLabel(devicescreenData.thingState.tstat_clock.current_day)}}</p>
+
+                <div class="time-section text-black">
+
+                    <p class="size-26 no-line-height no-margin" ng-bind-html="to12Hr(devicescreenData.thingState.tstat_clock.current_time)"></p>
+                </div>
+
+
+
+                <div class="set-section text-black" ng-hide="devicescreenData.thingState.op_state == 'OFF' && devicescreenData.thingState.tstat_mode == 'OFF'">
+                    <p class="size-14 no-line-height text-center no-margin" ng-if="devicescreenData.thingState.temp_hold != 'ENABLE' && getSetAtLabel(devicescreenData)">SET AT</p>
+                    <p class="no-margin text-center size-20" ng-if="getSetDetails(devicescreenData)">{{makeRound(getSetDetails(devicescreenData))}}°</p>
+                    <p class="size-14 no-line-height text-center no-margin" ng-if="devicescreenData.thingState.temp_hold">{{devicescreenData.thingState.temp_hold == "ENABLE" ? 'HOLD' : '' }}</p>
+
+
+                </div>
+                <div class="temp-section text-black">
+
+                    <p class="size-100 no-line-height no-margin weight-500" ng-if="devicescreenData.thingState.zone_temp">{{makeRound(devicescreenData.thingState.zone_temp)}}</p>
+                    <p class="top-sup">
+                        <span class="size-20">
+                            <block>o</block>
+                            <block>F</block>
+                       </span>
+                    </p>
+                    <br/>
+                </div>
+                <p class="no-margin text-center size-16 tstatmsg" ng-if="devicescreenData.thingState.tstat_msg">{{devicescreenData.thingState.tstat_msg}}</p>
+                <div class="condition-section text-center text-black" ng-if="devicescreenData.thingState.op_state != 'OFF' && (devicescreenData.thingState.relay_state.relay6 == 'ON' || devicescreenData.thingState.relay_state.relay7 == 'ON' || devicescreenData.thingState.relay_state.relay4 == 'ON' || devicescreenData.thingState.relay_state.relay5 == 'ON')">
+                    <p>Stage</p>
+
+                    <p class="no-margin text-center" ng-if="devicescreenData.thingState.op_state == 'COOL'">
+                    <span ng-if="devicescreenData.thingState.relay_state.relay6 == 'ON'">1</span> 
+                    <span ng-if="devicescreenData.thingState.relay_state.relay7 == 'ON'">2</span>
+                    </p>
+
+                    <p class="no-margin text-center" ng-if="devicescreenData.thingState.op_state == 'HEAT'">
+                    <span ng-if="devicescreenData.thingState.relay_state.relay6 == 'ON' || devicescreenData.thingState.relay_state.relay4 == 'ON'">1</span>
+                     <span ng-if="devicescreenData.thingState.relay_state.relay7 == 'ON' || devicescreenData.thingState.relay_state.relay5 == 'ON'">2</span>
+                     </p>
+
+                </div>
+
+                <div class="fan" ng-if="devicescreenData.thingState.fan_state == 'ON' ? true : ((devicescreenData.thingState.relay_state.relay3 == 'ON') ? true : false)"><span class="icon-fan-running size-50"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span></span>
+                </div>
+                <div class="alert-symbol" ng-if="devicescreenData.alertCount">
+                    <span class="icon-error size-50 red relative" aria-hidden="true"></span>
+                </div>
+
+                <div class="lock" ng-if="devicescreenData.keyBLockout == 'PARTIAL1' || devicescreenData.keyBLockout == 'FULL'"><span class="icon-lock size-30"></span></div>
+                <gap></gap>
+            </div>
+
+
+
+            <gap></gap>
+            <p ng-if="(!deviceProfileData.deviceStatus && deviceProfileData.registerType && deviceProfileData.thingState)" class="text-center">
+                <span ng-bind-html="getTimeZoneTime(formateDate(deviceProfileData.thingState.datetime),deviceProfileData.siteTimezone)"></span>
+            </p>
+
+            <gap></gap>
+        </div>
+        <div class="col-lg-7 col-md-6 col-xs-12" disable-all="(!deviceProfileData.deviceStatus && deviceProfileData.thingState) || !deviceProfileData.isActive || deviceProfileData.scheduleStatus == 1">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <div class="row">
+                        <div class="size-14 x-md-padding weight-700">Target Setpoint</div>
+                        <gap></gap>
+                        <div class="form-group">
+                            <label for="email" class="weight-400 control-label size-14 col-lg-3 col-md-3 top-5 col-xs-12">Cool</label>
+                            <div class="col-lg-9 col-xs-12">
+                                <div class="row">
+                                    <div class="col-lg-6 col-xs-6">
+                                        <input type="number" string-to-number class="form-control" ng-value="makeRound(deviceProfileData.thingState.cool_set)" 
+                                        ng-model="deviceProfileData.thingState.cool_set" name="cool_set" 
+                                        ng-blur="setTemp('COOL',deviceProfileData.thingState.cool_set)" 
+                                        ng-class="{'blue-border':deviceProfileData.configChanges.cool_set}" 
+                                        ng-keyup="$event.keyCode == 13 ? setTemp('COOL',deviceProfileData.thingState.cool_set) : null" 
+                                        ng-disabled="deviceProfileData.heatPump ? false : (!(deviceProfileData.thingState.op_state == 'OFF' && deviceProfileData.thingState.tstat_mode == 'AUTO') && (deviceProfileData.thingState.relay_state.relay1 == 'ON' || deviceProfileData.thingState.relay_state.relay4 == 'ON' || deviceProfileData.thingState.relay_state.relay5 == 'ON'))">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div ng-if="cool_setError">
+                                <p class="error" ng-if="deviceProfileData.minSP > deviceProfileData.thingState.cool_set || deviceProfileData.maxSP < deviceProfileData.thingState.cool_set">Please enter value between only {{deviceProfileData.minSP}} to {{deviceProfileData.maxSP}}</p>
+
+
+                                <!--<p class="error" ng-if="!(deviceProfileData.minSP > deviceProfileData.thingState.cool_set || deviceProfileData.maxSP < deviceProfileData.thingState.cool_set) && deviceProfileData.thingState.heat_set >= deviceProfileData.thingState.cool_set">Cool SP has to be greater than Heat SP</p>-->
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="form-group">
+                            <label for="email" class="weight-400 control-label size-14 col-lg-3 col-md-3 top-5 col-xs-12">Heat</label>
+                            <div class="col-lg-9 col-xs-12">
+                                <div class="row">
+                                    <div class="col-lg-6 col-xs-6">
+                                        <input type="number" string-to-number 
+                                        class="form-control" 
+                                        ng-value="makeRound(deviceProfileData.thingState.heat_set)" 
+                                        ng-model="deviceProfileData.thingState.heat_set" 
+                                        name="heat_set" 
+                                        ng-blur="setTemp('HEAT',deviceProfileData.thingState.heat_set)" 
+                                        ng-class="{'blue-border':deviceProfileData.configChanges.heat_set}" 
+                                        ng-keyup="$event.keyCode == 13 ? setTemp('HEAT',deviceProfileData.thingState.heat_set) : null" 
+                                        ng-disabled="deviceProfileData.heatPump ? false : (!(deviceProfileData.thingState.op_state == 'OFF' && deviceProfileData.thingState.tstat_mode == 'AUTO') && (deviceProfileData.thingState.relay_state.relay2 == 'ON' || deviceProfileData.thingState.relay_state.relay6 == 'ON' || deviceProfileData.thingState.relay_state.relay7 == 'ON'))">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="clear"></div>
+                            <div ng-if="heat_setError">
+                                <p class="error" ng-if="deviceProfileData.minSP > deviceProfileData.thingState.heat_set || deviceProfileData.maxSP < deviceProfileData.thingState.heat_set">Please enter value between only {{deviceProfileData.minSP}} to {{deviceProfileData.maxSP}}</p>
+
+                                <!--
+                            <p class="error" ng-if="!(deviceProfileData.minSP > deviceProfileData.thingState.heat_set || deviceProfileData.maxSP < deviceProfileData.thingState.heat_set) && deviceProfileData.thingState.heat_set >= deviceProfileData.thingState.cool_set">Heat SP has to be less than Cool SP</p>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12" disable-all="deviceProfileData.scheduleStatus == 1 || (devicescreenData.thingState.temp_hold != 'ENABLE' && getSetAtLabel(devicescreenData))">
+                    <div class="row">
+                        <div class="size-14 weight-700 x-md-padding">Setpoint Hold</div>
+                        <div class="col-xs-12">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="radio">
+                                        <label ng-class="{'blue-color':deviceProfileData.configChanges.temp_hold == 'ENABLE'}">
+                                            <input type="radio" ng-disabled="deviceProfileData.scheduleStatus == 1 || (devicescreenData.thingState.temp_hold != 'ENABLE' && getSetAtLabel(devicescreenData))" ng-model="deviceProfileData.thingState.temp_hold" name="temp_hold" ng-value="'ENABLE'" ng-change="changeSetPoint('1',deviceProfileData.thingState.temp_hold)">On</label>
+                                    </div>
+                                    <div class="radio">
+                                        <label ng-class="{'blue-color':deviceProfileData.configChanges.temp_hold == 'DISABLE'}">
+                                            <input type="radio" ng-disabled="deviceProfileData.scheduleStatus == 1 || (devicescreenData.thingState.temp_hold != 'ENABLE' && getSetAtLabel(devicescreenData))" ng-change="changeSetPoint('1',deviceProfileData.thingState.temp_hold)" ng-model="deviceProfileData.thingState.temp_hold" name="temp_hold" ng-value="'DISABLE'">Off</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="clear"></div>
+                        </div>
+                        <gap></gap>
+                        <gap></gap>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <div class="row">
+                        <div class="size-14 weight-700 x-md-padding">HVAC Mode</div>
+                        <div class="col-lg-4 col-md-4 col-xs-12">
+                            <div class="radio">
+                                <label ng-class="{'blue-color':deviceProfileData.configChanges.tstat_mode == 'OFF'}">
+                                    <input type="radio" name="optradio" ng-value="'OFF'" ng-model="deviceProfileData.thingState.tstat_mode" ng-change="changeSetPoint('9',deviceProfileData.thingState.tstat_mode)">Off</label>
+                            </div>
+                            <div class="radio">
+                                <label ng-class="{'blue-color':deviceProfileData.configChanges.tstat_mode == 'HEAT'}">
+                                    <input ng-disabled="deviceProfileData.thingState && deviceProfileData.thingState.ome.h == 'off'" 
+                                    type="radio" name="optradio" ng-value="'HEAT'" ng-model="deviceProfileData.thingState.tstat_mode" ng-change="changeSetPoint('9',deviceProfileData.thingState.tstat_mode)">Heat</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-xs-12">
+                            <div class="radio">
+                                <label ng-class="{'blue-color':deviceProfileData.configChanges.tstat_mode == 'AUTO'}">
+                                    <input ng-disabled="deviceProfileData.thingState && deviceProfileData.thingState.ome.a == 'off'" type="radio" name="optradio" ng-value="'AUTO'" ng-model="deviceProfileData.thingState.tstat_mode" ng-change="changeSetPoint('9',deviceProfileData.thingState.tstat_mode)">Auto</label>
+                            </div>
+                            <div class="radio">
+                                <label ng-class="{'blue-color':deviceProfileData.configChanges.tstat_mode == 'COOL'}">
+                                    <input ng-disabled="deviceProfileData.thingState && deviceProfileData.thingState.ome.c == 'off'" type="radio" name="optradio" ng-value="'COOL'" ng-model="deviceProfileData.thingState.tstat_mode" ng-change="changeSetPoint('9',deviceProfileData.thingState.tstat_mode)">Cool</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <div class="row">
+                        <div class="size-14 weight-700 x-md-padding">Fan Mode</div>
+                        <div class="col-xs-12">
+                            <div class="radio">
+                                <label ng-class="{'blue-color':deviceProfileData.configChanges.fan_state == 'ON'}">
+                                    <input type="radio" name="fan_state" ng-change="changeSetPoint('2',deviceProfileData.thingState.fan_state)" ng-value="'ON'" ng-model="deviceProfileData.thingState.fan_state">On</label>
+                            </div>
+                            <div class="radio">
+                                <label ng-class="{'blue-color':deviceProfileData.configChanges.fan_state == 'IDLE'}">
+                                    <input type="radio" name="fan_state" ng-change="changeSetPoint('2',deviceProfileData.thingState.fan_state)" ng-value="'IDLE'" ng-model="deviceProfileData.thingState.fan_state">Auto</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="size-14 weight-700">HVAC Status</div>
+                    <gap></gap>
+                    <div>
+                        {{(deviceProfileData.thingState.op_state == "OFF" && deviceProfileData.thingState.tstat_mode == "OFF") ? "OFF" : (deviceProfileData.thingState.op_state == "OFF") ? "NONE" : deviceProfileData.thingState.op_state}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+
+        <div ng-if="userDetails.isEai">
+            <div class="border-bottom x-md-padding" ng-click="showDetails = !showDetails">
+                <span class="weight-500 pull-left size-14 line-height-40">Advanced Settings</span>
+                <span class="pull-right y-padding">
+				    <i class="icon-down-arrow size-15 thick-border" ng-show="showDetails"></i>
+				    <i class="icon-right-arrow size-15 thick-outline margin-left-right-1" ng-show="!showDetails">
+				        
+				    </i>
+				    <div class="clear"></div>
+			    </span>
+                <div class="clear"></div>
+            </div>
+            <div class="col-lg-12" ng-show="showDetails" disable-all="(!deviceProfileData.deviceStatus && deviceProfileData.thingState) || !deviceProfileData.isActive || deviceProfileData.scheduleStatus == 1">
+                <gap></gap>
+                <div class="row">
+
+                    <div class="col-lg-8 col-xs-12">
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="email" class="weight-400 control-label size-14 col-lg-4 col-md-4 top-5 col-xs-12">Calibration(-4 to +4)</label>
+                                <div class="col-xs-12 col-lg-2 col-md-4">
+                                    <ng-form name="calibrationFrom">
+                                        <input type="number" string-to-number min="-4" max="4" ng-model="deviceProfileData.calibration" class="form-control" name="calibration" ng-blur="changeSetPoint('3',deviceProfileData.calibration)" ng-keyup="$event.keyCode == 13 ? changeSetPoint('3',deviceProfileData.calibration) : null" ng-class="{'blue-border':deviceProfileData.configChanges.calibration}">
+
+                                        <div class="error" ng-if="(calibrationFrom.calibration.$error.min && !calibrationFrom.calibration.$error.max || !calibrationFrom.calibration.$error.min && calibrationFrom.calibration.$error.max) && validateCalibration">
+                                            Please enter between -4 to 4
+                                        </div>
+                                        <div class="error" ng-if="calibrationFrom.calibration.$error.number && validateCalibration">
+                                            Please enter valid number
+                                        </div>
+                                    </ng-form>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <gap></gap>
+                            <div class="form-group">
+                                <label for="email" class="weight-400 control-label size-14 col-lg-4 col-md-4 top-5 col-xs-12">Temperature Display Unit</label>
+                                <div class="col-xs-12 col-md-8 col-lg-8 top-10" ng-init="deviceProfileData.tempUnits = 'F'" disable-all="deviceProfileData.awsCompatible">
+                                    <div class="radio-inline">
+                                        <label>
+                                            <input type="radio" name="tempUnits" ng-model="deviceProfileData.tempUnits" ng-checked="!deviceProfileData.tempUnits || deviceProfileData.tempUnits == 'C'" ng-disabled="deviceProfileData.awsCompatible">
+                                            <!--<input type="radio" name="tempUnits" ng-model="deviceProfileData.tempUnits" ng-value="'C'" ng-change="changeSetPoint('4',deviceProfileData.tempUnits)">-->C</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <label>
+                                            <input type="radio" name="tempUnits" ng-model="deviceProfileData.tempUnits" ng-checked="!deviceProfileData.tempUnits || deviceProfileData.tempUnits == 'F'" ng-disabled="deviceProfileData.awsCompatible">
+                                            <!--<input type="radio" name="tempUnits" ng-model="deviceProfileData.tempUnits" ng-value="'F'" ng-change="changeSetPoint('4',deviceProfileData.tempUnits)">-->F</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="clear"></div>
+                            <gap></gap>
+                            <div class="form-group">
+                                <label for="email" class="weight-400 control-label size-14 col-lg-4 col-md-4 top-5 col-xs-12">Keypad Lockout</label>
+                                <div class="col-xs-12 col-md-8 col-lg-8 top-10">
+
+                                    <label class="radio-inline" ng-class="{'blue-color':deviceProfileData.configChanges.keyBLockout == 'DISABLE'}">
+                                        <input type="radio" name="keyBLockout" ng-model="deviceProfileData.keyBLockout" ng-value="'DISABLE'" ng-change="changeSetPoint('5',deviceProfileData.keyBLockout)">Unlocked</label>
+
+                                    <label class="radio-inline" ng-class="{'blue-color':deviceProfileData.configChanges.keyBLockout == 'PARTIAL1'}">
+                                        <input type="radio" name="keyBLockout" ng-change="changeSetPoint('5',deviceProfileData.keyBLockout)" ng-model="deviceProfileData.keyBLockout" ng-value="'PARTIAL1'">Partial</label>
+
+
+                                    <label class="radio-inline" ng-class="{'blue-color':deviceProfileData.configChanges.keyBLockout == 'FULL'}">
+                                        <input type="radio" name="keyBLockout" ng-model="deviceProfileData.keyBLockout" ng-value="'FULL'" ng-change="changeSetPoint('5',deviceProfileData.keyBLockout)">Full</label>
+
+
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <gap></gap>
+                            <div class="form-group">
+                                <label for="email" class="weight-400 control-label size-14 col-lg-4 col-md-4 top-5 col-xs-12">Message Area</label>
+                                <div class="col-xs-8 col-md-6 col-lg-6">
+                                    <input type="text" class="form-control" ng-model="deviceProfileData.thingState.tstat_msg" name="tstat_msg" maxlength="17" ng-blur="changeSetPoint('6',deviceProfileData.thingState.tstat_msg)" ng-class="{'blue-border':(deviceProfileData.configChanges.tstat_msg || deviceProfileData.configChanges.tstat_msg == '')}" no-special-char ng-keyup="$event.keyCode == 13 ? changeSetPoint('6',deviceProfileData.thingState.tstat_msg) : null" ng-change="deviceProfileData.thingState.tstat_msg = deviceProfileData.thingState.tstat_msg.toUpperCase()">
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <gap></gap>
+                            <div class="form-group">
+
+                                <label for="email" class="weight-400 control-label size-14 col-lg-4 col-md-4 top-5 col-xs-12">Clock</label>
+                                <div class="col-xs-12 col-md-8 col-lg-8">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-12 col-md-3">
+                                            <label for="email" class="text-left weight-400 control-label size-14 top-5 col-md-12 col-xs-12 no-padding">Day</label>
+                                            <div class="col-xs-3 col-md-12 no-padding no-margin">
+                                                <select class="form-control" ng-model="deviceProfileData.thingState.tstat_clock.current_day" ng-class="{'blue-border':deviceProfileData.configChanges.current_day}">
+                                                    <option value="su" ng-selected="deviceProfileData.thingState.tstat_clock.current_day == 'su'">Sun</option>
+                                                    <option value="mo" ng-selected="deviceProfileData.thingState.tstat_clock.current_day == 'mo'">Mon</option>
+                                                    <option value="tu" ng-selected="deviceProfileData.thingState.tstat_clock.current_day == 'tu'">Tue</option>
+                                                    <option value="we" ng-selected="deviceProfileData.thingState.tstat_clock.current_day == 'we'">Wed</option>
+                                                    <option value="th" ng-selected="deviceProfileData.thingState.tstat_clock.current_day == 'th'">Thu</option>
+                                                    <option value="fr" ng-selected="deviceProfileData.thingState.tstat_clock.current_day == 'fr'">Fri</option>
+                                                    <option value="sa" ng-selected="deviceProfileData.thingState.tstat_clock.current_day == 'sa'">Sat</option>
+
+                                                </select>
+
+
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-9">
+                                            <div class="row">
+                                                <label for="email" class="weight-400 control-label size-14 top-5 col-md-12 col-xs-3">Time</label>
+                                                <div class="col-xs-10 no-margin">
+                                                    <div class="inline-block pull-left" uib-timepicker ng-model="timeData" show-spinners="false" hour-step="1" minute-step="1" show-meridian="true" mousewheel="false" ng-class="{'blue-border':deviceProfileData.configChanges.current_time}"></div>
+                                                    <button type="button" class="btn btn-default" style="margin-left:5px;" ng-click="changeClock(timeData,deviceProfileData.thingState.tstat_clock.current_day)">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="clear"></div>
+                            <gap></gap>
+                            <div class="form-group">
+                                <label for="email" class="weight-400 control-label size-14 col-lg-4 col-md-4 top-5 col-xs-12">Engaged Transactional Interval</label>
+                                <div class="col-lg-4 col-md-4 col-xs-7">
+                                    <input type="text" class="form-control" ng-model="deviceProfileData.eTInterval" name="eTInterval" ng-blur="changeSetPoint('7',deviceProfileData.eTInterval)" ng-class="{'blue-border':deviceProfileData.configChanges.eTInterval}" maxlength="3" ng-keyup="$event.keyCode == 13 ? changeSetPoint('7',deviceProfileData.eTInterval) : null" ng-disabled="deviceProfileData.awsCompatible">
+                                </div>
+                                <div class="col-xs-2 no-padding top-5 col-md-2 col-lg-1" ng-class="{'blue-color':deviceProfileData.configChanges.eTInterval}">
+                                    Seconds
+                                </div>
+                            </div>
+
+                            <div class="clear"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-4 col-xs-12">
+
+                        <div class="form-group row" ng-if="!deviceProfileData.heatPump">
+                            <label for="email" class="weight-400 control-label size-14 col-lg-4 col-md-4 top-5 col-xs-12">Relay Status</label>
+                            <div class="col-xs-12 col-md-8 col-lg-8 top-5">
+ <p ng-repeat="(key,value) in deviceProfileData.thingState.relay_state">{{relayData[key]}}: {{value}} </p>
+                            </div>
+
+                        </div>
+                        
+                        
+                        
+                            <div class="form-group" ng-if="deviceProfileData.heatPump">
+                                <label for="email" class="weight-400 control-label size-14 col-lg-4 col-md-4 top-5 col-xs-12">Relay Status (Heat Pump)</label>
+                                <div class="col-xs-12 col-md-8 col-lg-8 top-5">
+
+                                    
+                                <p>Active in Heat (B): {{deviceProfileData.thingState.relay_state["relay1"]}}</p>
+                                    
+                                <p>Active in Cool (O): {{deviceProfileData.thingState.relay_state["relay2"]}}</p>
+                                    
+                                <p>Fan (G): {{deviceProfileData.thingState.relay_state["relay3"]}}</p> 
+                                    
+                                <p>1st Stage Heat (Y): {{((deviceProfileData.stagesOfCool == 1 || deviceProfileData.stagesOfCool == 2) ? ((getHvacStatus() == "HEAT" && deviceProfileData.thingState.relay_state["relay6"] == "ON") ? "ON" : "OFF") : deviceProfileData.thingState.relay_state["relay4"])}}</p>
+                                    
+                                <p>2nd Stage Heat (Y2): {{((deviceProfileData.stagesOfCool == 1 || deviceProfileData.stagesOfCool == 2) ? ((getHvacStatus() == "HEAT" && deviceProfileData.thingState.relay_state["relay7"] == "ON") ? "ON" : "OFF") : deviceProfileData.thingState.relay_state["relay5"])}}</p>
+                                    
+                                <p>1st Stage Cool (Y): {{((deviceProfileData.stagesOfCool == 1 || deviceProfileData.stagesOfCool == 2) ? ((getHvacStatus() == "COOL" && deviceProfileData.thingState.relay_state["relay6"] == "ON") ? "ON" : "OFF") : deviceProfileData.thingState.relay_state["relay6"])}}</p>
+                                
+                                <p>2nd Stage Cool (Y2): {{((deviceProfileData.stagesOfCool == 1 || deviceProfileData.stagesOfCool == 2) ? ((getHvacStatus() == "COOL" && deviceProfileData.thingState.relay_state["relay7"] == "ON") ? "ON" : "OFF") : deviceProfileData.thingState.relay_state["relay7"])}} </p>
+                                    
+                                   
+                                </div>
+
+                            </div>
+
+
+
+
+                        <div class="clear"></div>
+
+
+                        <div class="form-group row">
+                            <label class="weight-400 control-label size-14 col-lg-4 col-md-4 top-5 col-xs-12">Heat Pump:</label>
+                            <div class="col-xs-12 col-md-8 col-lg-8 top-5">
+                                <label class="radio-inline">
+                                    <input type="radio" ng-model="deviceProfileData.heatPump" name="heatPump" ng-value="1" ng-change="updateHeatPumpRadio(1,deviceProfileData.heatPump)">ON</label>
+                                <label class="radio-inline">
+                                    <input type="radio" ng-model="deviceProfileData.heatPump" name="heatPump" ng-value="0" ng-change="updateHeatPumpRadio(1,deviceProfileData.heatPump)">OFF</label>
+                            </div>
+
+                        </div>
+
+
+                        <div ng-if="deviceProfileData.heatPump == 1">
+                            <div class="form-group row">
+                                <label class="weight-400 control-label size-14 col-lg-4 col-md-4 top-5 col-xs-12 line-height-30">Stages of Heat:</label>
+                                <div class="col-xs-12 col-md-8 col-lg-8 top-5" ng-init="stagesOfHeat = [1,2,3,4]">
+                                    <select class="form-control" ng-model="deviceProfileData.stagesOfHeat" ng-change="updateHeatPump(2,deviceProfileData.stagesOfHeat)" ng-options="option for option in stagesOfHeat" ng-init="deviceProfileData.stagesOfHeat == 0 ? (deviceProfileData.stagesOfHeat = 2) : (deviceProfileData.stagesOfHeat = deviceProfileData.stagesOfHeat)">
+
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="weight-400 control-label size-14 col-lg-4 col-md-4 top-5 col-xs-12 line-height-30">Stages of Cool:</label>
+                                <div class="col-xs-12 col-md-8 col-lg-8 top-5" ng-init="stagesOfCool = [1,2]">
+                                    <select class="form-control" ng-model="deviceProfileData.stagesOfCool" ng-change="updateHeatPump(3,deviceProfileData.stagesOfCool)" ng-options="option for option in stagesOfCool" ng-init="deviceProfileData.stagesOfCool == 0 ? (deviceProfileData.stagesOfCool = 2) : (deviceProfileData.stagesOfCool = deviceProfileData.stagesOfCool)">
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label class="weight-400 control-label size-14 col-lg-4 col-md-4 top-5 col-xs-12">Gas Auxiliary:</label>
+                                <div class="col-xs-12 col-md-8 col-lg-8 top-5">
+                                    <label class="radio-inline">
+                                        <input type="radio" ng-model="deviceProfileData.gasAuxilary" name="gasAuxilary" ng-value="1" ng-change="updateHeatPumpRadio(4,deviceProfileData.gasAuxilary)">ON</label>
+                                    <label class="radio-inline">
+                                        <input type="radio" ng-model="deviceProfileData.gasAuxilary" name="gasAuxilary" ng-value="0" ng-change="updateHeatPumpRadio(4,deviceProfileData.gasAuxilary)">OFF</label>
+
+
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+
+
+                        <gap></gap>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="email" class="weight-400 control-label size-14 col-lg-4 col-md-4 top-5 col-xs-12">Time Stamp</label>
+                                <div class="col-xs-12 col-md-8 col-lg-8 top-5">
+                                    <span ng-bind-html="getLocalTime(formateDate(deviceProfileData.thingState.datetime))"></span>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <gap></gap>
+
+
+
+                    </div>
+
+                </div>
+                <div class="">
+                    <button class="btn btn-primary pull-right" ng-click="changeSetPoint('8','reset')">Reset Thermostat</button>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="border-bottom x-md-padding" ng-click="showCalendar = !showCalendar">
+            <span class="weight-500 pull-left size-14 line-height-40">
+            <span ng-if="deviceProfileData.weather.feelslike_f"> Feels Like {{makeRound(deviceProfileData.weather.feelslike_f)}}° ,</span> 
+            <span> <span ng-if="events && deviceProfileData.scheduleStatus != 3 && deviceProfileData.scheduleStatus != 1 && devicescreenData.thingState.temp_hold != 'ENABLE'" 
+            ng-click="deviceProfileData.scheduleName && deviceProfileData.scheduleId &&  goScheduleProfile(deviceProfileData.scheduleId);$event.stopPropagation();" 
+            ng-class="{'link cursor':deviceProfileData.scheduleName && !(devicescreenData.thingState.temp_hold != 'ENABLE' && !getSetAtLabel(devicescreenData)),'no-cursor':!deviceProfileData.scheduleId,'cursor':(devicescreenData.thingState.temp_hold != 'ENABLE' && !getSetAtLabel(devicescreenData))}">Currently 
+            <span ng-if="!deviceProfileData.scheduleName">there is no schedule </span>
+            running {{deviceProfileData.scheduleName}} <span ng-if="devicescreenData.thingState.temp_hold != 'ENABLE' && !getSetAtLabel(devicescreenData)">(Temporary Hold)
+            </span></span>
+
+
+
+
+
+            <span class="text-green cursor" ng-if="deviceProfileData.scheduleStatus == 1 && deviceProfileData.registerType" 
+            ng-click="goScheduleProfile(deviceProfileData.scheduleId)">{{getWordSchedule(deviceProfileData.scheduleName)}} Downloading in Progress</span>
+            <span ng-if="deviceProfileData.scheduleStatus == 3 && deviceProfileData.registerType" ng-click="goScheduleProfile(deviceProfileData.scheduleId)" 
+            class="cursor">{{getWordSchedule(deviceProfileData.scheduleName)}} Download Failed</span>
+            <span ng-if="!events && deviceProfileData.scheduleStatus != 3 && deviceProfileData.scheduleStatus != 1"> Currently there is no schedule running</span>
+
+
+            </span>
+            <span ng-if="devicescreenData.thingState.temp_hold == 'ENABLE' && deviceProfileData.scheduleStatus == 2" 
+            ng-click="deviceProfileData1.scheduleName && deviceProfileData1.scheduleId &&  goScheduleProfile(deviceProfileData1.scheduleId);$event.stopPropagation();" 
+            ng-class="{'cursor':deviceProfileData1.scheduleName && deviceProfileData1.scheduleId}">Currently running {{deviceProfileData.scheduleName}} (Permanent Hold)</span>
+
+            </span>
+            <span class="pull-right y-padding">
+				    <i class="icon-down-arrow size-15 thick-border" ng-show="showCalendar"></i>
+				    <i class="icon-right-arrow size-15 thick-outline margin-left-right-1" ng-show="!showCalendar">
+				        
+				    </i>
+				    <div class="clear"></div>
+			    </span>
+            <div class="clear"></div>
+        </div>
+        <div class="col-lg-12" ng-class="showCalendar ? 'height-auto' : 'height-zero'" style="overflow:hidden;">
+            <!--<p class="top3-padding"> <span ng-if="deviceProfileData.scheduleStatus != 0 && deviceProfileData.scheduleStatus != 4 && deviceProfileData.registerType"> {{deviceProfileData.scheduleName}} Schedule Download:</span> <span ng-if="deviceProfileData.scheduleStatus == 1 && deviceProfileData.registerType"> Downloading</span><span ng-if="deviceProfileData.scheduleStatus == 2 && deviceProfileData.registerType"> Success</span><span ng-if="deviceProfileData.scheduleStatus == 3 && deviceProfileData.registerType"> Failure</span></p>-->
+            <div class="row">
+                <div ng-if="!events">
+                    <br/>
+                    <br/>
+                    <div class="text-center error col-centered">
+                        No Data Found
+                    </div>
+                </div>
+                <div class="chart-scroll">
+                    <div class="calendar-area" ng-if="events">
+                        <div my-calendar class="calendar" my-events="events" backdrop="occHours"></div>
+                    </div>
+                </div>
+                <gap></gap>
+            </div>
+
+            <div ng-if="events">
+
+                <button class="btn btn-default pull-right margin" ng-click="readCurrentSchedule()" ng-class="{'btn-refresh':readRefresh}"><span ng-if="!readRefresh">Read Current Schedule</span><span ng-if="readRefresh">Refresh</span></button>
+
+                <button ng-if="deviceProfileData.scheduleName" 
+                class="btn pull-right margin" 
+                ng-click="runSchedule(deviceProfileData)" 
+                ng-class="{'btn-primary':deviceProfileData.scheduleStatus == 1 ? false : (deviceProfileData.thingState.temp_hold == 'ENABLE' || (devicescreenData.thingState.temp_hold != 'ENABLE' && !getSetAtLabel(devicescreenData))) || (getObjectLength(events) > 0 && deviceProfileData.scheduleStatus != 1 && !scheduleMatched),'btn-default':getObjectLength(events) == 0 || deviceProfileData.scheduleStatus == 1 || scheduleMatched}" 
+                ng-disabled="deviceProfileData.scheduleStatus == 1 ? true : (deviceProfileData.thingState.temp_hold != 'ENABLE' && !(devicescreenData.thingState.temp_hold != 'ENABLE' && !getSetAtLabel(devicescreenData))) && (deviceProfileData.scheduleStatus == 1 || getObjectLength(events) == 0 || !deviceProfileData.isActive || scheduleMatched)">Run Schedule</button>
+                <button ng-if="!readRefresh && userDetails.rolePermissions['Schedule Management'] == 2" ng-hide="deviceProfileData.scheduleId == 0 && deviceProfileData.awsCompatible" class="btn btn-default pull-right margin" ng-click="createCustomSchedule(deviceProfileData)" ng-disabled="deviceProfileData.scheduleStatus == 1 || !deviceProfileData.isActive">Create Custom Schedule</button>
+            </div>
+            <div class="clear"></div>
+            <br/>
+        </div>
+
+
+        <div class="clear"></div>
+
+
+
+
+        <!--         <h1 ng-click="showDetailsAnalytics()" class="size-14 weight-700 border-bottom x-md-padding padding">Analytics  <i class="icon-down-arrow pull-right rotate-x size-26" ng-class="{'rotate-y':showDetailsAnalyticsCont}" aria-hidden="true"></i></h1> -->
+        <div class="border-bottom x-md-padding" ng-click="showDetailsAnalytics()">
+            <span class="weight-500 pull-left size-14 line-height-40">Analytics</span>
+            <span class="pull-right y-padding">
+			    <i class="icon-down-arrow size-15 thick-border" ng-show="showDetailsAnalyticsCont"></i>
+			    <i class="icon-right-arrow size-15 thick-outline margin-left-right-1" ng-show="!showDetailsAnalyticsCont">
+			        
+			    </i>
+			    <div class="clear"></div>
+		    </span>
+            <div class="clear"></div>
+        </div>
+        <div class="col-xs-12" ng-if="showDetailsAnalyticsCont">
+            <gap></gap>
+            <div>
+                <div class="pull-left">
+                    <label for="" class="weight-500 size-14">Reports</label>
+                    <select class="border text-muted xs-padding" id="datatype" name="datatype" ng-model="report.datatype" ng-options="option.id as option.name for option in dataType" ng-change="getAnalyics(true)" required>
+                        <option value="">Select Analytic</option>
+                    </select>
+                </div>
+                <div class="pull-right">
+                    <label for="" class="weight-500 size-14">Filter By</label>
+                    <select class="border text-muted xs-padding" name="time" ng-model="report.time" ng-options="option.id as option.name for option in timeOptions" ng-change="loadAnalytics(true)"></select>
+                </div>
+            </div>
+            <div>
+                <hc-spline-chart-device asc="{{report.mainTitle}}" desc="{{report.subTitle}}" ng-if="commonChartData.tempurateList.length > 0 && !isDegreeVsDaysGraph" class="col-xs-12 col-md-12 col-lg-12" id="container2" data="commonChartData.tempurateList"></hc-spline-chart-device>
+                <hc-spline-fan-chart-device count="1" asc="{{report.mainTitle}}" desc="{{report.subTitle}}" ng-if="commonChartData.onOffList.length > 0 && !isDegreeVsDaysGraph" class="col-xs-12 col-md-12 col-lg-12" id="container1" data="commonChartData.onOffList" height="true"></hc-spline-fan-chart-device>
+                <hc-spline-mode-chart-device asc="{{report.mainTitle}}" desc="{{report.subTitle}}" ng-if="commonChartData.modeTypeList.length > 0 && !isDegreeVsDaysGraph" class="col-xs-12 col-md-12 col-lg-12" id="container3" data="commonChartData.modeTypeList"></hc-spline-mode-chart-device>
+                <hc-spline-stages-degree-days-chart count="1" asc="{{report.mainTitle}}" desc="{{report.subTitle}}" ng-if="commonChartData.degreeDaysList.length > 0 && isDegreeVsDaysGraph" class="col-xs-12 col-md-12 col-lg-12" id="container4" data="commonChartData.degreeDaysList"></hc-spline-stages-degree-days-chart>
+                <!-- <hc-spline-days-chart-device asc="{{report.mainTitle}}" desc="{{report.subTitle}}" ng-if="commonChartData.daysTypeList.length > 0" class="col-xs-12 col-md-12 col-lg-12" id="container4" data="commonChartData.daysTypeList"></hc-spline-days-chart-device>
+                 -->
+                <div class="clear"></div>
+                <div ng-if="(commonChartData.onOffList.length <= 0 && commonChartData.tempurateList.length <= 0 && commonChartData.modeTypeList.length <= 0 && commonChartData.daysTypeList.length <= 0) || (!commonChartData.onOffList && !commonChartData.tempurateList && !commonChartData.modeTypeList && !commonChartData.daysTypeList && !commonChartData.degreeDaysList)" class="text-center error col-centered">No Data Found</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="opacity:0" id="nodata" ng-if="!deviceProfileData.thingState">
+    <br/>
+    <br/>
+    <div class="text-center error col-centered">
+        No Data Found
+    </div>
+</div>

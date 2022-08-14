@@ -1,0 +1,18 @@
+<div class="blue-bg-bar min-height-52 relative">
+	<img ng-if="companyLogo" class="customer-thumg pull-left" ng-src="fileUpload/loadImage?imageName={{companyLogo}}" alt="Company Logo" />
+</div>
+
+<div class="clear"></div>
+<gap></gap>
+<!-- Nav tabs -->
+<div class="navigation-list">
+	<ul class="nav nav-tabs x-md-padding" role="tablist">
+	    <li role="presentation" ng-class="{active: $state.current.activeSubTab == 'sites'}">
+	        <a ui-sref="bulkImport.sites($state.params)" data-target="#sites" aria-controls="profile" role="tab" data-toggle="tab">Sites Bulk Import Status</a>
+	    </li>
+	</ul>
+</div>
+<!-- Tab panes -->
+<div class="tab-content">
+    <div ui-view="bulk-upload-info"></div>
+</div>

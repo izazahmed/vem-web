@@ -1,0 +1,147 @@
+<div>
+<div class="x-md-padding" ng-class="{'blue-bg-bar':$state.current.name == 'users.usersList'}">
+<!--  
+	<li class="pull-left">
+		<div>
+			<span class="line-height-40">{{filteredLength}} Users</span> <span
+				class="vr height-25"></span> <span
+				class="border rounded cloud height-25"><i
+				class="fa fa-cloud-download" aria-hidden="true"></i></span>
+		</div>
+	</li>
+-->
+	<div class="pull-right">
+		<div>
+			<span class="line-height-40 size-14 weight-500" ng-class="{'white-text':$state.current.name == 'users.usersList'}">Filter By &nbsp;</span> <select
+				class="border text-muted xs-padding size-14 text-black" ng-model="filterBy"
+				ng-change="filterByChange()">
+				<option value="">All</option>
+				<option value="Customers" class="customers_tab_to_hide_in_cust_profile">Customer</option>
+				<option value="Groups" class="customers_tab_to_hide_in_cust_profile">Group</option>
+				<option value="Sites" class="customers_tab_to_hide_in_cust_profile">Site</option>
+				<option value="Roles">Role</option>
+				<option value="Status">Status</option>
+			</select> 
+			<select ng-show="filterBy=='Customers'" ng-change="getFilteredLength()"
+				class="border text-muted xs-padding" ng-model="customerId"
+				style="max-width: 200px;">
+				
+				<option value="{{customer.value}}" ng-selected="customerId == customer.value"
+					ng-repeat="customer in customers">{{customer.label}}</option>
+			</select> 
+			<select ng-show="filterBy=='Groups'" ng-change="getFilteredLength()"
+				class="border text-muted xs-padding" ng-model="groupId"
+				style="max-width: 200px;">
+				
+				<option value="{{group.value}}" ng-selected="groupId == group.value"
+					ng-repeat="group in groups">{{group.lable}}</option>
+			</select> 
+			<select ng-show="filterBy=='Sites'" ng-change="getFilteredLength()"
+				class="border text-muted xs-padding" ng-model="siteId"
+				style="max-width: 200px;">
+				
+				<option value="{{site.siteId}}" ng-selected="siteId == site.siteId"
+					ng-repeat="site in sites">{{site.siteName}}</option>
+			</select> 
+			<select ng-show="filterBy=='Roles'" ng-change="getFilteredLength()"
+				class="border text-muted xs-padding" ng-model="roleId"
+				style="max-width: 200px;">
+
+				<option value="{{role.value}}" ng-selected="roleId == role.value"
+					ng-repeat="role in roles">{{role.label}}</option>
+			</select> 
+			<select ng-show="filterBy=='Status'" ng-change="getFilteredLength()"
+				class="border text-muted xs-padding" ng-model="userActivity"
+				ng-init="userActivity='1'">
+				<option value="1" selected>Active</option>
+				<option value="0">Inactive</option>
+				<option value="2">Locked</option>
+			</select>
+			<input type="text" class="border padding-1" ng-focus="showSearch"
+				ng-show="showSearch" ng-model="filterUsers" />&nbsp;<i
+				class="icon-search size-20 cursor show-search v-middle y-padding" ng-class="{'white-text':$state.current.name == 'users.usersList'}" aria-hidden="true"
+				ng-click="showSearch = !showSearch"></i>
+		</div>
+	</div>
+	<div class="clear"></div>
+</div>
+<div class="clear"></div>
+	<div class="white-bg x-md-padding border-bottom">
+		<li class="pull-left">
+			<div>
+			<span ng-click="checkAll()" class="thick-border" style="padding-top:1px;">
+			<span class="icon-plus size-16 verticalTxt-btm" ng-show="!showMain"><span class="path1"></span><span class="path2"></span></span><span class="size-16  minus" ng-show="showMain">-</span></span>&nbsp;&nbsp;
+				<span class="line-height-40 weight-500">{{filteredLength}} / {{getObjectMergeLength(users)}}  Users </span>&nbsp;&nbsp;
+				<i class="icon-download size-30 v-middle text-dark" aria-hidden="true"></i>
+			</div>
+		</li>
+		<li class="pull-right mob-left">
+			<a href="" ng-click="openNewUser()" ng-if="userDetails.isSuper || userDetails.rolePermissions['User Management']==2">
+				<p class="title size-14 weight-400 pull-right add line-height-40 no-margin">
+					 <span class="icon-add size-20 verticalTxt-btm plus-icon">
+                <span class="path1"></span><span class="path2"></span>
+                </span>Add New User
+				</p>
+			</a>
+		</li>
+		<div class="clear"></div>
+	</div>
+</div>
+<div class="clear"></div>
+<s-gray-gap ng-if="$state.current.name == 'users.usersList'"></s-gray-gap>
+<ul class="listhover userlist "  ng-class="{'alphabets-badge-width reduce-width-80' : (getObjectMergeLength(users) > 100 && $state.current.name != 'customers.customersList.getCustomer.users'),'scroll top-99' : ($state.current.name == 'users.usersList')}">
+	<div ng-show="!isDataAvailable" style="opacity: 0" id="nodata">
+		<br /> <br />
+		<div class="text-center error col-centered">No Data Found</div>
+	</div>
+
+	<div ng-repeat="(letter, group) in users">
+
+		<h1 ng-show="getObjectMergeLength(users) > 100"
+			ng-if="filteredUsers.length > 0"
+			class="border-bottom size-16 no-margin padding x-md-padding"
+			group="{{letter}}">
+			<strong>{{letter}}</strong>
+		</h1>
+		<li
+			ng-repeat="user in filteredUsers = ( group | orderBy: ['firstName','lastName'] | filter: userActivityFilter | filter:search | filter:capture)"
+			class="line-height-60 border-bottom y-padding min-height-57 vertical-middle"
+			ng-click="viewInfo(user)" ng-class="{'disabled':!user.isActive}"
+			index="{{$index}}">
+			<div class="col-xs-6 col-lg-6">
+				<div class="v-middle-position inline-block">
+					<h1 class="size-14 weight-400 no-margin show-details">
+						<span ng-click="showDiv = !showDiv;$event.stopPropagation();">{{showPlus ? !showDiv ? "-" : "+" : showDiv ? "-" : "+" }}</span> {{user.firstName}} {{user.lastName}}
+						&nbsp; <b class="" ng-if="user.isActive == 2"><i
+							class="icon-lock size-14 vertical-super" aria-hidden="true"></i></b>
+					</h1>
+					<p
+						class="no-margin details-drop animate-show top3-padding no-line-height-inherit"
+						ng-show="showPlus ? !showDiv : showDiv">
+						&nbsp; {{user.roleName}} &nbsp;<span class="middle-dot" ng-show="user.emailId"></span>  &nbsp;{{user.emailId}}&nbsp; <i class="middle-dot" aria-hidden="true" ng-show="user.phoneNumber"></i> 
+				        {{customPhonePattern(user.phoneNumber)}}
+					</p>
+				</div>
+			</div>
+			<!-- <div class="col-xs-6 col-lg-6 text-right">
+				<label class="size-14 no-margin text-right weight-400" ng-if="!user.isCSO">{{(makeFormat(user.lastLoginInfo,'MM/DD/YYYY HH:mm A')) 
+						|| (user.isCSO == 1 ?'NA':'Never')}}</label>
+			</div> -->
+			<div class="col-xs-6 col-lg-6 text-right">
+			
+				<label class="size-14 no-margin text-right weight-400" ng-if="!user.isCSO && user.lastLoginInfo!=null">  {{ (makeFormat(user.lastLoginInfo,'MM/DD/YYYY hh:mm a') | uppercase) || (user.isCSO == 1 ?'NA':'Never')}}</label>
+				<label class="size-14 no-margin text-right weight-400" ng-if="!user.isCSO && user.lastLoginInfo==null">  {{ user.lastLoginInfo || (user.isCSO == 1 ?'NA':'Never')}}</label>
+			</div>
+			<div class="clear"></div>
+		</li>
+	</div><div class="clear"></div>
+</ul>
+<div class="alphabets-badge scroll top-99" ng-show="getObjectMergeLength(users) > 100" ng-if="$state.current.name == 'users.usersList'">
+	<ul>
+		<li data-ng-repeat="alphabet in alphabets" class="text-center"
+			style="height: {{alphabetHeight}}"
+			ng-class="{'text-muted':!isProperty(alphabet,users)}"
+			ng-click="moveRelatedGroup(alphabet)">{{alphabet}}</li>
+	</ul>
+</div>
+<div class="clear"></div>

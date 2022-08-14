@@ -1,0 +1,9 @@
+.users-menu:after{
+    position: absolute;
+    left: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 8px;
+    content: "";
+    background: #EBEBEB;
+}

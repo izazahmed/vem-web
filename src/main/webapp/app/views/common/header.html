@@ -1,0 +1,59 @@
+<div style="display:none"><img src="fileUpload/loadImage?imageName={{userDetails.companyLogo}}" class="one-customer customer-thumg pull-left"/> </div>
+
+<div class="row">
+    <div class="header">
+        <div class="col-xs-4 img-logo"> <img ng-src="fileUpload/loadApplicationImage?imageName=uploaded_logo.png" class="img-responsive header-logo" /> </div>
+        <div class="col-xs-8 y-lg-margin">
+            <ul class="">
+                <li class="title size-16 weight-400 pull-right t-margin-2 profile-menu">
+                    <div class="dropdown">
+                        <div class="dropdown-toggle cursor size-14 weight-500 font-blue" type="button" data-toggle="dropdown"><span class="usernName" alt="{{userDetails.firstName}} {{userDetails.lastName}}">&nbsp; {{userDetails.firstName}} {{userDetails.lastName}}</span><i class="icon-down-arrow size-20 font-ash" style="height: 14px; display: inline-block;vertical-align:top" aria-hidden="true"></i></div>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li ng-if="userDetails.isSuper"><a ui-sref="users.settings($tate.params)">Settings</a></li>
+                            <li><a ui-sref="users.settings.profile($state.params)">My Profile</a></li>
+                            <li><a ui-sref="users.settings.help($state.params)">Help</a></li>
+                            <hr class="no-margin" />
+                            <li><a href="logout">Log Out</a></li>
+                        </ul>
+                    </div>
+                </li>
+				<li class="title size-16 weight-400 pull-right">
+				<span class="icon-bell vertical-middle size-22">
+                	<span class="path1"></span><span class="path2"></span>
+                </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modelDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header no-border">
+                <button type="button" class="close close2" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="icon-close-popup size-26"></span></button>
+            </div>
+            <div class="modal-body y-no-padding" ui-view="dialog-template">
+
+                <h1 class="no-margin no-padding text-center size-20 weight-700 text-center modal-title"></h1>
+                <br/>
+                <p class="padding text-center model-content"></p>
+                <br/>
+
+                <div class="btn-group-gap middle" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-primary confirm" ng-click="accept($event)">Ok</button>
+                    <button type="button" class="btn btn-default cancel" data-dismiss="modal" aria-label="Close" ng-click="cancel($event)">Cancel</button>
+                </div>
+
+                <div class="gap">
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,69 @@
+<div class="blue-bg-bar min-height-52 relative">
+    <li class="pull-right">
+        <div class="">
+            <input type="text" class="border relative top-5" ng-focus="showSearch" ng-show="showSearch" ng-model="companyName.companyName" />&nbsp;
+            <i class="icon-search cursor show-search top-10 relative size-20 white-text" aria-hidden="true" ng-click="showSearch = !showSearch"></i>
+        </div>
+    </li>
+    <div class="clear"></div>
+</div>
+<div class="options-bar x-md-padding no-margin">
+    <li class="pull-left">
+        <div><span class="line-height-40 weight-500">{{filteredCustomers.length}} / {{customers.length}} Customers</span> <i class="icon-download size-30 v-middle text-dark" aria-hidden="true"></i> </div>
+    </li>    
+	<a href="#/customers/addNew">
+	    <p class="title size-14 weight-400 pull-right add line-height-40 no-margin mob-left" ng-if="userDetails.rolePermissions['Customer Management']==2"><span class="icon-add size-20 top-4 relative">
+	    <span class="path1"></span><span class="path2"></span></span> Add New Customer</p>
+	</a>   
+    <div class="clear"></div>
+</div>
+<s-gray-gap></s-gray-gap>
+<div class="clear"></div>
+<div class="listhover scroll top-97">
+    <div ng-show="!isDataAvailable" style="opacity:0" id="nodata">
+        <br/>
+        <br/>
+        <div class="text-center error col-centered">No Data Found</div>
+    </div>
+    <ul class="customers-list">
+        <li ng-click="getCustomerProfile(customer.customerId)" ng-repeat="customer in filteredCustomers  = ( customers | orderBy: customerSorter | filter: companyName)" class="x-md-padding border-bottom padding" ng-class="{'disabled':(!customer.isActive || customer.customerStatus==6)}">
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-8 mob-padding">                   
+                        <h1 class="size-14 weight-400 y-padding no-margin show-details">{{customer.companyName}}</h1>                    
+                </div>
+                <div class="col-xs-3 col-sm-2 col-md-2 col-lg-1 mob-padding" ng-if="userDetails.rolePermissions.hasOwnProperty('Group Management')">
+                    <a ui-sref="customers.customersList.getCustomer.groups(mergeObject($state.params,{customerId: customer.customerId,sourcePage:getSourcePageId(customer.customerId)}))" ng-click="$event.stopPropagation()">
+                        <h1 class="size-14 weight-400 y-padding no-margin text-center">{{customer.groups}}</h1>
+                        <p class="no-margin no-padding no-line-height text-center"><i>Groups</i></p>
+                    </a>
+                </div>
+                <div class="col-xs-3 col-sm-2 col-md-2 col-lg-1 mob-padding" ng-if="userDetails.rolePermissions.hasOwnProperty('Site Management')">
+                    <a ui-sref="customers.customersList.getCustomer.sites(mergeObject($state.params,{customerId: customer.customerId,sourcePage:getSourcePageId(customer.customerId)}))" ng-click="$event.stopPropagation()">
+                        <h1 class="size-14 weight-400 y-padding no-margin text-center">{{customer.locations}}</h1>
+                        <p class="no-margin no-padding no-line-height text-center"><i>Sites</i></p>
+                    </a>
+                </div>
+                <div class="col-xs-3 col-sm-2 col-md-2 col-lg-1 mob-padding" ng-if="userDetails.rolePermissions.hasOwnProperty('Device Management')">
+                    <a ui-sref="customers.customersList.getCustomer.devices(mergeObject($state.params,{customerId: customer.customerId,sourcePage:getSourcePageId(customer.customerId)}))" ng-click="$event.stopPropagation()">
+                        <h1 class="size-14 weight-400 y-padding no-margin text-center">{{customer.devices}}</h1>
+                        <p class="no-margin no-padding no-line-height text-center"><i>Devices</i></p>
+                    </a>
+                </div>
+                <div class="col-xs-3 col-sm-2 col-md-2 col-lg-1 mob-padding">
+                    <a ui-sref="customers.customersList.getCustomer.alerts(mergeObject($state.params,{customerId: customer.customerId,sourcePage:getSourcePageId(customer.customerId)}))" ng-click="$event.stopPropagation()">
+                        <h1 class="size-14 weight-400 y-padding no-margin text-center">{{customer.alerts}}</h1>
+                        <p class="no-margin no-padding no-line-height text-center"><i>Alerts</i></p>
+                    </a>
+                </div>
+              <!--  <div class="col-xs-2 col-lg-2">
+                    <div class="v-middle">
+                        <label class="switch col-centered ">
+                            <input type="checkbox" ng-checked="{{customer.isActive ? true : false}}" name="customerStatusChkbox_{{customer.customerId}}" id="customerStatusChkbox_{{customer.customerId}}" value="{{customer.customerId}}" checked ng-click="changeCustomerStatus(customer,$event);$event.stopPropagation();">
+                            <div class="slider round" ng-click="$event.stopPropagation();" ng-if="userDetails.rolePermissions['Customer Management']==2"></div>
+                        </label>
+                    </div>
+                </div>-->
+            </div>
+        </li>
+    </ul>
+</div>

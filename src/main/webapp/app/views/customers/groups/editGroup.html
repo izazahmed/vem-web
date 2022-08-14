@@ -1,0 +1,80 @@
+<div class="blue-bg-bar min-height-52 relative"></div>
+<div class="bar line-height-40 relative x-md-padding">
+     <span class="size-14 weight-500 line-height-40">Edit Group Information</span>
+</div>
+<s-gray-gap></s-gray-gap>
+<div class="clear"></div>
+<div class=" scroll top-97">
+<gap></gap>
+<form name="addSiteGroupForm" ng-submit="addSiteGroup(addSiteGroupForm)" novalidate="" autocomplete="off">
+    <div class="col-lg-6 col-md-12 col-xs-12">
+        <div class="form-group required">
+            <label for="email" class="weight-400 control-label size-14">Group Name</label>
+            <input type="text" ng-model="sitesFormData.groupName" placeholder="Enter group name" name="groupName" required  maxlength="50" maxlength50="sitesFormData.groupName" class="form-control">
+            <div ng-show="addSiteGroupForm.groupName.$error && addSiteGroupForm.$submitted" ng-messages="addSiteGroupForm.groupName.$error">
+                <div ng-messages-include="error-list1.html"></div>
+            </div>
+            <div class="error size15" ng-show="uniqueGroupNameError">Group name already in use</div>
+            <br/>
+            <label for="email" class="weight-400 size-14">Group Status</label>
+            <select name="groupStatus" placeholder="Select Group Status" class="form-control" required ng-model="sitesFormData.groupStatusCode" ng-options="choice.groupStatusCode as choice.groupStatus for choice in groupStatusList"></select>
+            <br/>
+            <label for="email" class="weight-400 size-14">Select Sites</label>
+            <div class="row">
+                <div class="col-lg-10 col-xs-6">
+                    <select name="siteList" placeholder="Select site" class="form-control" ng-model="sitesFormData.siteList" ng-options="site as site.siteName for site in sites | orderBy: 'siteName'">
+                        <option value="">Select</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-xs-4">
+                	<button type="button" ng-click="addSiteGroupList($event)" class="btn btn-default addBtn">Add</button>
+                </div>
+                
+            </div>
+            <div class="error size15" ng-show="addLocationShow && addSiteGroupForm.$submitted">Add at least one site</div>
+            <gap></gap>
+                    <div role="tabpanel" class="tab-pane" id="groups">
+            <ul class="options-bar">
+                <li class="pull-left">
+                    <div>
+                        <span class="line-height-40">{{orderedSitesDetails.length}} Sites</span>
+                    </div>
+                </li>
+                <li class="pull-right">
+                    <div>
+                        <input type="text" class="border" ng-focus="showSearch" ng-show="showSearch" ng-model="siteName" />&nbsp; <i class="icon-search  size-20 cursor show-search line-height-40" aria-hidden="true" ng-click="showSearch = !showSearch"></i>
+                    </div>
+                </li>
+            </ul>
+            <div class="clear"></div>
+            <hr class="no-margin" />
+            <div class="form-group">
+                <div ng-repeat="selectedSite in orderedSitesDetails = ( selectedSites | orderBy: 'siteName' | filter: siteName)" ng-show="selectedSite.siteName">
+                    <div class="pull-left">
+                        <h1 class="weight-700 size-14 siteNameHeader">{{selectedSite.siteName}}</h1>
+                    </div>
+                    <div class="pull-right">
+                        <div class="t-margin-15 inline-block"><i class="icon-close size-20 cursor" aria-hidden="true" ng-click="removeSeletedSite(selectedSite,$event);$event.stopPropagation();"></i></div>
+                    </div>
+                    <div class="clear"></div>
+                    <hr class="no-margin" />
+                </div>
+                <gap></gap>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class=" col-xs-12">
+            	<button type="button" class="btn btn-default pull-right margin-left10 mob-bottom-10" onclick="history.back()">Cancel</button>
+            	<button type="submit" class="btn btn-primary pull-right margin-left10 mob-bottom-10">Save</button>
+            	<a ng-if="userDetails.rolePermissions['Group Management']==2 " href="" data-toggle="modal" data-target="#modelDialog" class="btn btn-default pull-right margin-left10 mob-bottom-10" ng-click="deleteSiteGroup()">Delete</a>
+    </div>
+    <div class="clear"></div>
+</form>
+ 	<div class="clear"></div>
+ 	<gap></gap>
+<script id="error-list1.html" type="text/ng-template">
+    <div class="error size15" ng-message="required">This field is required</div>
+    <div class="error" ng-message="maxlength50">Maximum length of this field is 50 characters</div>
+</script>
+</div>

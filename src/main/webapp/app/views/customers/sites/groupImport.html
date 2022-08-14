@@ -1,0 +1,44 @@
+<div class="row">
+    <h1 class="no-margin padding text-center size-16 weight-700 text-center modal-title">Add New Group</h1>
+</div>
+<form name="addSiteGroupForm" ng-submit="addSiteGroup(addSiteGroupForm)" novalidate="" autocomplete="off">
+ 	<div class="form-group" ng-if="addgroup">
+        <label for="email" class="weight-400 size-14">Group Name</label>
+        <select name="group" class="form-control" ng-model="sitesFormData.group" required ng-options="option as option.groupName for option in groups | orderBy: 'groupName'">
+        	<option value="">-- Select Group --</option>
+        </select>
+         <div ng-show="addSiteGroupForm.group.$error && addSiteGroupForm.$submitted" ng-messages="addSiteGroupForm.group.$error">
+            <div ng-messages-include="error-list1.html"></div>
+        </div>
+    </div>
+    <div ng-if="addgroup" class="form-group">
+        <a ng-if="addgroup" ng-click="addnewgroup()"><span class="icon-add size-20 relative top-4"><span class="path1"></span><span class="path2"></span></span> Add New Group</a>
+    </div>
+    <div class="form-group" ng-if="addgroup==false">
+        <label for="email" class="weight-400 size-14">Group Name</label>
+        <input type="text" ng-model="sitesFormData.group" placeholder="Enter group name" name="group" required maxlength50="sitesFormData.group" class="form-control">
+        <div ng-show="addSiteGroupForm.group.$error && addSiteGroupForm.$submitted" ng-messages="addSiteGroupForm.group.$error">
+            <div ng-messages-include="error-list1.html"></div>
+        </div>
+        <div class="error size15" ng-show="uniqueGroupNameError">Group name already in use</div>
+    </div>
+    <div class="form-group">
+     	<label for="email" class="weight-400 size-14">Select Sites</label><br>
+        <label class="labelblock" ng-repeat="row in selectedLocations">{{row.siteName}}</label>
+    </div>
+    <div class="error size15" ng-show="addLocationShow && addSiteGroupForm.$submitted">Add at least one site</div>
+    <div class="col-xs-12">
+	    <div class="btn-group-gap middle" role="group" aria-label="Basic example">
+	        <button type="button" data-dismiss="modal" class="btn btn-default col-centered margin-left10">Cancel</button>
+	        <button type="submit" class="btn btn-primary margin-left10 col-centered">Save</button>
+	    </div>
+    </div>
+</form>
+
+<div class="clear"></div>
+<br/>
+<script id="error-list1.html" type="text/ng-template">
+    <div class="error size15" ng-message="required">This field is required</div>
+    <div class="error" ng-message="maxlength50">Maximum length of this field is 50 characters</div>
+	<div class="error" ng-message="selectValidation">This field is required</div>
+</script>

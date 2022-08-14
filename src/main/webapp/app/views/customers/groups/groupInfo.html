@@ -1,0 +1,65 @@
+<div class="blue-bg-bar min-height-52 relative">
+	<img ng-if="userDetails.companyLogo" class="customer-thumg" ng-src="fileUpload/loadImage?imageName={{userDetails.companyLogo}}" alt="Company Logo" />
+</div>
+<div class="bar relative height-40 x-md-padding">
+    <a ng-click="gotoParent()" href="javascript:void(0)" class="icon-back size-20 relative v-middle line-height-40"></a>
+    <span class="line-height-40 size-14">{{groupInfo.groupName}}</span>
+    <a ng-if="userDetails.rolePermissions['Group Management']==2" ng-click="editInfo(groupInfo.groupId)">
+       <div class="pull-right line-height-40 "><i class="icon-edit size-16 relative" aria-hidden="true"></i> Edit</div>
+   	</a>
+   	<div class="clear"></div>
+</div>
+
+<s-gray-gap></s-gray-gap>
+<div class="scroll top-97">
+<div class="x-md-padding y-padding">
+    <p class="no-margin no-padding no-line-height show-details"><span class="inline-block cursor weight-500" ng-click="showDetails = !showDetails;$event.stopPropagation();">{{ showDetails ? "- Details" : "+ Details" }} </span></p>
+    <div class="details-drop" ng-show="showDetails" ng-if="groupInfo">
+        <gap></gap>
+        <p class="no-margin">
+          <span ng-if="(userDetails.isSuper | number) == 1 "> Customer Name: {{groupInfo.customerInfo}}&nbsp;</span>
+        </p>
+        <p class="no-margin">
+            Status: {{groupInfo.groupStatus}}
+        </p>
+        <br/>    
+    </div>
+</div>
+
+<!-- Nav tabs -->
+<div class="navigation-list">
+<ul class="nav nav-tabs x-md-padding" role="tablist">
+
+    <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'sites'}" ng-if="userDetails.rolePermissions.hasOwnProperty('Site Management')">
+        <a ng-click="gotoSites()"  href="javascript:void(0)" data-target="#Locations" aria-controls="profile" role="tab" data-toggle="tab">Sites ({{groupInfo.siteCount}})</a>
+    </li>
+    <li role="presentation" ng-class="{active: $state.current.activeSubTab == 'devices'}" ng-if="userDetails.rolePermissions.hasOwnProperty('Device Management')">
+        <a data-target="#Devices" ng-click="gotoDevices()"  aria-controls="profile" role="tab" data-toggle="tab">Devices ({{groupInfo.deviceCount}})</a>
+    </li>
+    <li role="presentation" ng-class="{active: $state.current.activeSubTab == 'schedules'}" ng-if="userDetails.rolePermissions.hasOwnProperty('Schedule Management')">
+        <a data-target="#Alerts" aria-controls="profile" role="tab" data-toggle="tab" ng-click="gotoSchedules()">Schedules ({{groupInfo.scheduleCount}})</a>
+        <!--ui-sref="groups.groupList.groupInfo.schedules($state.params)" -->
+    </li>
+    <li role="presentation" ng-class="{active: $state.current.activeSubTab == 'alerts'}">
+        <a data-target="#Alerts" aria-controls="profile" role="tab" data-toggle="tab" ng-click="gotoAlerts()">Alerts ({{groupInfo.alertCount}})</a>
+    </li>
+   
+    <!-- <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'activities'}">
+        <a data-target="#Activity Log" ui-sref="groups.groupList.groupInfo.activitylog($state.params)" aria-controls="profile" role="tab" data-toggle="tab">Activity Log ({{groupInfo.activityCount}})</a>
+    </li> -->
+    <li role="presentation" ng-class="{active: $state.current.activeSubTab== 'users'}" ng-if="userDetails.rolePermissions.hasOwnProperty('User Management')">
+        <a ng-click="gotoUsers()" data-target="#users" aria-controls="profile" role="tab" data-toggle="tab">Users ({{groupInfo.users}})</a>
+    </li>
+     <li role="presentation" ng-class="{active: $state.current.activeSubTab == 'activities'}">
+        <a data-target="#Activity" ng-click="gotoActivityLog()" aria-controls="profile" role="tab" data-toggle="tab">Activity Log ({{groupInfo.activityCount}})</a>
+    </li>
+</ul>
+</div>
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="customer-info-sub-views" ui-view="group-sites-info"></div>
+</div>
+<div class="tab-content">
+    <div class="customer-info-sub-views" ui-view="group-activity-info"></div>
+</div>
+</div>

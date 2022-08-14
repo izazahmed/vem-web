@@ -1,0 +1,441 @@
+<div class="blue-bg-bar min-height-52 relative">
+	<img ng-if="user.companyLogo" class="customer-thumg" ng-src="fileUpload/loadImage?imageName={{user.companyLogo}}" alt="Company Logo" />
+</div>
+<div class="bar line-height-40 relative x-md-padding">
+     <span class="size-14 weight-500 line-height-40">Edit User Information</span>
+</div>
+<s-gray-gap></s-gray-gap>
+<div class="clear"></div>
+<form role="form" class="form-horizontal scroll top-97" name="createUserForm" novalidate="" ng-submit="createUser(createUserForm)" autocomplete="off">
+    <gap></gap>
+    <div class="col-lg-8 col-md-10">
+    <div class="form-group required">
+    <div class="row">
+        <label for="email" class="weight-400 control-label size-14 col-sm-3 text-left-imp">First Name</label>
+        <div class="col-sm-9">
+            <div class="item item-input rounded" ng-class="{ 'has-errors' : createUserForm.firstName.$invalid && createUserForm.$submitted, 'no-errors' : createUserForm.firstName.$valid && createUserForm.$submitted}">
+                <input type="text" class="form-control" name="firstName" ng-maxlength="32" maxlength="32" ng-model="firstName" required>
+            </div>
+            <div class="error-container last-error-container" ng-show="createUserForm.firstName.$error && createUserForm.$submitted" ng-messages="createUserForm.firstName.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class=" col-lg-8 col-md-10">
+    <div class="form-group required">
+    <div class="row">
+        <label for="email" class="weight-400 control-label size-14 col-sm-3 text-left-imp">Last Name</label>
+        <div class="col-sm-9">
+            <div class="item item-input rounded" ng-class="{ 'has-errors' : createUserForm.lastName.$invalid && createUserForm.$submitted, 'no-errors' : createUserForm.lastName.$valid && createUserForm.$submitted}">
+                <input type="text" class="form-control" name="lastName" ng-model="lastName" ng-maxlength="32" maxlength="32" required>
+            </div>
+            <div class="error-container last-error-container" ng-show="createUserForm.lastName.$error && createUserForm.$submitted" ng-messages="createUserForm.lastName.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class=" col-lg-8 col-md-10">
+    <div class="form-group">
+    <div class="row">
+        <label for="email" class="weight-400 control-label size-14 col-sm-3 text-left-imp">Title</label>
+        <div class="col-sm-9">
+            <div class="item item-input rounded" ng-class="{ 'has-errors' : createUserForm.title.$invalid && createUserForm.$submitted, 'no-errors' : createUserForm.title.$valid && createUserForm.$submitted}">
+                <input type="text" class="form-control" name="title" ng-model="title" maxlength20="title" maxlength="20" ng-pattern="/^[0-9a-zA-Z.\s]*$/">
+            </div>
+            <div class="error-container last-error-container" ng-show="createUserForm.title.$error && createUserForm.$submitted" ng-messages="createUserForm.title.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class=" col-lg-8 col-md-10">
+    <div class="form-group required">
+    <div class="row">
+        <label for="email" ng-class="{'control-label':roleId!=2}" class="weight-400 size-14 col-sm-3 text-left-imp">Email</label>
+        <div class="{{(isCSO || isFirstTimeUser) ? 'col-sm-3 no-padding-right' : 'col-sm-3 no-padding-right' }}">
+            <div class="item item-input rounded" ng-class="{ 'has-errors' : createUserForm.emailId.$invalid && createUserForm.$submitted, 'no-errors' : createUserForm.emailId.$valid && createUserForm.$submitted}">
+                <input type="email" class="form-control" name="emailId" ng-model="emailId" maxlength100="emailId" maxlength="100" skip-disable disallow-spaces ng-required='roleId!=2' disabled>
+            </div>
+            <div class="error-container last-error-container" ng-show="createUserForm.emailId.$error && createUserForm.$submitted" ng-messages="createUserForm.emailId.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+        </div>
+        <div class="col-sm-3 no-padding-right" ng-if="!isCSO && !isFirstTimeUser" style="margin-bottom:1px;">
+            <button type="button" class="btn btn-default col-xs-12" ng-click="changePassword($event)">Change Password</button>
+        </div>
+        <div class="col-sm-3">
+            <button type="button" class="btn btn-default col-xs-12" ng-click="changeEmail($event)">Change Email ID</button>
+        </div>
+        <div class="clear"></div>
+    </div>
+    </div>
+    </div>
+    <div class="clear"></div>
+
+    <div class=" col-lg-8 col-md-10">
+    <div class="form-group required" ng-class="{'required':preferenceText}">
+    	<div class="row">
+        <label for="email" class="weight-400 size-14 control-label col-sm-3 text-left-imp">Phone</label>
+        <div class="col-sm-9">
+            <input type="tel" class="form-control no-rounded" name="phoneNumber" ng-model="phoneNumber" ui-mask="(999) 999-9999" ui-options="{clearOnBlur: false}" ui-mask-placeholder ui-mask-placeholder-char="_" ng-minlength="10" required/>
+            <div ng-show="createUserForm.phoneNumber.$error && createUserForm.$submitted" ng-messages="createUserForm.phoneNumber.$error">
+                <div class="error" ng-message="required">This field is required</div>
+            </div>
+
+            <div ng-show="createUserForm.phoneNumber.$error.mask && createUserForm.$submitted">
+
+                <div class="error">Must be a valid phone number</div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    <div class="clear"></div>
+
+    <div class="col-lg-8 col-md-10">
+    <div class="form-group required">
+        <div class="row">
+        <label for="email" class="weight-400 size-14 control-label col-sm-3 text-left-imp">Role</label>
+        <div class="col-sm-9">
+            <div class="item item-input rounded" disable-all="isCSO == 1" ng-class="{ 'has-errors' : createUserForm.roleId.$invalid && createUserForm.$submitted, 'no-errors' : createUserForm.roleId.$valid && createUserForm.$submitted}">
+                <select class="form-control" name="roleId" ng-model="roleId" ng-change="onRoleChange()" select-validation="roleId" ng-options="item.value as item.label for item in roles|filter:item.isActive=1">
+                    <option value="" selected>Select Role</option>
+                    <!--<option value="{{role.value}}" ng-selected="roleId == role.value" ng-repeat="role in roles">{{role.label}}</option>-->
+                </select>
+        
+          
+            </div>
+            <div class="error-container last-error-container" ng-show="createUserForm.roleId.$error && createUserForm.$submitted" ng-messages="createUserForm.roleId.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        <div class="clear"></div>
+
+    <div class="col-lg-8 col-md-10">
+    <div class="form-group" ng-hide="hideCustomers">
+    <div class="row">
+        <label for="email" class="weight-400 size-14 control-label col-sm-3 text-left-imp">Assign Customers</label>
+        <div class="col-sm-9">
+            <div class="row">
+                <div class="col-xs-12">
+                    <!--<select class="form-control customers-dropdown no-rounded" name="customersList" ng-model="selectedCst" ng-options="cst as cst.label for cst in customers">
+                        <option value="" selected>Select Customers</option>
+                    </select>
+                    <div class="error" ng-show="createUserForm.customersList.$invalid">Select customer</div>-->
+
+                    <div ng-dropdown-multiselect="" class="customers-dropdown width-percent-100 text-left-imp" options="customersDataArry" selected-model="selectedCustomers" checkboxes="true" extra-settings="multiSelectCustomerSettings" events="customersDropdownEvents" disable-all="allModules">
+
+
+                    </div>
+
+                </div>
+                <!--
+                <div class="col-xs-4  col-lg-4">
+                    <button type="button" class="btn btn-default col-xs-12" ng-click="addCustomer()">Add</button>
+                </div>-->
+            </div>
+            <!--  <div class="size-14 max-height-100 border" ng-if="selectedCustomers.length">
+                <div ng-repeat="item in selectedCustomers track by $index" index="{{$index}}" class="padding-list-5-16 element-hover">{{item.label}} <i class="icon-close pull-right size-20 cursor" aria-hidden="true" ng-click="removeCustomer($index)"></i></div>
+                <div class="clear"></div>
+            </div>-->
+            <div class="clear"></div>
+        </div>
+        </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+
+	<div class=" col-lg-8 col-md-10">
+    <div class="form-group">
+    	<div class="row">
+        <label for="email" class="weight-400 size-14 control-label col-sm-3 text-left-imp">Assign Groups</label>
+        <div class="col-sm-9">
+            <div class="row">
+                <div class="col-xs-12">
+                    <!--<select class="form-control group-dropdown no-rounded" name="groupList" ng-model="selectedGup" ng-options="gup as gup.label for gup in groups">
+                        <option value="" selected>Select Groups</option>
+                    </select>
+                    <div class="error" ng-show="createUserForm.groupList.$invalid">Select group</div>
+         
+-->
+
+                    <div ng-dropdown-multiselect="" class="groups-dropdown width-percent-100 text-left-imp" options="groupsDataArry" selected-model="selectedGroups" checkboxes="true" extra-settings="multiSelectGroupsSettings" events="groupsDropdownEvents" disable-all="allModules">
+                    </div>
+          
+
+                </div>
+                <!--<div class="col-xs-4">
+                    <button type="button" class="btn btn-default col-xs-12" ng-click="addGroup($event)">Add</button>
+                </div>-->
+            </div>
+            <!-- <div class="size-14 max-height-100 border" ng-if="selectedGroups.length">
+                <div ng-repeat="item in selectedGroups track by $index" index="{{$index}}" class="padding-list-5-16 element-hover">{{item.label}} <i class="icon-close pull-right size-20 cursor" aria-hidden="true" ng-click="removeGroup($index)"></i></div>
+                <div class="clear"></div>
+            </div>-->
+            <div class="clear"></div>
+        </div>
+        </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+	<div class="col-lg-8 col-md-10">
+    <div class="form-group" disable-all="disableSite">
+    	<div class="row">
+        <label for="email" class="weight-400 size-14 control-label col-sm-3 text-left-imp">Assign Sites</label>
+        <div class="col-sm-9">
+            <div class="row">
+                <div class="col-xs-12">
+                   <!-- <select class="form-control group-dropdown no-rounded" name="locationsList" ng-model="selectedLoc" ng-options="loc as loc.label for loc in locations">
+                        <option value="" selected>Select Sites</option>
+                    </select>
+                    <div class="error" ng-show="createUserForm.locationsList.$invalid">Select Site</div>
+
+-->
+                    
+                    
+                    <div ng-dropdown-multiselect="" class="sites-dropdown width-percent-100 text-left-imp" options="sitesDataArry" selected-model="selectedSites" checkboxes="true" extra-settings="multiSelectSitesSettings" events="sitesDropdownEvents" disable-all="allModules">
+
+
+                    </div>
+                    
+            
+                </div>
+                <!--<div class="col-xs-4">
+                    <button type="button" class="btn btn-default col-xs-12" ng-click="addLocation($event)">Add</button>
+                </div>-->
+            </div>
+          <!--  <div class="size-14 max-height-100 border" ng-if="selectedLocations.length">
+                <div ng-repeat="item in selectedLocations track by $index" index="{{$index}}" class="padding-list-5-16 element-hover">{{item.label}} <i class="icon-close pull-right size-20 cursor" aria-hidden="true" ng-click="removeLocation($index)"></i></div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>-->
+        </div>
+    </div>
+    </div>
+    </div>
+    <div class="clear"></div>
+
+    <div class="col-lg-8 col-md-10">
+    <div class="form-group required ">
+    	<div class="row">
+        <label for="email" class="weight-400 size-14 col-sm-3 text-left-imp">Report Preference</label>
+        <div class="col-sm-9">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="item item-input rounded" ng-class="{ 'has-errors' : createUserForm.reportPreference.$invalid && createUserForm.$submitted, 'no-errors' : createUserForm.reportPreference.$valid && createUserForm.$submitted}">
+                        <select class="form-control group-dropdown" name="reportPreference" ng-change="onReportPreferenceChange(reportPreference)" ng-model="reportPreference" select-validation="reportPreference">
+                            <option value="1">Weekly</option>
+                            <option value="2">Monthly</option>
+                            <option value="3">Quarterly</option>
+                            <option value="4">Yearly</option>
+                            <option value="0">None</option>
+                        </select>
+                    </div>
+                    <div class="error-container last-error-container" ng-show="createUserForm.reportPreference.$error && createUserForm.$submitted" ng-messages="createUserForm.reportPreference.$error">
+                        <div ng-messages-include="error-list.html"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    </div>
+    </div>
+    
+    <div class=" col-lg-8 col-md-10">
+	    <div class="form-group required">
+	    	<div class="row">
+	        <label for="reportLevel" ng-class="{'control-label':reportPreference!=0}" class="weight-400 size-14 col-sm-3 text-left-imp">Report Level</label>
+	        <div class="col-sm-9">
+	            <div class="row">
+	                <div class="col-xs-12">
+	                    <div class="item item-input " ng-class="{ 'has-errors' : createUserForm.reportLevel.$invalid && createUserForm.$submitted, 'no-errors' : createUserForm.reportLevel.$valid && createUserForm.$submitted}">
+	                        <select class="form-control group-dropdown no-rounded" name="reportLevel" ng-model="reportLevel" ng-required='reportPreference!=0' ng-disabled="reportPreference == 0">
+	                            <option value="0">None</option>
+	                            <option value="1">Customer</option>
+	                            <option value="2">Group</option>
+	                            <option value="3">Site</option>
+	                        </select>
+	                    </div>
+	                    <div class="error-container last-error-container" ng-show="createUserForm.reportLevel.$error && createUserForm.$submitted" ng-messages="createUserForm.reportLevel.$error">
+	                        <div ng-messages-include="error-list.html"></div>
+	                    </div>
+	                    <div ng-show="(reportPreference != 0 && reportLevel == 0) && createUserForm.$submitted">
+			                <div class="error">Please select report level</div>
+			            </div>
+	                </div>
+	            </div>
+	            <div class="clear"></div>
+	        </div>
+	        </div>
+	      </div>
+	      </div>
+    
+    <div class="clear"></div>
+    <div class=" col-lg-8 col-md-10">
+    <div class="form-group required">
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-3">
+            <span>
+	    <div>
+	        <div class="checkbox" ng-show="(isEmailSent && selectedUser.isFirstTimeUser) || !isEmailSent">
+	            <label>
+                    <input type="checkbox" ng-model="sendEmail" ng-disabled="roleId == 2"/>
+                    <span ng-if="isEmailSent && selectedUser.isFirstTimeUser">Resend Account Creation Email</span>
+                    <span ng-if="!isEmailSent">Send an invitation email for the user to create their password</span>
+            	</label>
+	        </div>
+    </div>
+    <div class="clear"></div>
+    <div ng-hide="isHideLock" disable-all="isLoggedInSelectedUserSame">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="locked" ng-change="statusChange()" /> Locked
+            </label>
+        </div>
+    </div>
+    <div class="clear"></div>
+    </span>
+    </div>
+    <div class="clear"></div>
+    </div>
+    </div>
+    </div>
+    <div class="clear"></div>
+
+    <!--
+    <button type="button" class="x-lg-margin btn btn-default show-details hide-this" ng-click="showDiv = !showDiv">Change Password</button>
+    <div class="details-drop" ng-show="showDiv">
+        <br/>
+        <div class="col-lg-6">
+            <h1 class="size-16 weight-700 line-height-40 no-margin">Change Password</h1>
+        </div>
+        <div class="clear"></div>
+        <hr class="no-margin" />
+        <br/>
+        <ng-form name="changePasswordForm" novalidate>
+            <div class="form-group col-lg-6">
+                <label for="email" class="weight-400 size-14 control-label col-xs-4 text-left-imp">Current Password</label>
+                <div class="col-xs-8">
+                    <div class="item item-input rounded" ng-class="{ 'has-errors' : changePasswordForm.currentPassword.$invalid && changePasswordForm.$submitted, 'no-errors' : changePasswordForm.currentPassword.$valid && changePasswordForm.$submitted}">
+                        <input type="password" name="currentPassword" class="form-control" ng-model="currentPassword" ng-required="showDiv">
+                        <div ng-messages="changePasswordForm.currentPassword.$error">
+			                <div class="error" ng-message="required">This field is required</div>
+			                <div class="error" ng-message="pattern">Must be a valid 10 digit phone number</div>
+			            </div>
+            </div>
+                    <div class="error-container last-error-container" ng-show="changePasswordForm.currentPassword.$error && changePasswordForm.$submitted" ng-messages="changePasswordForm.currentPassword.$error">
+                        <div ng-messages-include="error-list.html"></div>
+                    </div>
+                    <div class="error-container last-error-container" ng-show="changePasswordForm.currentPassword.$error && changePasswordForm.$submitted" ng-messages="changePasswordForm.currentPassword.$error">
+		                <div ng-messages-include="error-list.html"></div>
+		            </div>
+                    
+                </div>
+            </div>
+            <div class="clear"></div>
+
+            <div class="form-group col-lg-6">
+                <label for="email" class="weight-400 size-14 control-label col-xs-4 text-left-imp">New Password</label>
+                <div class="col-xs-8">
+                    <input type="password" class="form-control" ng-required="showDiv">
+                </div>
+            </div>
+            <div class="clear"></div>
+
+            <div class="form-group col-lg-6">
+                <label for="email" class="weight-400 size-14 control-label col-xs-4 text-left-imp">Repeat New Password</label>
+                <div class="col-xs-8">
+                    <input type="password" class="form-control" ng-required="showDiv">
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="form-group col-lg-6">
+                <button type="button" class="btn btn-default pull-right x-md-margin" ng-click="changePassword($event)">Change password</button>
+            </div>
+        </ng-form>
+        <div class="clear"></div>
+    </div>
+-->
+    <div class="col-lg-8 col-md-10">
+    	<div class="row">
+	        <label class="weight-400 size-14 col-sm-3 text-left-imp">Notification Preferences</label>
+	        <div class="col-sm-9">
+	            <div class="row">
+	                <div class="col-xs-12">
+	                    <div class="checkbox" disable-all="roleId == 2">
+	                        <label>
+	                            <input type="checkbox" checked ng-model="preferenceEmail" /> Email
+	                        </label>
+	                    </div>
+	                    <div class="checkbox">
+	                        <label>
+	                            <input type="checkbox" checked ng-model="preferenceText" /> SMS
+	                        </label>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <gap></gap>
+    <div class="col-lg-8 col-md-10">
+    <div class="form-group " ng-if="selectedUser.isActive !== 2">
+    	<div class="row">
+        <label for="status" class="weight-400 size-14 col-sm-3 text-left-imp">Status</label>
+        <div class="col-sm-9" disable-all="isLoggedInSelectedUserSame">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="item item-input rounded">
+                        <select class="form-control" ng-model="selectedUser.isActive" ng-options="option.id as option.label for option in statusOptions">
+	    				</select>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    </div>
+    </div>
+    <div class="clear"></div>
+
+    <!--   <button type="button" onclick="history.back()" class="btn btn-default pull-right margin">Delete</button>
+ -->
+<div class="col-xs-12">
+    <!--<a ng-show="$state.current.usersActionType == 'view'" disabled class="btn btn-default pull-right margin-left10" onclick="history.back()">Cancel</a>-->
+    <a ng-show="$state.current.usersActionType == 'edit'" class="btn btn-default pull-right margin-left10 mob-bottom-10" ng-click="userInfoPage()">Cancel</a>
+    <button class="btn btn-primary pull-right margin-left10 mob-bottom-10">Save</button>
+    <a ng-show="$state.current.usersActionType == 'edit'" data-toggle="modal" data-target="#modelDialog" class="btn btn-default margin-left10 pull-right mob-bottom-10" disable-all="isLoggedInSelectedUserSame" ng-click="removeUser($event)">Delete</a>
+</div>
+<div class="clear"></div>
+<gap></gap>
+</form>
+<style>
+    form[name=createUserForm] .form-group {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+</style>
+<script id="error-list.html" type="text/ng-template">
+    <div class="error size15" ng-message="required">This field is required</div>
+    <div class="error size15" ng-message="compareTo">Passwords do not match</div>
+    <div class="error" ng-message="minlength">Minimum length of this field is 5 characters</div>
+    <div class="error" ng-message="maxlength">Maximum length of this field is 32 characters</div>
+    <div class="error" ng-message="maxlength100">Maximum length of this field is 100 characters</div>
+    <div class="error" ng-message="email">This field must be a valid email address</div>
+    <div class="error" ng-message="maxlength20">Maximum length of this field is 20 characters</div>
+    <div class="error" ng-message="pattern">Please enter only letters and numbers</div>
+    <div class="error" ng-message="selectValidation">This field is required</div>
+</script>

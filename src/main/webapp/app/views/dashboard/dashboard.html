@@ -1,0 +1,61 @@
+<div class="" ng-if="userDetails.rolePermissions['Dashboard Management'] == 3">
+<div class="blue-bg-bar min-height-52 relative">
+	<div class="x-scroll">
+	<div class="mobile-min-700">
+	<img ng-if="companyLogo" class="customer-thumg pull-left" ng-src="fileUpload/loadImage?imageName={{companyLogo}}" alt="Company Logo" />
+	<ul class="options-bar pull-right">
+	    <div class="pull-right relative">
+	            <span class="line-height-40 size-14 weight-500 white-text">Filter by</span>
+	            <select class="border text-muted xs-padding" style="max-width:170px" name="customer" ng-model="report.customer" ng-change="getGroups()" 
+		                    	ng-options="option.id as option.label for option in customers"></select> 
+	            <select class="border text-muted xs-padding" name="group" ng-model="report.group" ng-change="getSites()" style="max-width:100px"
+		                    	ng-options="option.groupId as option.groupName for option in groups">
+		                    	<option value="">All</option>
+	                	</select>
+	            <select class="border text-muted xs-padding" name="site" ng-model="report.site" style="max-width:100px"
+		                    	ng-options="option.siteId as option.siteName for option in sites" ng-change="loadChart()">
+		                    	<option value="">All</option>
+		                    	</select>
+	            <select class="border text-muted xs-padding" name="time" ng-model="report.time" style="max-width:100px" 
+		                    	ng-options="option.id as option.name for option in timeOptions" ng-change="loadChart()"></select>
+	    </div>
+	</ul>
+	</div>
+	</div>
+</div>
+<div class="clear"></div>
+<s-gray-gap></s-gray-gap>
+<div class="scroll top-56">
+<div class="">
+	<div class="col-lg-7 col-sm-10 col-md-7 col-xs-12 right-gray-gap perfomancetitle">
+		<div class="weight-700 size-16 line-height-40 ">Performance</div>
+		   <div class="row">
+			<hc-solid-chart callback-fn="ctrlFn(arg1, row)" ng-repeat="row in reportOptions track by $index" class="col-xs-6 col-sm-3 inline hc-solid-chart" id="container{{$index}}" 
+				title="{{row.title}}" name="{{row.name}}" data="[row]"></hc-solid-chart>
+		</div>
+	</div>
+	<div class="col-lg-5 col-sm-10 col-md-5 col-xs-12">
+		<div class="weight-700 size-16 line-height-40 ">Current Critical Issues</div>
+		<div class="row">
+			<hc-critical-chart ng-if="!noIssuesFlag" callback-fn="criticalFn(arg1)" options="alertsdata" class="col-xs-12 hc-chart"></hc-critical-chart>
+			<div class="hc-chart text-center"><img ng-if="noIssuesFlag" ng-src="assets/images/noCriticalIssues.png" alt="No Critical Issues" class="no-critical-img"/></div>
+		</div>
+	</div>
+</div>
+<div class="clear"></div>
+	<div class="top-gray-gap">
+		<div class="weight-700 size-16 line-height-40 x-md-padding">Map View</div>
+		<div ng-if="mapOptions" id="container" class="col-xs-12 col-sm-10 col-sm-offset-1"></div>
+		<div class="clearfix"></div>
+		<div class="col-lg-6 text-right size-14" ng-if="mapOptions.length>0"><span class="icon-rotated-square"></span> <strong>Comfort Optimization On</strong></div>
+		<div class="col-lg-6 size-14" ng-if="mapOptions.length>0"><span class="icon-circle-outline"></span> <strong>Comfort Optimization Off</strong></div>
+	</div>
+</div>
+</div>
+<style type="text/css">
+.inline { 
+	display: inline-block; 
+	border: 1px solid red; 
+	margin:10px;width: 200px; height: 200px; margin: 0 auto;
+}
+</style>

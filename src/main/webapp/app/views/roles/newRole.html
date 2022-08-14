@@ -1,0 +1,89 @@
+<div class="blue-bg-bar min-height-52 relative"></div>
+<div class="bar line-height-40 relative x-md-padding">
+    <span class="size-14 weight-500 line-height-40">New Role</span>
+</div>
+<s-gray-gap></s-gray-gap>
+<form role="form" class="checkboxform form-horizontal top-97 scroll" name="createRoleForm" novalidate="" ng-submit="createRole(createRoleForm)" id="createRoleForm" autocomplete="off">
+    <gap></gap><gap></gap>
+    <div class="clear"></div>
+
+    <div class="col-sm-10 col-lg-6">
+    	<div class="form-group required">
+        <label for="email" class="weight-400 size-14 control-label col-sm-4 text-left-imp">Role Name</label>
+        <div class="col-xs-8">
+            <div class="item item-input rounded" ng-class="{ 'has-errors' : createRoleForm.roleName.$invalid && createRoleForm.$submitted, 'no-errors' : createRoleForm.roleName.$valid && createRoleForm.$submitted}">
+                <input type="text" maxlength="50" ng-maxlength="50" class="form-control" ng-model="role.roleName" name="roleName" required>
+            </div>
+            <div class="error-container last-error-container" ng-show="createRoleForm.roleName.$error && createRoleForm.$submitted" ng-messages="createRoleForm.roleName.$error">
+                <div ng-messages-include="error-list.html"></div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="col-sm-10 col-lg-6">
+    	<div class="form-group">
+	        <label for="email" class="weight-400 size-14 control-label col-sm-4 text-left-imp">Role Type</label>
+	        <div class="col-sm-6">
+	            <select class="form-control" name="roleType" ng-model="role.roleType" ng-options="option.value as option.label for option in roleOptions"></select>
+	        </div>
+	    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="col-sm-10 col-lg-6">
+        <div class="form-group required">
+        <label for="email" class="weight-400 control-label size-14 control-label col-sm-4 text-left-imp">Status</label>
+        <div class="col-sm-6">
+          	<select class="form-control" ng-model="role.isActive" ng-options="option.value as option.label for option in statusOptions"></select>
+        </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="col-xs-10">
+    	<div class="form-group required  no-margin">
+	        <label class="size-16 control-label weight-400 line-height-40 no-margin">Permissions</label>
+	        <hr class="no-margin" />
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div><p class="error" ng-show="checkPermission">Please select at least one management permission</p></div>
+    <div ng-repeat="permission in permissions">
+    	<div class="col-sm-10 col-lg-6">
+        	<div class="form-group ">
+	            <gap></gap>
+	            <div class="checkbox col-sm-4">
+	                <label title="Customer Management">
+	                    <input ng-true-value="{{permission.permissionId}}" ng-false-value="0" type="checkbox" ng-checked="role.superAdmin || role.permissions[$index].permission" class="permissionClass" ng-model="role.permissions[$index].permission" name="permission{{$index}}"> {{permission.permissionName}}
+	                </label>
+	            </div>
+	            <div class="col-sm-7">
+	                <select class="form-control" name="permissionLevel{{$index}}" ng-model="role.permissions[$index].permissionLevel" ng-init="role.permissions[$index].permissionLevel" ng-options="option.permissionLevelId as option.permissionLevelName for option in permission.permissionLevels"></select>
+	            </div>
+	            <gap></gap>
+	        </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="col-sm-10 col-lg-6">
+    	<div class="form-group">    	
+        <gap></gap>
+        <div class="checkbox col-sm-4">
+            <label title="Manual Activity Log">
+                <input ng-true-value="1" ng-false-value="0" type="checkbox" ng-checked="role.createActivityLog" ng-model="role.createActivityLog"> Manual Activity Log
+            </label>
+        </div>
+        </div>
+        <gap></gap>	
+    </div>
+    <div class="clear"></div>
+	<div class="col-xs-12">
+    	<button type="button" onclick="history.back()" class="btn btn-default pull-right margin-left10">Cancel</button>
+    	<button class="btn btn-primary pull-right margin-left10">Save</button>
+    </div>    
+    <div class="clear"></div>
+    <gap></gap>
+</form>
+<script id="error-list.html" type="text/ng-template">
+    <div class="error size15" ng-message="required">This field is required</div>
+    <div class="error" ng-message="maxlength">Maximum length of this field is 50 characters</div>
+</script>

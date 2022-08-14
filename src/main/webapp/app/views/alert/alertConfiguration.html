@@ -1,0 +1,51 @@
+<div role="tabpanel" class="tab-pane" id="configuration">
+<gap></gap>
+	<ul class="options-bar">
+		<li class="pull-left">
+			<div class="x-md-padding">
+				<select name="customerList" placeholder="Select customer"  class="height-30 text-muted xs-padding pull-left mob-width-170" required 
+					ng-model="customer"
+					ng-options="option.customerId as option.companyName for option in customerList" 
+					ng-change="loadAlerts()">
+				</select> 
+				<span class="pull-left x-padding"><i class="icon-download size-30 v-middle cursor" aria-hidden="true"></i></span>
+			</div>
+		</li>
+		<div class="clear"></div>
+	</ul>
+	<gap></gap>
+    <div class="clear"></div>
+    <gap></gap>
+	<ul class="scroll border-top top-154 listhover users-list">
+		<li ng-repeat="item in alerts | orderBy: 'alert' " class="listhover">
+			<div class="border-bottom y-padding" ng-click="editConfiguration(item)" ng-class="{'disabled': item.alertStatus == 0}">
+				<div class="col-xs-4 col-sm-5 col-lg-5 mob-padding">
+					<div class="v-middle">
+						<div class="">{{item.alert}}</div>
+					</div>
+				</div>
+				<div class="col-xs-3 col-sm-4 col-lg-4 mob-padding">
+					<div class="v-middle">
+						<div class="">{{item.alertType}}</div>
+					</div>
+				</div>
+				<div class="col-xs-2 col-sm-1 col-lg-1 mob-padding">
+					<div class="v-middle">
+						<div class="weight-500">{{item.alertPriority}}</div>
+					</div>
+				</div>
+				<div class="col-xs-3 col-sm-2 col-lg-2 text-center mob-padding">
+					<div class="v-middle" ng-if="(item.alertType | lowercase) != 'alarm mode'" >
+						<div class="weight-500">{{item.alertParameter}}</div>
+						<div class="weight-400">{{item.alertParameterUnit}}</div>
+					</div>
+					<div class="v-middle" ng-if="(item.alertType | lowercase) == 'alarm mode'" >
+						<div class="weight-500">{{item.alertParameterUnit}}</div>
+						<div class="weight-400">{{item.alertParameter}}</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</li>
+	</ul>
+</div>

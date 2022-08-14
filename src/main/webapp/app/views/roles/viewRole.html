@@ -1,0 +1,69 @@
+<div class="blue-bg-bar min-height-52"></div>
+<div class="options-bar x-padding">
+    <div class="pull-left y-padding">    
+	    <a ui-sref="roles.rolesList($state.params)"><i class="icon-back size-20 vertical-middle cursor" aria-hidden="true" ></i>&nbsp;</a>
+	    <span class="size-14 weight-500">{{role.roleName}}</span>
+    </div>	
+	<div class="pull-right">
+ 		<a ng-click="editRole()" ng-hide="role.roleId == 1 || role.roleId == 2" 
+ 		class="size-14 line-height-30 x-xs-padding pull-right right-10 z-index-10 relative"><i class="icon-edit size-16" aria-hidden="true"></i>&nbsp; Edit</a>
+    </div>
+    <div class="clear"></div>
+</div>
+<s-gray-gap></s-gray-gap>
+<form role="form" class="checkboxform form-horizontal top-97 scroll" disable-all="true">
+    <gap></gap><gap></gap>
+    <div class="clear"></div>
+    <div class="form-group required col-sm-10 col-lg-6">
+        <label for="email" class="weight-400 size-14 control-label col-sm-4 text-left-imp">Role Name</label>
+        <div class="col-xs-8">
+            <input type="text" class="form-control" ng-model="role.roleName">
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="form-group col-sm-10 col-lg-6">
+        <label for="email" class="weight-400 size-14 control-label col-sm-4 text-left-imp">Role Type</label>
+        <div class="col-sm-6">
+            <select class="form-control" name="roleType" ng-model="role.roleType" ng-options="option.value as option.label for option in roleOptions"></select>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="form-group required col-sm-10 col-lg-6">
+        <label for="email" class="weight-400 control-label size-14 control-label col-sm-4 text-left-imp">Status</label>
+        <div class="col-sm-6">
+          	<select class="form-control" ng-model="role.isActive" ng-options="option.value as option.label for option in statusOptions"></select>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="form-group required col-xs-10 no-margin">
+        <label class="size-16 control-label weight-400 line-height-40 no-margin">Permissions</label>
+        <hr class="no-margin" />
+    </div>
+    <div class="clear"></div>
+    <div ng-repeat="permission in permissions">
+        <div class="form-group col-sm-10 col-lg-6">
+            <gap></gap>
+            <div class="checkbox col-sm-4">
+                <label title="Customer Management">
+                    <input ng-true-value="{{permission.permissionId}}" ng-false-value="0" type="checkbox" ng-checked="role.superAdmin || role.permissions[$index].permission" class="permissionClass" ng-model="role.permissions[$index].permission" name="permission{{$index}}"> {{permission.permissionName}}
+                </label>
+            </div>
+            <div class="col-sm-7">
+                <select class="form-control" ng-init="role.permissions[$index].permissionLevel" name="permissionLevel{{$index}}" ng-model="role.permissions[$index].permissionLevel" ng-options="option.permissionLevelId as option.permissionLevelName for option in permission.permissionLevels"></select>
+            </div>
+            <gap></gap>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="form-group col-sm-10 col-lg-6">
+        <gap></gap>
+        <div class="checkbox col-sm-4">
+            <label title="Manual Activity Log">
+                <input ng-true-value="1" ng-false-value="0" type="checkbox" ng-checked="role.createActivityLog" ng-model="role.createActivityLog"> Manual Activity Log
+            </label>
+        </div>
+        <gap></gap>	
+    </div>
+    <div class="clear"></div>
+    <div class="clear"></div>
+</form>

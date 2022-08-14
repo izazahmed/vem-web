@@ -1,0 +1,39 @@
+<div class="row">
+    <h1 class="no-margin padding text-center size-16 weight-700 text-center modal-title">Import Users</h1>
+
+</div>
+
+<div class="row border">
+   <!--  <div class="drag-placeholder margin"> -->
+<!-- 
+        <h1 class="text-center">Drag file here </h1>
+        <p class="text-center">or</p> -->
+       <br/>
+        <span class="btn btn-default btn-file col-centered">
+	    	<i class='fa fa-camera' aria-hidden='true'></i>&nbsp; Choose .xlsx file to upload
+	        <input type="file" title="Choose .xlsx file to upload" fileread="fileName" onchange="angular.element(this).scope().fileBulkUpload(event)" name="file" class="btn btn-default col-centerd file">
+	    </span>
+        <gap></gap>
+        
+<p class="text-center">{{fileName}}</p>
+   <!--  </div> -->
+</div>
+
+<br/>
+
+
+<a href="{{downloadLink}}"><p class="pull-left"><i class="icon-download size-30 vertical-middle" aria-hidden="true"></i> Download CSV Template</p></a>
+<button class="btn pull-right" ng-click="importFile()" ng-disabled="bulkFileEmpty" ng-class="{'btn-primary':!bulkFileEmpty}">Import</button>
+<div class="clear"></div>
+<br/>
+
+<a href="javascript:void(0)" class="u-line size-16" ng-click="importManually()">Enter Manually</a>
+
+<br/>
+<br/>
+<style>
+        .modal-dialog {
+            max-width: 400px;
+            margin:10px auto !important;
+        }
+    </style>
